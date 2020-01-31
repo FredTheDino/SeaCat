@@ -66,7 +66,7 @@ u64 Perf::highp_now() {
 }
 
 #include "../game/game_main.cpp"
-#include "../editor/editor_main.cpp"
+// #include "../editor/editor_main.cpp"
 #ifndef FOG_GAME
 #   error "No game found"
 #endif
@@ -173,7 +173,7 @@ int main(int argc, char **argv) {
     SETUP_DEBUG_KEYBINDINGS;
 
     ASSERT(Logic::init_entity(), "Failed to initalize entites");
-    Editor::entity_registration();
+    //Editor::entity_registration();
     Game::entity_registration();
     Logic::frame(SDL_GetTicks() / 1000.0f);
     setup();

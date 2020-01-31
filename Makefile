@@ -15,9 +15,9 @@ ASSET_OUTPUT = $(BIN_DIR)/data.fog
 ASSET_FILES = $(shell find res/ -type f -name "*.*")
 ASSET_SOURCE_FILES = $(shell find src/engine/asset/ -type f -name "*.*")
 ASSET_SOURCE_FILES += src/engine/unix_assets.cpp
-EDITOR_PROGRAM_NAME = rain
-EDITOR_PROGRAM_PATH = $(BIN_DIR)/$(EDITOR_PROGRAM_NAME)
-EDITOR_SOURCE_FILE = src/engine/unix_main.cpp
+# EDITOR_PROGRAM_NAME = rain
+# EDITOR_PROGRAM_PATH = $(BIN_DIR)/$(EDITOR_PROGRAM_NAME)
+# EDITOR_SOURCE_FILE = src/engine/unix_main.cpp
 SOURCE_FILES = $(shell find src/ -type f -name "*.*")
 DOCUMENTATION_GENERATOR = $(shell python3 doc/doc-builder.py)
 DOCUMENTATION = doc/doc.html
@@ -38,9 +38,9 @@ $(ENGINE_PROGRAM_PATH): $(SOURCE_FILES) $(ASSET_OUTPUT)
 	rm -f $(BIN_DIR)/res
 	$(CXX) $(FLAGS) $(ENGINE_SOURCE_FILE) -o $(ENGINE_PROGRAM_PATH) -L $(LIB_PATH) $(LIBS)
 
-$(EDITOR_PROGRAM_PATH): $(SOURCE_FILES) $(ASSET_OUTPUT)
-	mkdir -p $(BIN_DIR)
-	$(CXX) $(FLAGS) -DFOG_EDITOR $(EDITOR_SOURCE_FILE) -o $(EDITOR_PROGRAM_PATH) -L $(LIB_PATH) $(LIBS)
+# $(EDITOR_PROGRAM_PATH): $(SOURCE_FILES) $(ASSET_OUTPUT)
+# 	mkdir -p $(BIN_DIR)
+# 	$(CXX) $(FLAGS) -DFOG_EDITOR $(EDITOR_SOURCE_FILE) -o $(EDITOR_PROGRAM_PATH) -L $(LIB_PATH) $(LIBS)
 
 
 $(ASSET_BUILDER_PROGRAM_NAME): $(ASSET_SOURCE_FILES) $(ASSET_BUILDER_SOURCE_FILE)
@@ -57,8 +57,8 @@ clean:
 	rm -f src/fog_assets.cpp
 	rm -f doc/doc.html
 
-edit: $(EDITOR_PROGRAM_PATH)
-	cd $(BIN_DIR); ./$(EDITOR_PROGRAM_NAME)
+#edit: $(EDITOR_PROGRAM_PATH)
+#	cd $(BIN_DIR); ./$(EDITOR_PROGRAM_NAME)
 
 run: $(ENGINE_PROGRAM_PATH) 
 	cd $(BIN_DIR); ./$(ENGINE_PROGRAM_NAME)
