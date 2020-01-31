@@ -2,6 +2,7 @@
 #define FOG_GAME
 
 #include <vector>
+#include "enemies.h"
 
 namespace Game {
 
@@ -16,7 +17,12 @@ enum class GameState {
 
 GameState game_state = GameState::GAME;
 
+std::vector<Enemy*> enemies;
+
 void setup() {
+    enemy_shape = Physics::add_shape(LEN(enemy_shape_points), enemy_shape_points);
+    enemies.push_back(new SmallEnemy(V2(0, 0)));
+
     Renderer::turn_on_camera(0);
 }
 
@@ -32,6 +38,9 @@ void update(f32 delta) {
 
         // Update game.
         case GameState::GAME:
+            for (Enemy* enemy : enemies) {
+                enemy->update(delta);
+            }
             break;
 
         // Update transition.
@@ -46,7 +55,6 @@ void update(f32 delta) {
 
 // Main draw
 void draw() {
-    const char *some_string = "SeaCow";
 
     // Determine which part of the game we are in.
     switch (game_state) {
@@ -57,6 +65,9 @@ void draw() {
 
         // Draw game.
         case GameState::GAME:
+            for (Enemy* enemy : enemies) {
+                Renderer::push_rectangle(1, enemy->body.position, enemy->body.scale);
+            }
             break;
 
         // Draw transition.
