@@ -18,12 +18,25 @@ namespace Intro {
     f32 DELAY2 = 0.27;
     f32 STARTED = 0;
 
+    void play_cat_sound() {
+        u64 assets[] = {ASSET_VOICE2_1, ASSET_VOICE2_2, ASSET_VOICE2_3, ASSET_VOICE2_4};
+        u32 sound = random_int() % 4;
+        Mixer::play_sound(0, assets[sound]);
+    }
+
+    void play_ther_sound() {
+        u64 assets[] = {ASSET_VOICE1_1, ASSET_VOICE1_2, ASSET_VOICE1_3, ASSET_VOICE1_4};
+        u32 sound = random_int() % 4;
+        Mixer::play_sound(0, assets[sound]);
+    }
+
     void update_cat_text(f32 now, f32 started, char *phrase) {
         u32 charAmount= strlen(phrase);
         u32 charsWritten = strlen(phrase1);
         if ((now - started - (charsWritten * DELAY1)) >= DELAY1 && 
-                charsWritten <= charAmount) {
+                charsWritten < charAmount) {
             phrase1[charsWritten] = phrase[charsWritten];
+            play_cat_sound();
         }
     }
 
@@ -31,9 +44,9 @@ namespace Intro {
         u32 charAmount= strlen(phrase);
         u32 charsWritten = strlen(phrase2);
         if ((now - started - (charsWritten * DELAY2 + strlen(phrase1) * DELAY1)) >= DELAY2 && 
-                charsWritten <= charAmount) {
+                charsWritten < charAmount) {
             phrase2[charsWritten] = phrase[charsWritten];
-            //Mixer::play_sound(0
+            play_ther_sound();
         }
     }
 
