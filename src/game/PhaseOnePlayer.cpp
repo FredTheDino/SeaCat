@@ -9,13 +9,13 @@ f32 ACCELERATION_STEPS = 0.4;
 #include <iostream>
 class PhaseOnePlayer {
 public:
-    
+
     void init_PhaseOnePlayer();
     void update(f32 delta);
     void draw();
-    
+
     Physics::Body player_body;
-    
+
 private:
 
     void jerk (Vec2 *new_vector);
@@ -23,12 +23,12 @@ private:
     void accelerate();
 
     f32 cos_acc_mod(Vec2 *currSpeed);
-    
+
     bool space_movement = true;
 
 // Vec2i current_pos = (0,0);
 // Vec2 acceleration_target = (0,0);
-// Vec2 current_speed = (0,0);    
+// Vec2 current_speed = (0,0);
 };
 
 
@@ -36,7 +36,7 @@ private:
 void PhaseOnePlayer::init_PhaseOnePlayer(){
     Vec2 points[] = { V2(0, 0), V2(0, 0.5), V2(0.5, 0.5), V2(0.5, 0) };
     Physics::ShapeID my_shape = Physics::add_shape(LEN(points), points);
-    player_body = Physics::create_body(my_shape, 0b110); 
+    player_body = Physics::create_body(my_shape, 0b110);
 
 }
 
@@ -47,7 +47,7 @@ void PhaseOnePlayer::update(f32 delta){
     if (Util::begin_tweak_section("phase1_controls", &show_control_controls)) {
         Util::tweak("TOP_SPEED", &TOP_SPEED);
         Util::tweak("TOP_ACCELERATION", &TOP_ACCELERATION);
-	Util::tweak("ACCELERATION_STEPS", &ACCELERATION_STEPS);
+    Util::tweak("ACCELERATION_STEPS", &ACCELERATION_STEPS);
     }
     Util::end_tweak_section(&show_control_controls);
 
@@ -70,10 +70,10 @@ void PhaseOnePlayer::update(f32 delta){
 //Increase the current acceleration Edward
 void PhaseOnePlayer::jerk(Vec2 *new_acc){
     Vec2 acc_temp = *new_acc;
-    
+
     acc_temp.x = CLAMP(-TOP_ACCELERATION, TOP_ACCELERATION, acc_temp.x);
     acc_temp.y = CLAMP(-TOP_ACCELERATION, TOP_ACCELERATION, acc_temp.y);
-    
+
     player_body.acceleration = acc_temp;
 }
 
@@ -84,10 +84,10 @@ void PhaseOnePlayer::draw(){
 
 //Calc and Change the current speed by the acc and cos(max_speed - curr_speed)
 void PhaseOnePlayer::accelerate(){
-    
+
     Vec2 vel_temp = player_body.velocity;
     vel_temp += player_body.acceleration * cos_acc_mod(&vel_temp);
-    
+
     vel_temp.x = CLAMP(-TOP_SPEED, TOP_SPEED, vel_temp.x);
     vel_temp.y = CLAMP(-TOP_SPEED, TOP_SPEED, vel_temp.y);
 
@@ -96,7 +96,7 @@ void PhaseOnePlayer::accelerate(){
 
 //Move by the curr speed
 void PhaseOnePlayer::move(){
- 
+
     Vec2 current_vel = player_body.velocity;
     player_body.position = current_vel + player_body.position;
 
@@ -109,10 +109,10 @@ f32 PhaseOnePlayer::cos_acc_mod(Vec2 *currSpeed){
     f32 speed_procantage_x = (currSpeed->x/TOP_SPEED);
     f32 speed_procantage_y = (currSpeed->y/TOP_SPEED);
     if ((speed_procantage_x+speed_procantage_y) <= MIN_ACCELERATION){
-	return MIN_ACCELERATION;
+    return MIN_ACCELERATION;
     }else{
-	return ((sin(speed_procantage_x*(PI/2)) + sin(speed_procantage_y*(PI/2)))/2);
+    return ((sin(speed_procantage_x*(PI/2)) + sin(speed_procantage_y*(PI/2)))/2);
     }
-    
-    
+
+
 }
