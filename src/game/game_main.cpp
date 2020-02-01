@@ -61,7 +61,7 @@ Renderer::turn_on_camera(0);
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
         //Phase2::enter();
-        Intro::enter();
+        Intro::enter(0);
     }
 }
 

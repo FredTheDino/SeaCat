@@ -1,16 +1,17 @@
 namespace Intro {
 
-    void enter();
+    void enter(u32 state);
     void update(f32 now, f32 delta);
     void draw();
     void exit();
     void update_cat_text(f32 now, f32 started, char *phrase);
     void update_ther_text(f32 now, f32 started, char *phrase);
 
-    char *catPhrase1 = "Hello...";
-    char *catPhrase2 = "Hello";
-    char *catPhrase3 = "Hi!";
+    char *catPhrase0 = "Hello...";
+    char *catPhrase1 = "Hello";
+    char *catPhrase2= "Hi!";
     char *therPhrase = "How are you doing?";
+    char *catPhrase = "";
     char phrase1[9];
     char phrase2[19];
     f32 DELAY1 = 0.36;
@@ -36,7 +37,7 @@ namespace Intro {
     }
 
     Logic::LogicID timer_id;
-    void enter() {
+    void enter(u32 state) {
         current_exit();
         Logic::update_callback(update_id, update, 0.0, Logic::FOREVER);
         Logic::update_callback(draw_id, draw, 0.0, Logic::FOREVER);
@@ -49,11 +50,25 @@ namespace Intro {
         STARTED = Logic::now();
         for (int i = 0; i < 9; i++) phrase1[i] = 0;
         for (int i = 0; i < 19; i++) phrase2[i] = 0;
+        switch(state) {
+            case 0:
+                catPhrase = catPhrase0;
+                break;
+            case 1:
+                catPhrase = catPhrase1;
+                break;
+            case 2:
+                catPhrase = catPhrase2;
+                break;
+            default:
+                ASSERT(false, "faulty intro state");
+        }
+
     }
 
     void update(f32 delta, f32 now) {
-        update_cat_text(now, STARTED, catPhrase1);
-        if (strlen(catPhrase1) == strlen(phrase1)) {
+        update_cat_text(now, STARTED, catPhrase);
+        if (strlen(catPhrase) == strlen(phrase1)) {
             update_ther_text(now, STARTED, therPhrase);
         }
     }
