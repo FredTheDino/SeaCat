@@ -14,6 +14,7 @@ void (*current_exit)();
 
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
+#include "game_state_phase3.cpp"
 #include "game_state_cutscenes.cpp"
 
 namespace Game {
@@ -33,6 +34,7 @@ void empty_func() {}
 void setup() {
     Phase1::setup();
     Phase2::setup();
+    Phase3::setup();
 
     square_shape = Physics::add_shape(LEN(square_shape_points), square_shape_points);
 
@@ -58,7 +60,7 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
-        Phase1::enter();
+        Phase3::enter();
     }
 }
 

@@ -8,7 +8,8 @@ enum EntityType {
     FLOOF = 1,
     GLOOP = 2,
     COG = 3,
-    BOSS = 4
+    BOSS = 4,
+	NR_OF_ENTITIES = 5
 };
 
 struct GameEntity : public Logic::Entity {
@@ -202,6 +203,11 @@ void cog_init(Cog &cog, Vec2 position=V2(0, 0)) {
     cog.body.position = position;
 }
 
+struct Boss : public GameEntity {
+};
+
+// TODO: Boss init fn
+
 struct Spawner {
 
     void update(float delta) {
@@ -240,6 +246,13 @@ struct Spawner {
                 }
                 break;
             // cogs
+            case 3:
+				// TODO: Only spawn one
+                if (!last_spawn[EntityType::BOSS]) {
+                    last_spawn[EntityType::BOSS] = 1;
+					spawn_boss();
+				}
+				break;
             case 11:
             case 12:
                 if (time - last_spawn[EntityType::COG] > 2) {
@@ -264,6 +277,9 @@ struct Spawner {
             last_spawn[EntityType::FLOOF] = 24;
             last_spawn[EntityType::GLOOP] = -4;
         }
+        if (phase == 3) {
+            last_spawn[EntityType::BOSS] = 0;
+		}
     }
 
     void set_paused(bool paused) {
@@ -294,10 +310,15 @@ struct Spawner {
         entities.push_back(Logic::add_entity(cog));
     }
 
+    void spawn_boss() {
+		// TODO: spawn boss
+		spawn_aggro();
+    }
+
     std::vector<Logic::EntityID> entities;
 private:
+    float last_spawn[EntityType::NR_OF_ENTITIES];
     int phase = 0;
     bool paused = false;
     float time = 0;
-    float last_spawn[EntityType::BOSS];
 };
