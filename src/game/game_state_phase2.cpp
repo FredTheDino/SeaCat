@@ -68,6 +68,10 @@ struct Player : public Logic::Entity {
         if (down(Input::Name::SHOOT)) {
             shot_held_for += delta;
             rightLaser.spawn();
+            rightLaser.spawn();
+            rightLaser.spawn();
+            leftLaser.spawn();
+            leftLaser.spawn();
             leftLaser.spawn();
         }
 
@@ -82,6 +86,12 @@ struct Player : public Logic::Entity {
                 shot_current_shot_length = 0;
             }
             shot_current_shot_length += delta;
+            rightLaser.spawn();
+            leftLaser.spawn();
+            middleLaser.spawn();
+            rightLaser.spawn();
+            leftLaser.spawn();
+            middleLaser.spawn();
             rightLaser.spawn();
             leftLaser.spawn();
             middleLaser.spawn();
