@@ -134,9 +134,7 @@ void Cog::update(f32 delta) {
                V2(cos(time * rot_speed), sin(time * rot_speed)) * rot_amp;
     body.position = position;
 
-    u32 BPM = 120;
-    rotation = 0.35 * (u32)((Logic::now() - init_time)/(60.0f/BPM));
-    LOG("init = %f, now = %f", init_time, Logic::now());
+    rotation = 0.35 * ((u32)(((Logic::now())/0.5f) - init_rotations));
 }
 
 void Cog::draw() {
@@ -144,7 +142,6 @@ void Cog::draw() {
     Physics::debug_draw_body(&body);
 #endif
     draw_sprite(2, position, size * 1.5, rotation, Sprites::COG);
-    draw_sprite(2, position, size * 1.5, 0.0, Sprites::COG);
 }
 
 void cog_init(Cog& cog, Vec2 position = V2(0, 0)) {
