@@ -13,13 +13,11 @@ void (*current_exit)();
 
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
-#include "game_state_intro.cpp"
+#include "game_state_cutscenes.cpp"
 
 namespace Game {
 
-f32 INTRO_TIME = 12;
-u32 CRITICAL_CONFIDENCE = 3;
-u32 enteredCS = 0;
+const u32 CRITICAL_CONFIDENCE = 3;
 u32 confidence = 0;
 u32 intro = 0;
 u32 phase = 0;
@@ -38,7 +36,7 @@ void setup() {
     enemy_shape = Physics::add_shape(LEN(enemy_shape_points), enemy_shape_points);
 
     Renderer::turn_on_camera(0);
-	
+
     using namespace Input;
     add(K(a), Name::LEFT);
     add(K(d), Name::RIGHT);
@@ -57,8 +55,7 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
-        Intro::enter(intro);
-        enteredCS = Logic::now();
+        Phase1::enter();
     }
 }
 
@@ -66,35 +63,6 @@ void setup() {
 // Extra logic
 void update(f32 delta) {
     Renderer::debug_camera(0);
-    if (Logic::now() - enteredCS >= INTRO_TIME && phase < 1) {
-        phase = 1;
-        Intro::exit();
-        Phase1::enter();
-    }
-    else if (confidence >= CRITICAL_CONFIDENCE && intro < 1) {
-        intro = 1;
-        Phase1::exit();
-        Intro::enter(intro);
-        enteredCS = Logic::now();
-    }
-    else if (Logic::now() - enteredCS >= 15 && phase < 2) {
-        phase = 2;
-        Intro::exit();
-        Phase2::enter();
-    }
-    else if (confidence >= CRITICAL_CONFIDENCE * 2 && intro < 2) {
-        intro = 2;
-        Phase2::exit();
-        Intro::enter(intro);
-        enteredCS = Logic::now();
-    }
-    
-    else if (Logic::now() - enteredCS >= INTRO_TIME && phase < 3) {
-        phase = 3;
-        Intro::exit();
-        //Boss::enter();
-    }
-    
 }
 
 
