@@ -4,6 +4,8 @@
 #include <vector>
 #include "enemies.h"
 
+Spawner spawner;
+
 Logic::LogicID update_id;
 Logic::LogicID draw_id;
 void (*current_exit)();
@@ -27,19 +29,6 @@ void setup() {
 
     enemy_shape = Physics::add_shape(LEN(enemy_shape_points), enemy_shape_points);
 
-    AggroEnemy aggro_enemy;
-    aggro_enemy_init(aggro_enemy);
-
-    FloofEnemy floof_enemy;
-    floof_enemy_init(floof_enemy, V2(0, 1));
-    
-    GloopEnemy gloop_enemy;
-    gloop_enemy_init(gloop_enemy, V2(0,1));
-
-    Logic::add_entity(aggro_enemy);
-    Logic::add_entity(floof_enemy);
-    Logic::add_entity(gloop_enemy);
-
     Renderer::turn_on_camera(0);
 
     using namespace Input;
@@ -61,7 +50,7 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
-        Phase1::enter();
+        Phase2::enter();
     }
 }
 

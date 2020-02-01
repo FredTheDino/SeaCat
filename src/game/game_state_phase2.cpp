@@ -129,6 +129,9 @@ void enter() {
 
 void update(f32 delta, f32 now) {
     player.update(delta);
+
+    spawner.set_phase(2);
+    spawner.set_paused(false);
 }
 
 void draw() {
