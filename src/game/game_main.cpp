@@ -68,6 +68,13 @@ void update(f32 delta) {
     if (pressed(Name::FULLSCREEN)) {
         Renderer::toggle_fullscreen();
     }
+
+    static bool camera_vignette = true;
+    if (Util::begin_tweak_section("CAMERA VIGNETTE", &camera_vignette)) {
+        Util::tweak("vin-radius", &Renderer::vignette_radius);
+        Util::tweak("vin-strengt", &Renderer::vignette_strength);
+    }
+    Util::end_tweak_section(&camera_vignette);
 }
 
 // Extra draw
