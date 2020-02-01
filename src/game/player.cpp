@@ -39,7 +39,10 @@ void PlayerPhase1::update(f32 delta) {
 }
 
 void PlayerPhase1::draw() {
-    draw_sprite(2, body.position, 0.3, 0, Sprites::CAT);
+    draw_sprite(3, body.position, 0.3, 0, Sprites::CAT);
+    f32 angle = sin(Logic::now()) * 0.2 + 0.2;
+    draw_sprite(2, body.position - rotate(V2(0, -0.3), angle) * 0.2, 0.3, angle, Sprites::TAIL);
+    Renderer::push_line(10, body.position, body.position + rotate(V2(0, -0.3), angle) * scaler, V4(0, 1, 0, 1));
 }
 
 void PlayerPhase1::init() {
@@ -131,7 +134,7 @@ void PlayerPhase2::draw() {
     rightLaser.draw();
     leftLaser.draw();
     middleLaser.draw();
-        
+
     Renderer::push_rectangle(0, position, DIMENSIONS);
     Physics::debug_draw_body(&ship_body);
     Physics::debug_draw_body(&shot_body);
