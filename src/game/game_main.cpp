@@ -4,6 +4,7 @@
 #include <vector>
 #include "assets.cpp"
 #include "game_entities.h"
+#include "game_entities.cpp"
 #include "text_zoom.cpp"
 
 Spawner enemy_spawner;
