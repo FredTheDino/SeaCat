@@ -64,7 +64,7 @@ void update(f32 delta, f32 now) {
 void draw() {
     // Draw background
     Vec4 tint = LERP(START_COLOR, progess, END_COLOR);
-    draw_sprite(0, ((PlayerPhase1 *) Logic::fetch_entity(player_id))->body.position, 2, 0, Sprites::BACKGROUND, tint);
+    draw_sprite(0, -Renderer::get_camera(0)->position, 2, 0, Sprites::BACKGROUND, tint);
 
     // Physics::Overlap curr_overlap =
     // Physics::check_overlap(&player1.player_body, &temp_rect);

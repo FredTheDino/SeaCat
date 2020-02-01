@@ -45,11 +45,18 @@ void aggro_enemy_init(AggroEnemy& aggro_enemy, Vec2 position = V2(0, 0)) {
     aggro_enemy.body.position = position;
 }
 
+void sinus_strat(FloofEnemy *self, f32 delta) {
+    self->body.velocity = V2(cos(self->time) * self->speed, -self->speed);
+    self->body.position += self->body.velocity * delta;
+}
+
+void target_strat(FloofEnemy *self, f32 delta) {
+    self->body.position += self->body.velocity * delta;
+}
+
 void FloofEnemy::update(float delta) {
     time += delta;
-
-    body.velocity = V2(cos(time) * speed, -speed);
-    body.position += body.velocity * delta;
+    strategy(this, delta);
 }
 
 void FloofEnemy::draw() {
@@ -66,6 +73,13 @@ void floof_enemy_init(FloofEnemy& floof_enemy, Vec2 position = V2(0, 0)) {
     floof_enemy.body = Physics::create_body(square_shape);
     floof_enemy.body.scale = V2(1, 1) * 0.08;
     floof_enemy.body.position = position;
+    floof_enemy.strategy = sinus_strat;
+}
+
+void floof_enemy_init_linear(FloofEnemy& floof_enemy, Vec2 position, Vec2 target) {
+    floof_enemy_init(floof_enemy, position);
+    floof_enemy.strategy = target_strat;
+    floof_enemy.body.velocity = normalize(target - position) * floof_enemy.speed;
 }
 
 void GloopEnemy::update(float delta) {
@@ -232,9 +246,10 @@ void Spawner::spawn_floof_phase1() {
     float camera_zoom = Renderer::get_camera()->zoom;
     float camera_ratio = Renderer::get_window_aspect_ratio();
 
-    floof_enemy_init(floof_enemy,
-                     camera_pos + V2(1, 1 / camera_ratio) / camera_zoom);
-    floof_enemy.speed = 0;
+    floof_enemy_init_linear(floof_enemy,
+                            camera_pos + V2(1, 1 / camera_ratio) / camera_zoom,
+                            Renderer::get_camera(0)->position);
+    floof_enemy.speed = 2;
     entities.push_back(Logic::add_entity(floof_enemy));
 }
 

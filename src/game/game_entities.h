@@ -31,13 +31,16 @@ void aggro_enemy_init(AggroEnemy& aggro_enemy, Vec2 position);
 struct FloofEnemy : public GameEntity {
     void update(float delta) override;
 
+    void (*strategy)(FloofEnemy *self, f32 delta);
+
     void draw() override;
 
     float speed = 0.1;
     REGISTER_FIELDS(FLOOF_ENEMY, FloofEnemy, speed);
 };
 
-void floof_enemy_init(FloofEnemy& floof_enemy, Vec2 position);
+void floof_enemy_init(FloofEnemy& floof_enemy, Vec3 position);
+void floof_enemy_init_linear(FloofEnemy& floof_enemy, Vec3 position, Vec2 target);
 
 struct GloopEnemy : public GameEntity {
     void update(float delta) override;
