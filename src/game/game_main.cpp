@@ -2,16 +2,16 @@
 #define FOG_GAME
 
 #include <vector>
-#include "phase_one_player.cpp"
+#include "PhaseOnePlayer.cpp"
 
 namespace Game {
 
-phase_one_player player1;
+PhaseOnePlayer player1;
 
 void entity_registration() {}
 
 void setup() {
-    player1 = phase_one_player();
+    player1.init_PhaseOnePlayer();
     Renderer::turn_on_camera(0);
 
     using namespace Input;
@@ -30,7 +30,8 @@ void update(f32 delta) {
 void draw() {
     const char *some_string = "SeaCow";
     Renderer::draw_text(some_string, 0, 0, 1.0, ASSET_MONACO_FONT, -0.5);
-    Physics::debug_draw_body(player1.get_body());
+    Physics::debug_draw_body(&player1.player_body);
+    player1.draw();
 }
 
 }  // namespace Game
