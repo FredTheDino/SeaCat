@@ -205,6 +205,10 @@ EntityID add_entity(T entity);
 EntityID add_entity_ptr(Entity *entity);
 
 ///*
+// Removes all entities in the entity system, resetting it.
+void clear_entitysystem();
+
+///*
 // Tries to fetch an entity from the ES, and returns a pointer
 // to it. If the ID is invalid a nullptr is returned.
 Entity *fetch_entity(EntityID id);

@@ -163,6 +163,15 @@ namespace Logic {
         return id;
     }
 
+    void clear_entitysystem() {
+        _fog_es.memory->clear();
+        _fog_es.next_free = 0;
+        _fog_es.entity.clear();
+        _fog_es.max_entity = 0;
+        _fog_es.num_entities = 0;
+        _fog_es.num_removed = 0;
+    }
+
     Entity *fetch_entity(EntityID id) {
         if (id.slot >= 0) {
             Entity *entity = _fog_es.entities[id.slot];
