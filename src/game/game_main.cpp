@@ -23,6 +23,7 @@ void empty_func() {}
 
 
 void setup() {
+    Phase1::setup();
     enemy_shape = Physics::add_shape(LEN(enemy_shape_points), enemy_shape_points);
 
     AggroEnemy aggro_enemy;
@@ -39,7 +40,7 @@ void setup() {
     Logic::add_entity(gloop_enemy);
 
     Renderer::turn_on_camera(0);
-
+	
     using namespace Input;
     add(K(a), Name::LEFT);
     add(K(d), Name::RIGHT);
