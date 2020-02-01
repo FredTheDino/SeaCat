@@ -3,14 +3,22 @@
 
 #include <vector>
 
+Logic::LogicID update_id;
+Logic::LogicID draw_id;
+
+void (*current_exit)();
+
+#include "game_state_phase1.cpp"
+#include "game_state_phase2.cpp"
+
 namespace Game {
 
 void entity_registration() {}
 
+void empty_func() {}
+
 void setup() {
     Renderer::turn_on_camera(0);
-
-    Renderer::get_camera(0)->zoom = 0.1;
 
     using namespace Input;
     add(K(a), Name::LEFT);
@@ -22,45 +30,22 @@ void setup() {
     add(A(LEFTY, Player::P1), Name::UP_DOWN);
     add(A(LEFTX, Player::P2), Name::LEFT_RIGHT);
     add(A(LEFTY, Player::P2), Name::UP_DOWN);
-}
 
-// scroll
-const f32 MAX_SPEED = 10;  // ship
-f32 vel_rel = 0.4;
-f32 floatiness = 4;
-Vec2 vel = V2(0, 0);  // change per frame
-Vec2 pos = V2(0, 0);  // current position
-const Vec2 DIM = V2(1, 1);  // size of rect
+    {
+        update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func,
+                0.0, Logic::FOREVER);
 
-// Main logic
-void update(f32 delta) {
-    static bool show_control_controls = true;
-    if (Util::begin_tweak_section("controls", &show_control_controls)) {
-        Util::tweak("floatiness", &floatiness);
-        Util::tweak("vel_rel", &vel_rel);
+        draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
+                0.0, Logic::FOREVER);
+        current_exit = empty_func;
+        Phase2::enter();
     }
-    Util::end_tweak_section(&show_control_controls);
-
-    using namespace Input;
-    Vec2 vel_target = V2(0, 0);
-    if (down(Name::UP))
-        vel_target.y += vel_rel;
-    if (down(Name::DOWN))
-        vel_target.y -= vel_rel;
-    if (down(Name::LEFT))
-        vel_target.x -= vel_rel;
-    if (down(Name::RIGHT))
-        vel_target.x += vel_rel;
-    vel_target.y += vel_rel * value(Name::UP_DOWN);
-    vel_target.x += vel_rel * value(Name::LEFT_RIGHT);
-
-    vel += (vel_target - vel) * floatiness * delta;
-    pos += vel;
 }
 
-// Main draw
-void draw() {
-    Renderer::push_rectangle(0, pos, DIM);
-}
+// Extra logic
+void update(f32 delta) {}
+
+// Extra draw
+void draw() {}
 
 }  // namespace Game
