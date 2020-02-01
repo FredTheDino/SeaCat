@@ -358,6 +358,7 @@ bool init(const char *title, int width, int height) {
     SDL::window_callback = resize_window;
     SDL_GL_SetSwapInterval(1);
     glEnable(GL_DEBUG_OUTPUT);
+
 #if FOG_VERBOSE
     glDebugMessageCallback(gl_debug_message, 0);
 #endif

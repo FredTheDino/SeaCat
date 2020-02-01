@@ -19,13 +19,15 @@ f32 DELAY2 = 0.27;
 f32 STARTED = 0;
 
 void play_cat_sound() {
-    u64 assets[] = {ASSET_VOICE2_1, ASSET_VOICE2_2, ASSET_VOICE2_3, ASSET_VOICE2_4};
+    u64 assets[] = {ASSET_VOICE2_1, ASSET_VOICE2_2, ASSET_VOICE2_3,
+                    ASSET_VOICE2_4};
     u32 sound = random_int() % 4;
     Mixer::play_sound(0, assets[sound]);
 }
 
 void play_their_sound() {
-    u64 assets[] = {ASSET_VOICE1_1, ASSET_VOICE1_2, ASSET_VOICE1_3, ASSET_VOICE1_4};
+    u64 assets[] = {ASSET_VOICE1_1, ASSET_VOICE1_2, ASSET_VOICE1_3,
+                    ASSET_VOICE1_4};
     u32 sound = random_int() % 4;
     Mixer::play_sound(0, assets[sound]);
 }
@@ -60,19 +62,19 @@ void enter(u32 state) {
     current_exit = leave;
 
     auto exit_func = [state]() {
-        switch(state) {
-                case 0:
-                    Phase1::enter();
-                    break;
-                case 1:
-                    Phase2::enter();
-                    break;
-                case 2:
-                    // Boss::enter();
-                    break;
-                default:
-                    UNREACHABLE;
-            };
+        switch (state) {
+            case 0:
+                Phase1::enter();
+                break;
+            case 1:
+                Phase2::enter();
+                break;
+            case 2:
+                // Boss::enter();
+                break;
+            default:
+                UNREACHABLE;
+        };
     };
     Logic::add_callback(Logic::POST_DRAW, exit_func, CUTSCENE_DURATION);
 
@@ -94,7 +96,8 @@ void draw() {
     f32 aspect_ratio = Renderer::get_window_aspect_ratio();
     Renderer::draw_text(cat_buffer, -0.8, 0.8 * aspect_ratio, 1.0,
                         ASSET_MONACO_FONT, 0, V4(0.41, 0.63, 1, 1));
-    Vec2 text_offset = Renderer::messure_text(their_phrase, 1.0, ASSET_MONACO_FONT);
+    Vec2 text_offset =
+        Renderer::messure_text(their_phrase, 1.0, ASSET_MONACO_FONT);
     Renderer::draw_text(their_buffer, 0.8 - text_offset.x,
                         -0.8 * aspect_ratio + text_offset.y, 1.0,
                         ASSET_MONACO_FONT, 0);

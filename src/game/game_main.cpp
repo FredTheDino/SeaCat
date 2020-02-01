@@ -5,6 +5,8 @@
 #include "assets.cpp"
 #include "game_entities.h"
 #include "particles.h"
+#include "game_entities.cpp"
+#include "text_zoom.cpp"
 
 Spawner enemy_spawner;
 Spawner cog_spawner;
@@ -19,23 +21,20 @@ void (*current_exit)();
 
 namespace Game {
 
-const u32 CRITICAL_CONFIDENCE = 3;
 u32 confidence = 0;
 u32 intro = 0;
 u32 phase = 0;
 
-void entity_registration() {
-    REGISTER_ENTITY(AggroEnemy);
-}
+void entity_registration() { REGISTER_ENTITY(AggroEnemy); }
 
 void empty_func() {}
-
 
 void setup() {
     Phase1::setup();
     Phase2::setup();
 
-    square_shape = Physics::add_shape(LEN(square_shape_points), square_shape_points);
+    square_shape =
+        Physics::add_shape(LEN(square_shape_points), square_shape_points);
 
     Renderer::turn_on_camera(0);
 
@@ -56,16 +55,15 @@ void setup() {
     init_laser_particles();
 
     {
-        update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func,
-                0.0, Logic::FOREVER);
+        update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func, 0.0,
+                                        Logic::FOREVER);
 
-        draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
-                0.0, Logic::FOREVER);
+        draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func, 0.0,
+                                      Logic::FOREVER);
         current_exit = empty_func;
         Phase2::enter();
     }
 }
-
 
 // Extra logic
 void update(f32 delta) {
@@ -76,12 +74,7 @@ void update(f32 delta) {
     }
 }
 
-
 // Extra draw
-void draw() {
-    //for (u32 i = 0; i < (u32) Sprites::NUM_SPRITES; i++) {
-    //    draw_sprite(0, V2(0, i), 0.5, 0.0, (Sprites) i);
-    //}
-}
+void draw() {}
 
 }  // namespace Game
