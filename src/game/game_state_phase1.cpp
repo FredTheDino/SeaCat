@@ -25,7 +25,7 @@ namespace Phase1 {
         spawner.set_paused(false);
     }
 
-    void update(f32 now, f32 delta) {
+    void update(f32 delta, f32 now) {
         player1.update(delta);
         spawner.update(delta);
     }
