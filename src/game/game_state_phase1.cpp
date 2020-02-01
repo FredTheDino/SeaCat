@@ -1,8 +1,6 @@
-#include "phase1_player.cpp"
-
 namespace Phase1 {
 
-PhaseOnePlayer player1;
+Logic::EntityID player_id;
 Physics::Body bordere_rect_container[4];
 
 f32 progess = 0;
@@ -17,7 +15,6 @@ void draw();
 void exit();
 
 void setup() {
-    player1.init_PhaseOnePlayer();
     // for (int num_rec_i = 0; num_rec_i < len(temp_rect);num_rec_i){
     //     if (num_rec_i%2 = 0){
     //         Vec2 points[] = { V2(0, 0), V2(0, 1), V2(5, 1), V2(5, 0) };
@@ -43,33 +40,34 @@ void enter() {
 
     cog_spawner.set_phase(11);
     cog_spawner.set_paused(false);
+
+    PlayerPhase1 player;
+    player.init();
+    player_id = Logic::add_entity(player);
+
 }
 
 void update(f32 delta, f32 now) {
-    player1.update(delta);
     enemy_spawner.update(delta);
     cog_spawner.update(delta);
 
-    // TODO: Check for enemy collisions
-
+    PlayerPhase1 *player = (PlayerPhase1 *) Logic::fetch_entity(player_id);
     for (s32 i = cog_spawner.entities.size() - 1; i >= 0; i--) {
         GameEntity *cog =
             Logic::fetch_entity<GameEntity>(cog_spawner.entities[i]);
-        if (Physics::check_overlap(&cog->body, &player1.player_body)) {
+        if (Physics::check_overlap(&cog->body, &player->body)) {
             cog->hp = 0;
             pick_up_compliment(cog->position);
             progess = CLAMP(0, 1.0, progess + 0.1);
         }
     }
-    Renderer::get_camera()->position = -player1.player_body.position;
+    Renderer::get_camera()->position = -player->body.position;
 }
 
 void draw() {
-    player1.draw();
-
     // Draw background
     Vec4 tint = LERP(START_COLOR, progess, END_COLOR);
-    draw_sprite(0, player1.player_body.position, 2, 0, Sprites::BACKGROUND, tint);
+    draw_sprite(0, ((PlayerPhase1 *) Logic::fetch_entity(player_id))->body.position, 2, 0, Sprites::BACKGROUND, tint);
 
     // Physics::Overlap curr_overlap =
     // Physics::check_overlap(&player1.player_body, &temp_rect);

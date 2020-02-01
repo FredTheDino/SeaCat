@@ -1,6 +1,3 @@
-Vec2 square_shape_points[] = {V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1)};
-Physics::ShapeID square_shape;
-
 Vec2 target = V2(0, 0);
 
 enum EntityType { AGGRO = 0, FLOOF = 1, GLOOP = 2, COG = 3, BOSS = 4 };

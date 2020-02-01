@@ -2,9 +2,15 @@
 #define FOG_GAME
 
 #include <vector>
+
+Vec2 square_shape_points[] = {V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1)};
+Physics::ShapeID square_shape;
+
 #include "assets.cpp"
-#include "game_entities.h"
 #include "particles.h"
+#include "player.h"
+#include "player.cpp"
+#include "game_entities.h"
 #include "game_entities.cpp"
 #include "text_zoom.cpp"
 
