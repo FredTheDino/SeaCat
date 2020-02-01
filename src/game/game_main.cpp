@@ -4,6 +4,7 @@
 #include <vector>
 #include "assets.cpp"
 #include "game_entities.h"
+#include "particles.h"
 #include "game_entities.cpp"
 #include "text_zoom.cpp"
 
@@ -14,6 +15,7 @@ Logic::LogicID update_id;
 Logic::LogicID draw_id;
 void (*current_exit)();
 
+#include "game_state_cutscenes.h"
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
 #include "game_state_cutscenes.cpp"
@@ -50,6 +52,9 @@ void setup() {
     add(A(LEFTY, Player::P1), Name::UP_DOWN);
     add(A(LEFTX, Player::P2), Name::LEFT_RIGHT);
     add(A(LEFTY, Player::P2), Name::UP_DOWN);
+
+    init_laser_particles();
+
     {
         update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func, 0.0,
                                         Logic::FOREVER);
@@ -57,7 +62,7 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func, 0.0,
                                       Logic::FOREVER);
         current_exit = empty_func;
-        Phase1::enter();
+        Cutscene::enter(0);
     }
 }
 
@@ -68,6 +73,13 @@ void update(f32 delta) {
     if (pressed(Name::FULLSCREEN)) {
         Renderer::toggle_fullscreen();
     }
+
+    static bool camera_vignette = true;
+    if (Util::begin_tweak_section("CAMERA VIGNETTE", &camera_vignette)) {
+        Util::tweak("vin-radius", &Renderer::vignette_radius);
+        Util::tweak("vin-strengt", &Renderer::vignette_strength);
+    }
+    Util::end_tweak_section(&camera_vignette);
 }
 
 // Extra draw

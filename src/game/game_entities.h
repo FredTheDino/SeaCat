@@ -90,6 +90,8 @@ struct Spawner {
 
     void set_paused(bool paused);
 
+    void clear();
+
     void spawn_aggro();
 
     void spawn_floof_phase1();
@@ -101,7 +103,6 @@ struct Spawner {
     void spawn_cog();
 
     std::vector<Logic::EntityID> entities;
-
    private:
     int phase = 0;
     bool paused = false;

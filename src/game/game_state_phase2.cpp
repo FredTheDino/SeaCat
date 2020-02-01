@@ -56,8 +56,23 @@ struct Player : public Logic::Entity {
             velocity + V2(sin(Logic::now() * wobble_speed) * wobble_amp, 0);
         ship_body.position = position;
 
+        //Update the position of the laser particle systems
+        rightLaser.position = position;
+        leftLaser.position = position;
+        middleLaser.position = position;
+
+        rightLaser.update(delta);
+        leftLaser.update(delta);
+        middleLaser.update(delta);
+
         if (down(Input::Name::SHOOT)) {
             shot_held_for += delta;
+            rightLaser.spawn();
+            rightLaser.spawn();
+            rightLaser.spawn();
+            leftLaser.spawn();
+            leftLaser.spawn();
+            leftLaser.spawn();
         }
 
         if (released(Input::Name::SHOOT)) {
@@ -71,6 +86,15 @@ struct Player : public Logic::Entity {
                 shot_current_shot_length = 0;
             }
             shot_current_shot_length += delta;
+            rightLaser.spawn();
+            leftLaser.spawn();
+            middleLaser.spawn();
+            rightLaser.spawn();
+            leftLaser.spawn();
+            middleLaser.spawn();
+            rightLaser.spawn();
+            leftLaser.spawn();
+            middleLaser.spawn();
         }
 
         f32 max_height = Renderer::get_camera(0)->zoom;
@@ -83,6 +107,10 @@ struct Player : public Logic::Entity {
         draw_sprite(2, ship_body.position, 0.22, 0, Sprites::SHIP);
         //Physics::debug_draw_body(&ship_body);
         //Physics::debug_draw_body(&shot_body);
+        //
+        rightLaser.draw();
+        leftLaser.draw();
+        middleLaser.draw();
 
         if (shot_held_for >= shot_held_target) {
             // TODO(gu) particles

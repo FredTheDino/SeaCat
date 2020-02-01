@@ -148,7 +148,7 @@ void cog_init(Cog& cog, Vec2 position = V2(0, 0)) {
     cog.time = 0;
     cog.body = Physics::create_body(square_shape);
     cog.body.scale = V2(cog.size, cog.size) * 0.3;
-    cog.body.position = position;
+    cog.body.position = position + V2(cog.rot_amp, 0);
 }
 
 void Spawner::update(float delta) {
@@ -213,6 +213,11 @@ void Spawner::set_phase(int phase) {
 }
 
 void Spawner::set_paused(bool paused) { this->paused = paused; }
+
+void Spawner::clear() {
+    entities.clear();
+    Logic::clear_entitysystem();
+}
 
 void Spawner::spawn_aggro() {
     AggroEnemy aggro_enemy;

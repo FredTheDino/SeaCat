@@ -28,6 +28,10 @@ void main() {
             color = texture(screen_samplers[0], pass_uv);
         }
     }
+    vec2 coords = (pass_uv - 0.5) * radius;
+    vec4 scaler = vec4(1.0 - clamp(strength * length(coords), 0.0, 1.0));
+    scaler.a = 1.0;
+    color = color * scaler; 
 }
 
 #endif

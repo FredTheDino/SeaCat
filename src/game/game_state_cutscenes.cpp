@@ -1,12 +1,5 @@
 namespace Cutscene {
 
-void enter(u32 state);
-void update(f32 now, f32 delta);
-void draw();
-void leave();
-void update_cat_phrase(f32 now, f32 started, char *phrase);
-void update_their_phrase(f32 now, f32 started, char *phrase);
-
 const char *cat_phrases[] = {"Hello...", "Hello", "Hi!"};
 const char *cat_phrase = "";
 const char *their_phrase = "How are you doing?";
@@ -36,7 +29,7 @@ void update_cat_phrase(f32 now, f32 started, const char *phrase) {
     u32 charAmount = strlen(phrase);
     u32 charsWritten = strlen(cat_buffer);
     if ((now - started - (charsWritten * DELAY1)) >= DELAY1 &&
-        charsWritten <= charAmount) {
+        charsWritten < charAmount) {
         cat_buffer[charsWritten] = phrase[charsWritten];
         play_cat_sound();
     }
@@ -47,7 +40,7 @@ void update_their_phrase(f32 now, f32 started, const char *phrase) {
     u32 charsWritten = strlen(their_buffer);
     if ((now - started -
          (charsWritten * DELAY2 + strlen(cat_buffer) * DELAY1)) >= DELAY2 &&
-        charsWritten <= charAmount) {
+        charsWritten < charAmount) {
         their_buffer[charsWritten] = phrase[charsWritten];
         play_their_sound();
     }
