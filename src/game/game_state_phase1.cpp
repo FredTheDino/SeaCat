@@ -29,6 +29,8 @@ void setup() {
     // temp_rect.position = V2(0, 3);
 }
 
+Logic::LogicID leave_id;
+
 void enter() {
     current_exit();
     Logic::update_callback(update_id, update, 0.0, Logic::FOREVER);
@@ -41,10 +43,15 @@ void enter() {
     cog_spawner.set_phase(11);
     cog_spawner.set_paused(false);
 
+    auto leave = [&leave_id]() {
+        if (progess >= 1.0)
+            Cutscene::enter(1);
+    };
+    leave_id = Logic::add_callback(Logic::POST_DRAW, leave, 0.0, Logic::FOREVER);
+
     PlayerPhase1 player;
     player.init();
     player_id = Logic::add_entity(player);
-
 }
 
 void update(f32 delta, f32 now) {
@@ -58,6 +65,7 @@ void update(f32 delta, f32 now) {
         if (Physics::check_overlap(&cog->body, &player->body)) {
             cog->hp = 0;
             pick_up_compliment(cog->position);
+            // TODO: Fix this later
             progess = CLAMP(0, 1.0, progess + 0.1);
         }
     }
@@ -75,5 +83,9 @@ void draw() {
     // Physics::debug_draw_body(&temp_rect);
 }
 
-void exit() { LOG("Do stuff for the exit"); }
+void exit() {
+    Logic::remove_callback(leave_id);
+    enemy_spawner.clear();
+    cog_spawner.clear();
+}
 };  // namespace Phase1

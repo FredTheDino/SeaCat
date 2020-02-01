@@ -125,6 +125,8 @@ void PlayerPhase2::update(f32 delta) {
 }
 
 void PlayerPhase2::draw() {
+    draw_sprite(2, ship_body.position, 0.22, 0, Sprites::SHIP);
+
     rightLaser.draw();
     leftLaser.draw();
     middleLaser.draw();

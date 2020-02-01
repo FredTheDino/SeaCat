@@ -21,6 +21,7 @@ Logic::LogicID update_id;
 Logic::LogicID draw_id;
 void (*current_exit)();
 
+#include "game_state_cutscenes.h"
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
 #include "game_state_cutscenes.cpp"
