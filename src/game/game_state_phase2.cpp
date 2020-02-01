@@ -106,7 +106,7 @@ void player_init(Player &player, Vec2 position=V2(0, 0)) {
     player.shot_body.position = player.position;
 }
 
-Player player;
+Logic::EntityID player_id;
 
 void setup();
 void enter();
@@ -124,18 +124,17 @@ void enter() {
     Logic::update_callback(draw_id, draw, 0.0, Logic::FOREVER);
     current_exit = exit;
 
+    Player player;
     player_init(player);
+    player_id = Logic::add_entity(player);
 }
 
 void update(f32 delta, f32 now) {
-    player.update(delta);
-
     spawner.set_phase(2);
     spawner.set_paused(false);
 }
 
 void draw() {
-    player.draw();
 }
 
 void exit() {}
