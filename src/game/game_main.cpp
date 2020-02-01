@@ -24,6 +24,8 @@ void empty_func() {}
 
 
 void setup() {
+    Phase2::setup();
+
     enemy_shape = Physics::add_shape(LEN(enemy_shape_points), enemy_shape_points);
 
     Renderer::turn_on_camera(0);
@@ -33,6 +35,7 @@ void setup() {
     add(K(d), Name::RIGHT);
     add(K(w), Name::UP);
     add(K(s), Name::DOWN);
+    add(K(SPACE), Name::SHOOT);
 
     add(A(LEFTX, Player::P1), Name::LEFT_RIGHT);
     add(A(LEFTY, Player::P1), Name::UP_DOWN);

@@ -25,14 +25,12 @@ namespace Phase1 {
         spawner.set_paused(false);
     }
 
-    void update(f32 delta, f32 now) {
-        LOG("Updating!\n");
+    void update(f32 now, f32 delta) {
         player1.update(delta);
         spawner.update(delta);
     }
 
     void draw() {
-        LOG("DRAWING\n");
         player1.draw();
     }
 
