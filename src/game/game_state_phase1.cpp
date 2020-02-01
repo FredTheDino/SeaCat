@@ -20,11 +20,15 @@ namespace Phase1 {
         Logic::update_callback(draw_id, draw, 0.0, Logic::FOREVER);
 	setup();
         current_exit = exit;
+
+        spawner.set_phase(1);
+        spawner.set_paused(false);
     }
 
     void update(f32 now, f32 delta) {
         LOG("Updating!\n");
-	player1.update(delta);
+        player1.update(delta);
+        spawner.update(delta);
     }
 
     void draw() {

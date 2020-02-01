@@ -19,6 +19,9 @@ void enter() {
     Logic::update_callback(update_id, update, 0.0, Logic::FOREVER);
     Logic::update_callback(draw_id, draw, 0.0, Logic::FOREVER);
     current_exit = exit;
+
+    spawner.set_phase(2);
+    spawner.set_paused(false);
 }
 
 void update(f32 delta, f32 now) {
@@ -47,6 +50,8 @@ void update(f32 delta, f32 now) {
 
     vel += (vel_target - vel) * control * delta;
     pos += vel + V2(sin(now * wobble_speed) * wobble_amp, 0);
+
+    spawner.update(delta);
 }
 
 void draw() {
