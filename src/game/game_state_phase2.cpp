@@ -1,10 +1,14 @@
 namespace Phase2 {
 
-Vec2 player_shape_points[] = { V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1) };
-Physics::ShapeID player_shape;
+Vec2 square_shape_points[] = { V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1) };
+Physics::ShapeID square_shape;
+
+// NOTE
+// remember to check bool shot_shooting when checking collisions with enemies
 
 struct Player : public Logic::Entity {
-    Physics::Body body;
+    Physics::Body ship_body;
+    Physics::Body shot_body;
 
     Vec2 position;
     Vec2 velocity = V2(0, 0);
@@ -53,7 +57,7 @@ struct Player : public Logic::Entity {
 
         velocity += (vel_target - velocity) * control * delta;
         position += velocity + V2(sin(Logic::now() * wobble_speed) * wobble_amp, 0);
-        body.position = position;
+        ship_body.position = position;
 
         if (down(Input::Name::SHOOT)) {
             shot_held_for += delta;
@@ -71,36 +75,48 @@ struct Player : public Logic::Entity {
             }
             shot_current_shot_length += delta;
         }
+
+        f32 max_height = Renderer::get_camera(0)->zoom;
+        f32 shot_height = max_height - position.y;
+        shot_body.position = position + V2(0, shot_height/2);
+        shot_body.scale = V2(shot_width, shot_height - 0.1);
     }
 
     void draw() override {
         Renderer::push_rectangle(0, position, DIMENSIONS);
+        Physics::debug_draw_body(&ship_body);
+        Physics::debug_draw_body(&shot_body);
 
         if (shot_held_for >= shot_held_target) {
             //TODO(gu) particles
         }
 
         if (shot_shooting) {
-            f32 max_height = Renderer::get_camera(0)->zoom;
-            f32 shot_height = max_height - position.y;
-            Renderer::push_rectangle(1, position + V2(0, shot_height/2), V2(shot_width, shot_height - 0.1), V4(0, 0.2, 1, 1));
+            Renderer::push_rectangle(1, shot_body.position, shot_body.scale, V4(0, 0.2, 1, 1));
         }
     }
 };
 
 void player_init(Player &player, Vec2 position=V2(0, 0)) {
     player.position = position;
-    player.body = Physics::create_body(player_shape);
-    player.body.scale = player.DIMENSIONS;
-    player.body.position = player.position;
+    player.ship_body = Physics::create_body(square_shape);
+    player.ship_body.scale = player.DIMENSIONS;
+    player.ship_body.position = player.position;
+    player.shot_body = Physics::create_body(square_shape);
+    player.shot_body.position = player.position;
 }
 
 Player player;
 
+void setup();
 void enter();
 void update(f32 now, f32 delta);
 void draw();
 void exit();
+
+void setup() {
+    square_shape = Physics::add_shape(LEN(square_shape_points), square_shape_points);
+}
 
 void enter() {
     current_exit();
@@ -108,7 +124,6 @@ void enter() {
     Logic::update_callback(draw_id, draw, 0.0, Logic::FOREVER);
     current_exit = exit;
 
-    player_shape = Physics::add_shape(LEN(player_shape_points), player_shape_points);
     player_init(player);
 }
 
