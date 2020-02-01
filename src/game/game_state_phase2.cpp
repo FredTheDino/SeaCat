@@ -12,12 +12,12 @@ struct Player : public Logic::Entity {
 
     Vec2 position;
     Vec2 velocity = V2(0, 0);
-    f32 max_velocity = 0.04;
+    f32 max_velocity = 0.12;
     f32 control = 4;  // higher => better control
     const Vec2 DIMENSIONS = V2(0.1, 0.1);
 
     u32 wobble_speed = 10;
-    f32 wobble_amp = 0.005;
+    f32 wobble_amp = 0.015;
 
     f32 shot_width = 0.05;
     f32 shot_held_for = 0;
@@ -128,8 +128,6 @@ void enter() {
     player_init(player);
     player_id = Logic::add_entity(player);
 
-    Renderer::get_camera()->zoom = 0.3;
-
     enemy_spawner.set_phase(2);
     enemy_spawner.set_paused(false);
 
@@ -159,8 +157,7 @@ void update(f32 delta, f32 now) {
 
 void draw() {
     // Draw background
-    draw_sprite(0, V2(0, 0), 2 / Renderer::get_camera()->zoom, 0,
-            Sprites::BACKGROUND);
+    draw_sprite(0, V2(0, 0), 2, 0, Sprites::BACKGROUND);
 }
 
 void exit() {}

@@ -34,8 +34,6 @@ namespace Phase1 {
         Logic::update_callback(draw_id, draw, 0.0, Logic::FOREVER);
         current_exit = exit;
 
-        Renderer::get_camera()->zoom = 0.3;
-
         enemy_spawner.set_phase(1);
         enemy_spawner.set_paused(false);
 
@@ -63,12 +61,11 @@ namespace Phase1 {
 
         // Draw background
         Renderer::push_rectangle(1, V2(0, 0), V2(13, 13), V4(0.1, 0, 0, 0.3));
-        draw_sprite(0, player1.player_body.position, 2 /
-                Renderer::get_camera()->zoom, 0, Sprites::BACKGROUND);
+        draw_sprite(0, player1.player_body.position, 2, 0, Sprites::BACKGROUND);
 
-    // Physics::Overlap curr_overlap = Physics::check_overlap(&player1.player_body, &temp_rect);
-    // Physics::solve(curr_overlap);
-    // Physics::debug_draw_body(&temp_rect);
+        // Physics::Overlap curr_overlap = Physics::check_overlap(&player1.player_body, &temp_rect);
+        // Physics::solve(curr_overlap);
+        // Physics::debug_draw_body(&temp_rect);
     }
 
     void exit() {

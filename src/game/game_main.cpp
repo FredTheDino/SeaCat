@@ -4,10 +4,10 @@
 #include <vector>
 #include "assets.cpp"
 #include "game_entities.h"
+#include "text_zoom.cpp"
 
 Spawner enemy_spawner;
 Spawner cog_spawner;
-#include "text_zoom.cpp"
 
 Logic::LogicID update_id;
 Logic::LogicID draw_id;
@@ -72,10 +72,6 @@ void update(f32 delta) {
 
 
 // Extra draw
-void draw() {
-    //for (u32 i = 0; i < (u32) Sprites::NUM_SPRITES; i++) {
-    //    draw_sprite(0, V2(0, i), 0.5, 0.0, (Sprites) i);
-    //}
-}
+void draw() {}
 
 }  // namespace Game
