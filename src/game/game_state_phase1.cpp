@@ -14,20 +14,7 @@ void update(f32 now, f32 delta);
 void draw();
 void exit();
 
-void setup() {
-    // for (int num_rec_i = 0; num_rec_i < len(temp_rect);num_rec_i){
-    //     if (num_rec_i%2 = 0){
-    //         Vec2 points[] = { V2(0, 0), V2(0, 1), V2(5, 1), V2(5, 0) };
-    //     }else{
-    //         Vec2 points[] = { V2(0, 0), V2(0, 1), V2(5, 1), V2(5, 0) };
-    //     }
-
-    // }
-    // Vec2 points[] = { V2(0, 0), V2(0, 1), V2(5, 1), V2(5, 0) };
-    // Physics::ShapeID temp_shape = Physics::add_shape(LEN(points), points);
-    // temp_rect = Physics::create_body(temp_shape, 0.0, 0b110, 0.5);
-    // temp_rect.position = V2(0, 3);
-}
+void setup() {}
 
 Logic::LogicID leave_id;
 
@@ -43,7 +30,7 @@ void enter() {
     cog_spawner.set_phase(11);
     cog_spawner.set_paused(false);
 
-    auto leave = [&leave_id]() {
+    auto leave = []() {
         if (progess >= 1.0)
             Cutscene::enter(1);
     };
@@ -69,7 +56,9 @@ void update(f32 delta, f32 now) {
             progess = CLAMP(0, 1.0, progess + 0.1);
         }
     }
-    Renderer::get_camera()->position = -player->body.position;
+    Vec2 target = -player->body.position;
+    Vec2 curr = Renderer::get_camera()->position;
+    Renderer::get_camera()->position = LERP(curr, delta, target);
 }
 
 void draw() {
