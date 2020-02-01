@@ -46,7 +46,7 @@ void enter() {
     cog_spawner.set_phase(11);
     cog_spawner.set_paused(false);
 
-    auto leave = [&leave_id]() {
+    auto leave = []() {
         if (progess >= 1.0)
             Cutscene::enter(1);
     };
@@ -70,7 +70,9 @@ void update(f32 delta, f32 now) {
             progess = CLAMP(0, 1.0, progess + 0.1);
         }
     }
-    Renderer::get_camera()->position = -player1.player_body.position;
+    Vec2 target = -player1.player_body.position;
+    Vec2 curr = Renderer::get_camera()->position;
+    Renderer::get_camera()->position = LERP(curr, delta, target);
 }
 
 void draw() {
