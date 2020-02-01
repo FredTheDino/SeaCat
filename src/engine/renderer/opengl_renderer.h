@@ -111,8 +111,8 @@ GLuint screen_quad_vao;
 GLuint screen_quad_vbo;
 GLuint screen_texture_location;
 GLuint num_screen_textures_location;
-
-
+GLuint strength_location;
+GLuint radius_location;
 
 // OpenGL global variables
 SDL_Window *window;

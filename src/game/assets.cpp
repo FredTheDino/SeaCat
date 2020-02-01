@@ -48,10 +48,10 @@ SubSprite _sprite_states[] = {
     [SPRITE(BOSS_LAZER)] = {ASSET_SS7, V2(10, 329), V2(496, 174)},
 };
 
-void draw_sprite(u32 layer, Vec2 pos, f32 dim, f32 rotation, Sprites sprite) {
+void draw_sprite(u32 layer, Vec2 pos, f32 dim, f32 rotation, Sprites sprite, Vec4 tint=V4(1.0, 1.0, 1.0, 1.0)) {
     SubSprite sub_sprite = _sprite_states[(u32) sprite];
     Vec2 size = sub_sprite.max / 512.0;
     size.y *= -1;
     Renderer::push_sprite(layer, pos, size * dim, rotation, sub_sprite.sheet,
-                          sub_sprite.min, sub_sprite.max);
+                          sub_sprite.min, sub_sprite.max, tint);
 }
