@@ -13,6 +13,7 @@ void (*current_exit)();
 
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
+#include "game_state_intro.cpp"
 
 namespace Game {
 
@@ -24,12 +25,13 @@ void empty_func() {}
 
 
 void setup() {
+    Phase1::setup();
     Phase2::setup();
 
     enemy_shape = Physics::add_shape(LEN(enemy_shape_points), enemy_shape_points);
 
     Renderer::turn_on_camera(0);
-
+	
     using namespace Input;
     add(K(a), Name::LEFT);
     add(K(d), Name::RIGHT);
@@ -41,7 +43,6 @@ void setup() {
     add(A(LEFTY, Player::P1), Name::UP_DOWN);
     add(A(LEFTX, Player::P2), Name::LEFT_RIGHT);
     add(A(LEFTY, Player::P2), Name::UP_DOWN);
-
     {
         update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func,
                 0.0, Logic::FOREVER);
@@ -49,7 +50,8 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
-        Phase2::enter();
+        Intro::enter(0);
+        Phase1::enter();
     }
 }
 
