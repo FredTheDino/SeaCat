@@ -79,7 +79,7 @@ void PhaseOnePlayer::jerk(Vec2 *new_acc){
 
 //Draw the Hero
 void PhaseOnePlayer::draw(){
-    Renderer::push_rectangle(0,player_body.position, V2(0.5,0.5), V4(1,0,0,1));
+    draw_sprite(2, player_body.position, 1, 0, Sprites::CAT);
 }
 
 //Calc and Change the current speed by the acc and cos(max_speed - curr_speed)
