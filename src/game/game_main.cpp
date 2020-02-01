@@ -17,6 +17,13 @@ void (*current_exit)();
 
 namespace Game {
 
+f32 INTRO_TIME = 12;
+u32 CRITICAL_CONFIDENCE = 3;
+u32 enteredCS = 0;
+u32 confidence = 0;
+u32 intro = 0;
+u32 phase = 0;
+
 void entity_registration() {
     REGISTER_ENTITY(AggroEnemy);
 }
@@ -50,8 +57,8 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
-        Intro::enter(0);
-        Phase2::enter();
+        Intro::enter(intro);
+        enteredCS = Logic::now();
     }
 }
 
@@ -59,7 +66,37 @@ void setup() {
 // Extra logic
 void update(f32 delta) {
     Renderer::debug_camera(0);
+    if (Logic::now() - enteredCS >= INTRO_TIME && phase < 1) {
+        phase = 1;
+        Intro::exit();
+        Phase1::enter();
+    }
+    else if (confidence >= CRITICAL_CONFIDENCE && intro < 1) {
+        intro = 1;
+        Phase1::exit();
+        Intro::enter(intro);
+        enteredCS = Logic::now();
+    }
+    else if (Logic::now() - enteredCS >= 15 && phase < 2) {
+        phase = 2;
+        Intro::exit();
+        Phase2::enter();
+    }
+    else if (confidence >= CRITICAL_CONFIDENCE * 2 && intro < 2) {
+        intro = 2;
+        Phase2::exit();
+        Intro::enter(intro);
+        enteredCS = Logic::now();
+    }
+    
+    else if (Logic::now() - enteredCS >= INTRO_TIME && phase < 3) {
+        phase = 3;
+        Intro::exit();
+        //Boss::enter();
+    }
+    
 }
+
 
 // Extra draw
 void draw() {
