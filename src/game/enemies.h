@@ -48,7 +48,7 @@ struct AggroEnemy : public Enemy {
     }
 
     void draw () {
-        Renderer::push_rectangle(1, body.position, body.scale, V4(0.7, 0, 0, 1));
+        draw_sprite(1, body.position, 0.5, 0, Sprites::SPIKE);
     }
 
     bool charging = false;
@@ -80,7 +80,7 @@ struct FloofEnemy : public Enemy {
     }
 
     void draw () {
-        Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0.7, 1));
+        draw_sprite(1, body.position, 0.5, 0, Sprites::FLOOF);
     }
 
     float speed = 0.2;
@@ -118,11 +118,12 @@ struct GloopBullet : public Enemy {
     }
 
     void draw () {
-        Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0, 1));
+        draw_sprite(1, body.position, 1, 0, sprite);
     }
 
     float speed = 0.5;
     float rotation = 0;
+    Sprites sprite = (random_bit() ? Sprites::GLOOP_PEW_1 : Sprites::GLOOP_PEW_2);
     REGISTER_FIELDS(GLOOP_BULLET, GloopBullet, speed);
 };
 
@@ -153,7 +154,7 @@ void GloopEnemy::update(float delta) {
 }
 
 void GloopEnemy::draw () {
-    Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0, 1));
+    draw_sprite(1, body.position, 0.5, 0, Sprites::GLOOP);
 }
 
 void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position=V2(0, 0)) {

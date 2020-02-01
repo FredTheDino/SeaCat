@@ -2,6 +2,7 @@
 #define FOG_GAME
 
 #include <vector>
+#include "assets.cpp"
 #include "enemies.h"
 
 Spawner spawner;
@@ -12,8 +13,6 @@ void (*current_exit)();
 
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
-
-#include "assets.cpp"
 
 namespace Game {
 
@@ -47,7 +46,7 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
-        Phase1::enter();
+        Phase2::enter();
     }
 }
 
@@ -59,9 +58,9 @@ void update(f32 delta) {
 
 // Extra draw
 void draw() {
-    for (u32 i = 0; i < (u32) Sprites::NUM_SPRITES; i++) {
-        draw_sprite(0, V2(0, i), 0.5, 0.0, (Sprites) i);
-    }
+    //for (u32 i = 0; i < (u32) Sprites::NUM_SPRITES; i++) {
+    //    draw_sprite(0, V2(0, i), 0.5, 0.0, (Sprites) i);
+    //}
 }
 
 }  // namespace Game
