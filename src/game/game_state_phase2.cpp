@@ -150,7 +150,6 @@ void update(f32 delta, f32 now) {
     for (s32 i = cog_spawner.entities.size() - 1; i >= 0; i--) {
         GameEntity *cog = Logic::fetch_entity<GameEntity>(cog_spawner.entities[i]);
         if (Physics::check_overlap(&cog->body, &player->ship_body)) {
-            LOG("COG!");
             cog->hp = 0;
         }
     }

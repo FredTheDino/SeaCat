@@ -41,6 +41,8 @@ void setup() {
     Renderer::turn_on_camera(0);
 	
     using namespace Input;
+    add(K(f), Name::FULLSCREEN);
+
     add(K(a), Name::LEFT);
     add(K(d), Name::RIGHT);
     add(K(w), Name::UP);
@@ -96,6 +98,10 @@ void update(f32 delta) {
         //Boss::enter();
     }
     
+    using namespace Input;
+    if (pressed(Name::FULLSCREEN)) {
+        Renderer::toggle_fullscreen();
+    }
 }
 
 

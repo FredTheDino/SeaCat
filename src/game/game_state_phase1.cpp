@@ -48,6 +48,12 @@ namespace Phase1 {
         enemy_spawner.update(delta);
         cog_spawner.update(delta);
 
+        for (s32 i = cog_spawner.entities.size() - 1; i >= 0; i--) {
+            GameEntity *cog = Logic::fetch_entity<GameEntity>(cog_spawner.entities[i]);
+            if (Physics::check_overlap(&cog->body, &player1.player_body)) {
+                cog->hp = 0;
+            }
+        }
         //Renderer::get_camera()->position = -player1.player_body.position;
     }
 

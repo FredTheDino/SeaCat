@@ -34,6 +34,8 @@ namespace Input {
 
         SHOOT,
 
+        FULLSCREEN,
+
         /* ---------------- And above this line ---------------- */
 
         // Defaults
