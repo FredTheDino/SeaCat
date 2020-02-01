@@ -25,11 +25,14 @@ namespace Input {
         LEFT_RIGHT,
         UP_DOWN,
         SEL,
+        START,
 
         LEFT,
         RIGHT,
         UP,
         DOWN,
+
+        SHOOT,
 
         /* ---------------- And above this line ---------------- */
 
@@ -81,8 +84,10 @@ namespace Perf {
 namespace Logic {
     enum class EntityType {
         BASE,
-        A_TYPE,
-        MY_ENT,
+        AGGRO_ENEMY,
+        FLOOF_ENEMY,
+        GLOOP_ENEMY,
+        GLOOP_BULLET,
 
         NUM_ENTITY_TYPES, // Don't write anything after this.
     };
