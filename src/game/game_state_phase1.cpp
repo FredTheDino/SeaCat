@@ -52,7 +52,7 @@ namespace Phase1 {
             GameEntity *cog = Logic::fetch_entity<GameEntity>(cog_spawner.entities[i]);
             if (Physics::check_overlap(&cog->body, &player1.player_body)) {
                 cog->hp = 0;
-                pick_up_compliment("Awesome!", cog->position);
+                pick_up_compliment(cog->position);
             }
         }
         //Renderer::get_camera()->position = -player1.player_body.position;
@@ -62,6 +62,7 @@ namespace Phase1 {
         player1.draw();
 
         // Draw background
+        Renderer::push_rectangle(1, V2(0, 0), V2(13, 13), V4(0.1, 0, 0, 0.3));
         draw_sprite(0, V2(0, 0), 2 / Renderer::get_camera()->zoom, 0,
                 Sprites::BACKGROUND);
 

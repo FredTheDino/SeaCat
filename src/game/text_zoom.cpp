@@ -18,7 +18,7 @@ struct TextCompliment: public Logic::Entity {
         f32 scale = life * life * ZOOM_SCALE;
         Renderer::draw_text(text, position.x, position.y + 0.5 * life * life,
                             scale, ASSET_MONACO_FONT, -0.5,
-                            V4(0.1, 0.1, 0.1, alpha));
+                            V4(0.7, 0.7, 0.7, alpha));
     }
     REGISTER_FIELDS(TEXT_COMPLIMENT, TextCompliment, position);
 };
@@ -29,9 +29,28 @@ void remove_text() {
     };
 }
 
-void pick_up_compliment(const char *text, Vec2 position) {
+void pick_up_compliment(Vec2 position) {
+    const char *compliments[] = {
+        "You look nice!",
+        "WELL DONE!",
+        "Keep fighting!",
+        "Perfect!",
+        "Keep it up!",
+        "So proud!",
+        "Love it.",
+        "Great idea",
+        "you go!",
+        "Sweet!",
+        "Awesome!",
+        "You're strong!",
+        "Amazing!",
+        "That's great",
+        "Impressive!",
+        "Beautiful",
+        "Lovely!",
+    };
     TextCompliment compliment = {};
-    compliment.text = text;
+    compliment.text = compliments[random_int() % LEN(compliments)];
     compliment.position = (position - Renderer::get_camera(0)->position) *
                           Renderer::get_camera(0)->zoom;
     Logic::add_entity(compliment);

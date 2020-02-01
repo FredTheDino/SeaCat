@@ -1,5 +1,6 @@
 enum class Sprites {
     SHIP,
+    COG,
     FLOOF,
     SPIKE,
     GLOOP,
@@ -29,6 +30,7 @@ struct SubSprite {
 #define SPRITE(n) ((u32) Sprites::n)
 SubSprite _sprite_states[] = {
     [SPRITE(SHIP)]   = { ASSET_SS1, V2( 40,  21), V2(428, 485) },
+    [SPRITE(COG)]    = { ASSET_SS2, V2(263, 268), V2(248, 239) },
     [SPRITE(FLOOF)]  = { ASSET_SS2, V2(255,   8), V2(250, 259) },
     [SPRITE(SPIKE)]  = { ASSET_SS3, V2(280, 280), V2(230, 230) },
     [SPRITE(GLOOP)]  = { ASSET_SS2, V2(  6,  11), V2(245, 230) },

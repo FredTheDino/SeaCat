@@ -189,7 +189,8 @@ struct Cog : public GameEntity {
 
     void draw() override {
         //Renderer::push_point(0, position, V4(1, 1, 1, 0.66), size);
-        Physics::debug_draw_body(&body);
+        // Physics::debug_draw_body(&body);
+        draw_sprite(2, position, size * 3.5, 0.0, Sprites::COG);
     }
 };
 
