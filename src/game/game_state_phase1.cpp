@@ -16,9 +16,9 @@ namespace Phase1 {
     player1.init_PhaseOnePlayer();
     // for (int num_rec_i = 0; num_rec_i < len(temp_rect);num_rec_i){
     //     if (num_rec_i%2 = 0){
-    //  Vec2 points[] = { V2(0, 0), V2(0, 1), V2(5, 1), V2(5, 0) };
+    //         Vec2 points[] = { V2(0, 0), V2(0, 1), V2(5, 1), V2(5, 0) };
     //     }else{
-    //  Vec2 points[] = { V2(0, 0), V2(0, 1), V2(5, 1), V2(5, 0) };
+    //         Vec2 points[] = { V2(0, 0), V2(0, 1), V2(5, 1), V2(5, 0) };
     //     }
 
     // }
@@ -55,7 +55,7 @@ namespace Phase1 {
                 pick_up_compliment(cog->position);
             }
         }
-        //Renderer::get_camera()->position = -player1.player_body.position;
+        Renderer::get_camera()->position = -player1.player_body.position;
     }
 
     void draw() {
@@ -63,8 +63,8 @@ namespace Phase1 {
 
         // Draw background
         Renderer::push_rectangle(1, V2(0, 0), V2(13, 13), V4(0.1, 0, 0, 0.3));
-        draw_sprite(0, V2(0, 0), 2 / Renderer::get_camera()->zoom, 0,
-                Sprites::BACKGROUND);
+        draw_sprite(0, player1.player_body.position, 2 /
+                Renderer::get_camera()->zoom, 0, Sprites::BACKGROUND);
 
     // Physics::Overlap curr_overlap = Physics::check_overlap(&player1.player_body, &temp_rect);
     // Physics::solve(curr_overlap);
