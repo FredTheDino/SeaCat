@@ -2,9 +2,15 @@
 #define FOG_GAME
 
 #include <vector>
+
+Vec2 square_shape_points[] = {V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1)};
+Physics::ShapeID square_shape;
+
 #include "assets.cpp"
-#include "game_entities.h"
 #include "particles.h"
+#include "player.h"
+#include "player.cpp"
+#include "game_entities.h"
 #include "game_entities.cpp"
 #include "text_zoom.cpp"
 
@@ -15,6 +21,7 @@ Logic::LogicID update_id;
 Logic::LogicID draw_id;
 void (*current_exit)();
 
+#include "game_state_cutscenes.h"
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
 #include "game_state_cutscenes.cpp"
@@ -52,6 +59,9 @@ void setup() {
     add(A(LEFTX, Player::P2), Name::LEFT_RIGHT);
     add(A(LEFTY, Player::P2), Name::UP_DOWN);
 
+    add(B(B, Player::P1), Name::SHOOT);
+    add(B(B, Player::P2), Name::SHOOT);
+
     init_laser_particles();
 
     {
@@ -61,7 +71,8 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func, 0.0,
                                       Logic::FOREVER);
         current_exit = empty_func;
-        Cutscene::enter(0);
+        //Cutscene::enter(0);
+        Phase2::enter();
     }
 }
 

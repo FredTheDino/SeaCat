@@ -1,12 +1,5 @@
 namespace Cutscene {
 
-void enter(u32 state);
-void update(f32 now, f32 delta);
-void draw();
-void leave();
-void update_cat_phrase(f32 now, f32 started, char *phrase);
-void update_their_phrase(f32 now, f32 started, char *phrase);
-
 const char *cat_phrases[] = {"Hello...", "Hello", "Hi!"};
 const char *cat_phrase = "";
 const char *their_phrase = "How are you doing?";
@@ -17,6 +10,8 @@ char their_buffer[THEIR_BUFFER_LEN];
 f32 DELAY1 = 0.36;
 f32 DELAY2 = 0.27;
 f32 STARTED = 0;
+
+Logic::LogicID id;
 
 void play_cat_sound() {
     u64 assets[] = {ASSET_VOICE2_1, ASSET_VOICE2_2, ASSET_VOICE2_3,
@@ -76,7 +71,7 @@ void enter(u32 state) {
                 UNREACHABLE;
         };
     };
-    Logic::add_callback(Logic::POST_DRAW, exit_func, CUTSCENE_DURATION);
+    id = Logic::add_callback(Logic::POST_DRAW, exit_func, CUTSCENE_DURATION);
 
     STARTED = Logic::now();
     for (u32 i = 0; i < CAT_BUFFET_LEN; i++) cat_buffer[i] = 0;
@@ -103,5 +98,7 @@ void draw() {
                         ASSET_MONACO_FONT, 0);
 }
 
-void leave() { LOG("Do stuff for the exit"); }
+void leave() {
+    Logic::remove_callback(id);
+}
 };  // namespace Cutscene
