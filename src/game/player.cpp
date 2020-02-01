@@ -119,10 +119,10 @@ void PlayerPhase2::update(f32 delta) {
         middleLaser.spawn();
     }
 
-    f32 max_height = Renderer::get_camera(0)->zoom / Renderer::get_camera()->aspect_ratio;
-    f32 shot_height = max_height - position.y;
+    f32 max_height = Renderer::get_camera()->zoom / Renderer::get_camera()->aspect_ratio;
+    f32 shot_height = max_height/2 - position.y;
     shot_body.position = position + V2(0, shot_height / 2);
-    shot_body.scale = V2(shot_width, shot_height - 0.1);
+    shot_body.scale = V2(shot_width, shot_height);
 }
 
 void PlayerPhase2::draw() {
