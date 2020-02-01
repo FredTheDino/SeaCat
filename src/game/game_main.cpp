@@ -23,6 +23,7 @@ void empty_func() {}
 
 
 void setup() {
+#if 0
     enemy_shape = Physics::add_shape(LEN(enemy_shape_points), enemy_shape_points);
 
     AggroEnemy aggro_enemy;
@@ -50,7 +51,8 @@ void setup() {
     add(A(LEFTY, Player::P1), Name::UP_DOWN);
     add(A(LEFTX, Player::P2), Name::LEFT_RIGHT);
     add(A(LEFTY, Player::P2), Name::UP_DOWN);
-
+#endif
+Renderer::turn_on_camera(0);
     {
         update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func,
                 0.0, Logic::FOREVER);
