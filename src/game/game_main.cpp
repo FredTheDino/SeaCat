@@ -9,6 +9,7 @@ Logic::LogicID draw_id;
 void (*current_exit)();
 
 #include "game_state_phase1.cpp"
+#include "game_state_intro.cpp"
 
 namespace Game {
 
@@ -27,7 +28,7 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
-        Phase1::enter();
+        Intro::enter();
     }
 }
 
