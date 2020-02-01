@@ -82,8 +82,6 @@ struct FloofEnemy : public Enemy {
     }
 
     float speed = 0.2;
-    Vec2& circling_center = target;
-    bool charging = false;
     REGISTER_FIELDS(FLOOF_ENEMY, FloofEnemy, speed);
 };
 
@@ -98,22 +96,63 @@ void floof_enemy_init(FloofEnemy& floof_enemy, Vec2 position=V2(0, 0)) {
 }
 
 struct GloopEnemy : public Enemy {
+
+    void update(float delta);
+    void draw ();
+
+    float speed = 0.2;
+    Vec2& player_pos = target;
+    REGISTER_FIELDS(GLOOP_ENEMY, GloopEnemy, speed);
+};
+
+struct GloopBullet : public Enemy {
     void update(float delta) {
         time += delta;
-
-        body.velocity = V2(-sin(time) * speed, -speed);
         body.position += body.velocity * delta;
+
+        if (time > 10) {
+            Logic::remove_entity(id);
+        }
     }
 
     void draw () {
         Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0, 1));
     }
 
-    float speed = 0.2;
-    Vec2& circling_center = target;
-    bool charging = false;
-    REGISTER_FIELDS(GLOOP_ENEMY, GloopEnemy, speed);
+    float speed = 0.5;
+    float rotation = 0;
+    REGISTER_FIELDS(GLOOP_BULLET, GloopBullet, speed);
 };
+
+void gloop_bullet_init(GloopBullet& gloop_bullet, GloopEnemy& shooter) {
+
+    gloop_bullet.hp = 10;
+    gloop_bullet.time = 0;
+    gloop_bullet.body = Physics::create_body(enemy_shape);
+    gloop_bullet.body.scale = V2(0.10, 0.10);
+    gloop_bullet.body.position = shooter.body.position;
+    gloop_bullet.body.velocity = normalize(shooter.player_pos - shooter.body.position) * gloop_bullet.speed;
+    gloop_bullet.body.rotation = atan2(gloop_bullet.body.velocity.y, gloop_bullet.body.velocity.x);
+}
+
+void GloopEnemy::update(float delta) {
+    time += delta;
+
+    body.velocity = V2(-sin(time) * speed, -speed);
+    body.position += body.velocity * delta;
+
+    if (time > 8) {
+        time = 0;
+
+        GloopBullet bullet;
+        gloop_bullet_init(bullet, *this);
+        Logic::add_entity(bullet);
+    }
+}
+
+void GloopEnemy::draw () {
+    Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0, 1));
+}
 
 void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position=V2(0, 0)) {
 
