@@ -17,6 +17,11 @@ void setup() {
     add(K(d), Name::RIGHT);
     add(K(w), Name::UP);
     add(K(s), Name::DOWN);
+
+    add(A(LEFTX, Player::P1), Name::LEFT_RIGHT);
+    add(A(LEFTY, Player::P1), Name::UP_DOWN);
+    add(A(LEFTX, Player::P2), Name::LEFT_RIGHT);
+    add(A(LEFTY, Player::P2), Name::UP_DOWN);
 }
 
 // scroll
@@ -46,6 +51,8 @@ void update(f32 delta) {
         vel_target.x -= vel_rel;
     if (down(Name::RIGHT))
         vel_target.x += vel_rel;
+    vel_target.y += vel_rel * value(Name::UP_DOWN);
+    vel_target.x += vel_rel * value(Name::LEFT_RIGHT);
 
     vel += (vel_target - vel) * floatiness * delta;
     pos += vel;

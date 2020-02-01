@@ -25,6 +25,7 @@ namespace Input {
         LEFT_RIGHT,
         UP_DOWN,
         SEL,
+        START,
 
         LEFT,
         RIGHT,
