@@ -37,6 +37,7 @@ void setup() {
     Phase3::setup();
 
     square_shape = Physics::add_shape(LEN(square_shape_points), square_shape_points);
+    triangle_shape = Physics::add_shape(LEN(triangle_shape_points), triangle_shape_points);
 
     Renderer::turn_on_camera(0);
 

@@ -30,6 +30,8 @@ struct Player : public Logic::Entity {
         using namespace Util;
         static bool show_ship_controls = true;
         if (begin_tweak_section("ship controls", &show_ship_controls)) {
+			Boss* bosss = Logic::fetch_entity<Boss>(bossID);
+			tweak("center body pos", &bosss->body.position);
             //tweak("max velocity", &max_velocity);
             //tweak("control", &control);
             //tweak("wobble speed", &wobble_speed);

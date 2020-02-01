@@ -1,5 +1,7 @@
 Vec2 square_shape_points[] = { V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1) };
 Physics::ShapeID square_shape;
+Vec2 triangle_shape_points[] = { V2(0, 0), V2(1, 0), V2(0, 1) };
+Physics::ShapeID triangle_shape;
 
 Vec2 target = V2(0, 0);
 
@@ -216,31 +218,32 @@ struct Boss : public GameEntity {
     }
 
     void draw() override {
-		// TODO: Draw all bodies
-        Physics::debug_draw_body(&body);
         Physics::debug_draw_body(&body_left);
-        Physics::debug_draw_body(&body_right);
-    	draw_sprite(1, body.position, size, 0, Sprites::BOSS);
+        Physics::debug_draw_body(&body);
+        //Physics::debug_draw_body(&body_right);
+    	draw_sprite(1, position, size, 0, Sprites::BOSS);
     }
 };
 
+// TEST
+Logic::EntityID bossID;
 void boss_init() {
     Boss boss;
     boss.hp = 5;
-	// TODO: Complicated body - several shapes
-    boss.body  = Physics::create_body(square_shape);
-    boss.body.scale = V2(boss.size, boss.size);
-    boss.body.position = V2(0, 0);
-
-    boss.body_left = Physics::create_body(square_shape);
+	
+    boss.body_left = Physics::create_body(triangle_shape);
     boss.body_left.scale = V2(boss.size, boss.size);
     boss.body_left.position = V2(-1, 0);
 
-    boss.body_right = Physics::create_body(square_shape);
+    boss.body  = Physics::create_body(square_shape);
+    boss.body.scale = V2(boss.size * 0.2, boss.size * 0.8);
+    boss.body.position = V2(-boss.size * 0.1, boss.size * 0.1);
+
+    boss.body_right = Physics::create_body(triangle_shape);
     boss.body_right.scale = V2(boss.size, boss.size);
     boss.body_right.position = V2(1, 0);
 
-	Logic::add_entity(boss);
+	bossID = Logic::add_entity(boss);
 }
 
 struct Spawner {
