@@ -39,11 +39,12 @@ void PlayerPhase1::update(f32 delta) {
 }
 
 void PlayerPhase1::draw() {
-    draw_sprite(2, body.position, 1, 0, Sprites::CAT);
+    draw_sprite(2, body.position, 0.3, 0, Sprites::CAT);
 }
 
 void PlayerPhase1::init() {
     body = Physics::create_body(square_shape, 0b110);  //TODO(gu) ????
+    body.scale = V2(1, 1) * 0.2;
 }
 
 void PlayerPhase2::update(f32 delta) {
