@@ -43,6 +43,15 @@ void enter() {
 
     cog_spawner.set_phase(11);
     cog_spawner.set_paused(false);
+
+    auto leave = []() -> bool {
+        if (progess >= 1.0) {
+            Cutscene::enter(1);
+            return true;
+        }
+        return false;
+    };
+    Logic::add_callback(Logic::POST_DRAW, leave, 0.0, Logic::FOREVER);
 }
 
 void update(f32 delta, f32 now) {
@@ -58,6 +67,7 @@ void update(f32 delta, f32 now) {
         if (Physics::check_overlap(&cog->body, &player1.player_body)) {
             cog->hp = 0;
             pick_up_compliment(cog->position);
+            // TODO: Fix this later
             progess = CLAMP(0, 1.0, progess + 0.1);
         }
     }
@@ -77,5 +87,7 @@ void draw() {
     // Physics::debug_draw_body(&temp_rect);
 }
 
-void exit() { LOG("Do stuff for the exit"); }
+void exit() {
+    // TODO(ed): Clear entities
+}
 };  // namespace Phase1

@@ -197,6 +197,10 @@ void Spawner::set_phase(int phase) {
 
 void Spawner::set_paused(bool paused) { this->paused = paused; }
 
+void clear() {
+    entities.clear();
+}
+
 void Spawner::spawn_aggro() {
     AggroEnemy aggro_enemy;
     aggro_enemy_init(aggro_enemy, V2(2 * random_real() - 1, 2));
