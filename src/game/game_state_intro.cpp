@@ -33,6 +33,7 @@ namespace Intro {
         if ((now - started - (charsWritten * DELAY2 + strlen(phrase1) * DELAY1)) >= DELAY2 && 
                 charsWritten <= charAmount) {
             phrase2[charsWritten] = phrase[charsWritten];
+            //Mixer::play_sound(0
         }
     }
 
