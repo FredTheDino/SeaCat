@@ -66,42 +66,10 @@ void setup() {
 // Extra logic
 void update(f32 delta) {
     Renderer::debug_camera(0);
-<<<<<<< HEAD
-=======
-    if (Logic::now() - enteredCS >= INTRO_TIME && phase < 1) {
-        phase = 1;
-        Intro::exit();
-        Phase1::enter();
-    }
-    else if (confidence >= CRITICAL_CONFIDENCE && intro < 1) {
-        intro = 1;
-        Phase1::exit();
-        Intro::enter(intro);
-        enteredCS = Logic::now();
-    }
-    else if (Logic::now() - enteredCS >= 15 && phase < 2) {
-        phase = 2;
-        Intro::exit();
-        Phase2::enter();
-    }
-    else if (confidence >= CRITICAL_CONFIDENCE * 2 && intro < 2) {
-        intro = 2;
-        Phase2::exit();
-        Intro::enter(intro);
-        enteredCS = Logic::now();
-    }
-
-    else if (Logic::now() - enteredCS >= INTRO_TIME && phase < 3) {
-        phase = 3;
-        Intro::exit();
-        //Boss::enter();
-    }
-
     using namespace Input;
     if (pressed(Name::FULLSCREEN)) {
         Renderer::toggle_fullscreen();
     }
->>>>>>> 80c11ccb346ee2c94057a5114c300694727aeb34
 }
 
 

@@ -10,8 +10,10 @@ void update_their_phrase(f32 now, f32 started, char *phrase);
 const char *cat_phrases[] = {"Hello...", "Hello", "Hi!"};
 const char *cat_phrase = "";
 const char *their_phrase = "How are you doing?";
-char cat_buffer[9];
-char their_buffer[19];
+const u32 CAT_BUFFET_LEN = 9;
+const u32 THEIR_BUFFER_LEN = 19;
+char cat_buffer[CAT_BUFFET_LEN];
+char their_buffer[THEIR_BUFFER_LEN];
 f32 DELAY1 = 0.36;
 f32 DELAY2 = 0.27;
 f32 STARTED = 0;
@@ -75,9 +77,9 @@ void enter(u32 state) {
     Logic::add_callback(Logic::POST_DRAW, exit_func, CUTSCENE_DURATION);
 
     STARTED = Logic::now();
-    for (u32 i = 0; i < LEN(cat_buffer); i++) cat_buffer[i] = 0;
-    for (u32 i = 0; i < LEN(their_buffer); i++) their_buffer[i] = 0;
-    ASSERT(state < LEN(cat_phrase), "faulty intro state");
+    for (u32 i = 0; i < CAT_BUFFET_LEN; i++) cat_buffer[i] = 0;
+    for (u32 i = 0; i < THEIR_BUFFER_LEN; i++) their_buffer[i] = 0;
+    ASSERT(state < CAT_BUFFET_LEN, "faulty intro state");
     cat_phrase = cat_phrases[state];
 }
 
