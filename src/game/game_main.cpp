@@ -6,11 +6,12 @@
 
 Logic::LogicID update_id;
 Logic::LogicID draw_id;
-
 void (*current_exit)();
 
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
+
+
 
 namespace Game {
 
@@ -29,7 +30,7 @@ void setup() {
 
     FloofEnemy floof_enemy;
     floof_enemy_init(floof_enemy, V2(0, 1));
-
+    
     GloopEnemy gloop_enemy;
     gloop_enemy_init(gloop_enemy, V2(0,1));
 
@@ -57,13 +58,14 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
-        Phase2::enter();
+        Phase1::enter();
     }
 }
 
 
 // Extra logic
 void update(f32 delta) {
+    
     static bool show_control_contols = true;
     if (Util::begin_tweak_section("target", &show_control_contols)) {
         Util::tweak("center", &target);
