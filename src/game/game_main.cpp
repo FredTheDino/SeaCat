@@ -9,6 +9,7 @@ Logic::LogicID draw_id;
 void (*current_exit)();
 
 #include "game_state_phase1.cpp"
+#include "assets.cpp"
 
 namespace Game {
 
@@ -32,9 +33,15 @@ void setup() {
 }
 
 // Extra logic
-void update(f32 delta) {}
+void update(f32 delta) {
+    Renderer::debug_camera(0);
+}
 
 // Extra draw
-void draw() {}
+void draw() {
+    for (u32 i = 0; i < (u32) Sprites::NUM_SPRITES; i++) {
+        draw_sprite(0, V2(0, i), 0.5, 0.0, (Sprites) i);
+    }
+}
 
 }  // namespace Game

@@ -13,11 +13,9 @@ namespace Phase1 {
     }
 
     void update(f32 now, f32 delta) {
-        LOG("Updating!\n");
     }
 
     void draw() {
-        LOG("DRAWING\n");
     }
 
     void exit() {
