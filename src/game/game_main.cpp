@@ -3,70 +3,38 @@
 
 #include <vector>
 
+Logic::LogicID update_id;
+Logic::LogicID draw_id;
+
+void (*current_exit)();
+
+#include "game_state_phase1.cpp"
+
 namespace Game {
 
 void entity_registration() {}
 
-enum class GameState {
-    INTRO,
-    GAME,
-    TRANSITION,
-    THERAPY
-};
-
-GameState game_state = GameState::GAME;
+void empty_func() {}
 
 void setup() {
     Renderer::turn_on_camera(0);
-}
 
-// Main logic
-void update(f32 delta) {
+    // Set inital state for gamestates
+    {
+        update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func,
+                0.0, Logic::FOREVER);
 
-    // Determine which part of the game we are in.
-    switch (game_state) {
-
-        // Update intro.
-        case GameState::INTRO:
-            break;
-
-        // Update game.
-        case GameState::GAME:
-            break;
-
-        // Update transition.
-        case GameState::TRANSITION:
-            break;
-
-        // Update thrapy session.
-        case GameState::THERAPY:
-            break;
+        draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
+                0.0, Logic::FOREVER);
+        current_exit = empty_func;
+        Phase1::enter();
     }
 }
 
-// Main draw
-void draw() {
-    const char *some_string = "SeaCow";
+// Extra logic
+void update(f32 delta) {}
 
-    // Determine which part of the game we are in.
-    switch (game_state) {
-
-        // Draw intro.
-        case GameState::INTRO:
-            break;
-
-        // Draw game.
-        case GameState::GAME:
-            break;
-
-        // Draw transition.
-        case GameState::TRANSITION:
-            break;
-
-        // Draw thrapy session.
-        case GameState::THERAPY:
-            break;
-    }
-}
+// Extra draw
+void draw() {}
 
 }  // namespace Game
