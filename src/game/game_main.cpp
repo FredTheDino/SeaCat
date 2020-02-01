@@ -59,6 +59,9 @@ void setup() {
     add(A(LEFTX, Player::P2), Name::LEFT_RIGHT);
     add(A(LEFTY, Player::P2), Name::UP_DOWN);
 
+    add(B(B, Player::P1), Name::SHOOT);
+    add(B(B, Player::P2), Name::SHOOT);
+
     init_laser_particles();
 
     {

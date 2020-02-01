@@ -78,8 +78,8 @@ void PlayerPhase2::update(f32 delta) {
     vel_target.x += max_velocity * value(Name::LEFT_RIGHT);
 
     velocity += (vel_target - velocity) * control * delta;
-    position +=
-        velocity + V2(sin(Logic::now() * wobble_speed) * wobble_amp, 0);
+    wobble_velocity = V2(sin(Logic::now() * wobble_speed) * wobble_amp, 0);
+    position += velocity + wobble_velocity;
     ship_body.position = position;
 
     rightLaser.position = position;
@@ -122,14 +122,15 @@ void PlayerPhase2::update(f32 delta) {
         middleLaser.spawn();
     }
 
-    f32 max_height = Renderer::get_camera(0)->zoom / Renderer::get_camera()->aspect_ratio;
-    f32 shot_height = max_height - position.y;
+    f32 max_height = Renderer::get_camera()->zoom / Renderer::get_camera()->aspect_ratio;
+    f32 shot_height = max_height/2 - position.y;
     shot_body.position = position + V2(0, shot_height / 2);
-    shot_body.scale = V2(shot_width, shot_height - 0.1);
+    shot_body.scale = V2(shot_width, shot_height);
 }
 
 void PlayerPhase2::draw() {
-    draw_sprite(2, ship_body.position, 0.22, 0, Sprites::SHIP);
+    const f32 MAX_ROT = PI/16;
+    draw_sprite(2, ship_body.position, 0.22, CLAMP(-MAX_ROT, MAX_ROT, (velocity + wobble_velocity).x * 100), Sprites::SHIP);
 
     rightLaser.draw();
     leftLaser.draw();

@@ -75,6 +75,8 @@ struct Cog : public GameEntity {
     f32 size = 0.15;
     f32 rot_speed = 0.2;
     f32 rot_amp = 0.2;
+    f32 rotation = 0;
+    u32 init_rotations = (u32)(Logic::now()/0.5f);
 
     void update(f32 delta) override;
 
