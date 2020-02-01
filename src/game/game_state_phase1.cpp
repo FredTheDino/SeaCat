@@ -10,10 +10,14 @@ namespace Phase1 {
         Logic::update_callback(update_id, update, 0.0, Logic::FOREVER);
         Logic::update_callback(draw_id, draw, 0.0, Logic::FOREVER);
         current_exit = exit;
+
+        spawner.set_phase(1);
+        spawner.set_paused(false);
     }
 
     void update(f32 now, f32 delta) {
         LOG("Updating!\n");
+        spawner.update(delta);
     }
 
     void draw() {
