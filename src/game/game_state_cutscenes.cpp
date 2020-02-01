@@ -36,7 +36,7 @@ void update_cat_phrase(f32 now, f32 started, const char *phrase) {
     u32 charAmount = strlen(phrase);
     u32 charsWritten = strlen(cat_buffer);
     if ((now - started - (charsWritten * DELAY1)) >= DELAY1 &&
-        charsWritten <= charAmount) {
+        charsWritten < charAmount) {
         cat_buffer[charsWritten] = phrase[charsWritten];
         play_cat_sound();
     }
@@ -47,7 +47,7 @@ void update_their_phrase(f32 now, f32 started, const char *phrase) {
     u32 charsWritten = strlen(their_buffer);
     if ((now - started -
          (charsWritten * DELAY2 + strlen(cat_buffer) * DELAY1)) >= DELAY2 &&
-        charsWritten <= charAmount) {
+        charsWritten < charAmount) {
         their_buffer[charsWritten] = phrase[charsWritten];
         play_their_sound();
     }
