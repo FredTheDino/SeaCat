@@ -57,6 +57,7 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
+        Phase2::enter();
         Intro::enter(intro);
         enteredCS = Logic::now();
     }

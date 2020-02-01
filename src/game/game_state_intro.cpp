@@ -77,6 +77,7 @@ namespace Intro {
         Renderer::draw_text(phrase1, -0.8, 0.8 * Renderer::get_window_aspect_ratio(), 1.0, ASSET_MONACO_FONT, 0, V4(0.41, 0.63, 1, 1));
         Vec2 textOffset = Renderer::messure_text(therPhrase, 1.0, ASSET_MONACO_FONT);
         Renderer::draw_text(phrase2, 0.8 - textOffset.x, -0.8 * Renderer::get_window_aspect_ratio() + textOffset.y, 1.0, ASSET_MONACO_FONT, 0);
+        draw_sprite(0, V2(0, 0), 2, 0, Sprites::BACKGROUND);
     }
 
     void exit() {

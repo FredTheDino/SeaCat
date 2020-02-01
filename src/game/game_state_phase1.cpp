@@ -52,7 +52,8 @@ namespace Phase1 {
         player1.draw();
 
         // Draw background
-        draw_sprite(0, V2(0, 0), 10, 0, Sprites::BACKGROUND);
+        draw_sprite(0, V2(0, 0), 2 / Renderer::get_camera()->zoom, 0,
+                Sprites::BACKGROUND);
 
 	// Physics::Overlap curr_overlap = Physics::check_overlap(&player1.player_body, &temp_rect);
 	// Physics::solve(curr_overlap);

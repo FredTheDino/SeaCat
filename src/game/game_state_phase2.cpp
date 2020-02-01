@@ -128,6 +128,8 @@ void enter() {
     player_init(player);
     player_id = Logic::add_entity(player);
 
+    Renderer::get_camera()->zoom = 0.3;
+
     spawner.set_phase(2);
     spawner.set_paused(false);
 }
@@ -145,6 +147,9 @@ void update(f32 delta, f32 now) {
 }
 
 void draw() {
+    // Draw background
+    draw_sprite(0, V2(0, 0), 2 / Renderer::get_camera()->zoom, 0,
+            Sprites::BACKGROUND);
 }
 
 void exit() {}
