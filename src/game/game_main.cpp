@@ -23,9 +23,7 @@ u32 confidence = 0;
 u32 intro = 0;
 u32 phase = 0;
 
-void entity_registration() {
-    REGISTER_ENTITY(AggroEnemy);
-}
+void entity_registration() { REGISTER_ENTITY(AggroEnemy); }
 
 void empty_func() {}
 
@@ -33,7 +31,8 @@ void setup() {
     Phase1::setup();
     Phase2::setup();
 
-    square_shape = Physics::add_shape(LEN(square_shape_points), square_shape_points);
+    square_shape =
+        Physics::add_shape(LEN(square_shape_points), square_shape_points);
 
     Renderer::turn_on_camera(0);
 
@@ -51,11 +50,11 @@ void setup() {
     add(A(LEFTX, Player::P2), Name::LEFT_RIGHT);
     add(A(LEFTY, Player::P2), Name::UP_DOWN);
     {
-        update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func,
-                0.0, Logic::FOREVER);
+        update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func, 0.0,
+                                        Logic::FOREVER);
 
-        draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
-                0.0, Logic::FOREVER);
+        draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func, 0.0,
+                                      Logic::FOREVER);
         current_exit = empty_func;
         Phase1::enter();
     }
@@ -69,7 +68,6 @@ void update(f32 delta) {
         Renderer::toggle_fullscreen();
     }
 }
-
 
 // Extra draw
 void draw() {}

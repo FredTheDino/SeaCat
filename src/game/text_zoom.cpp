@@ -1,5 +1,5 @@
 
-struct TextCompliment: public Logic::Entity {
+struct TextCompliment : public Logic::Entity {
     // Max lifetime in seconds
     const f32 MAX_LIFE = 1.0f;
     const f32 ZOOM_SCALE = 10.0f;
@@ -8,9 +8,7 @@ struct TextCompliment: public Logic::Entity {
     f32 life;
     Vec2 position;
 
-    void update(f32 delta) {
-        life += delta;
-    }
+    void update(f32 delta) { life += delta; }
 
     void draw() {
         // TODO(ed): What color here?
@@ -31,22 +29,10 @@ void remove_text() {
 
 void pick_up_compliment(Vec2 position) {
     const char *compliments[] = {
-        "You look nice!",
-        "WELL DONE!",
-        "Keep fighting!",
-        "Perfect!",
-        "Keep it up!",
-        "So proud!",
-        "Love it.",
-        "Great idea",
-        "you go!",
-        "Sweet!",
-        "Awesome!",
-        "You're strong!",
-        "Amazing!",
-        "That's great",
-        "Impressive!",
-        "Beautiful",
+        "You look nice!", "WELL DONE!",   "Keep fighting!", "Perfect!",
+        "Keep it up!",    "So proud!",    "Love it.",       "Great idea",
+        "you go!",        "Sweet!",       "Awesome!",       "You're strong!",
+        "Amazing!",       "That's great", "Impressive!",    "Beautiful",
         "Lovely!",
     };
     TextCompliment compliment = {};

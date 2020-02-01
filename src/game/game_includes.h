@@ -17,84 +17,83 @@
 
 // The possible inputs
 namespace Input {
-    enum class Name {
-        NONE = 0,
+enum class Name {
+    NONE = 0,
 
-        /* --------- Your bindings go bellow this line --------- */
+    /* --------- Your bindings go bellow this line --------- */
 
-        LEFT_RIGHT,
-        UP_DOWN,
-        SEL,
-        START,
+    LEFT_RIGHT,
+    UP_DOWN,
+    SEL,
+    START,
 
-        LEFT,
-        RIGHT,
-        UP,
-        DOWN,
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN,
 
-        SHOOT,
+    SHOOT,
 
-        FULLSCREEN,
+    FULLSCREEN,
 
-        /* ---------------- And above this line ---------------- */
+    /* ---------------- And above this line ---------------- */
 
-        // Defaults
-        QUIT,
-        TWEAK_STEP,
-        TWEAK_SMOOTH,
+    // Defaults
+    QUIT,
+    TWEAK_STEP,
+    TWEAK_SMOOTH,
 
-        // Debug
-        DEBUG_PERF,
-        DEBUG_VIEW,
-        DEBUG_VALUES,
+    // Debug
+    DEBUG_PERF,
+    DEBUG_VIEW,
+    DEBUG_VALUES,
 
-        // Editor
-        EDIT_MOVE_MODE,
-        EDIT_SCALE_MODE,
+    // Editor
+    EDIT_MOVE_MODE,
+    EDIT_SCALE_MODE,
 
-        EDIT_ABORT,
-        EDIT_SELECT_ALL,
-        EDIT_SELECT_BOX,
-        EDIT_DO,
+    EDIT_ABORT,
+    EDIT_SELECT_ALL,
+    EDIT_SELECT_BOX,
+    EDIT_DO,
 
-        COUNT, // Don't write anything after this.
-    };
+    COUNT,  // Don't write anything after this.
+};
 }
 
 // The possible performance timers
 namespace Perf {
-    enum MarkerID {
-        MAIN,
-        INPUT,
-        RENDER,
-        TEXT,
+enum MarkerID {
+    MAIN,
+    INPUT,
+    RENDER,
+    TEXT,
 
-        ENTITY_UPDATE,
-        ENTITY_DRAW,
-        ENTITY_DEFRAG,
+    ENTITY_UPDATE,
+    ENTITY_DRAW,
+    ENTITY_DEFRAG,
 
-        AUDIO,
-        AUDIO_SOURCES,
-        AUDIO_EFFECTS,
+    AUDIO,
+    AUDIO_SOURCES,
+    AUDIO_EFFECTS,
 
-        NUMBER_OF_MARKERS, // Don't write anything after this.
-    };
+    NUMBER_OF_MARKERS,  // Don't write anything after this.
+};
 }
-
 
 // This is where you add a new entity
 namespace Logic {
-    enum class EntityType {
-        BASE,
-        PLAYER_PHASE2,
-        AGGRO_ENEMY,
-        FLOOF_ENEMY,
-        GLOOP_ENEMY,
-        GLOOP_BULLET,
+enum class EntityType {
+    BASE,
+    PLAYER_PHASE2,
+    AGGRO_ENEMY,
+    FLOOF_ENEMY,
+    GLOOP_ENEMY,
+    GLOOP_BULLET,
 
-        TEXT_COMPLIMENT,
+    TEXT_COMPLIMENT,
 
-        NUM_ENTITY_TYPES, // Don't write anything after this.
-    };
+    NUM_ENTITY_TYPES,  // Don't write anything after this.
+};
 }
 
