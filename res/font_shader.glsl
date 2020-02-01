@@ -44,7 +44,7 @@ void main() {
     if (bool(pass_border)) {
         color = vec4(alpha, alpha, alpha, 1.0) * pass_color;
     } else {
-        color = vec4(alpha) * pass_color.rgba;
+        color = vec4(alpha) * pass_color;
     }
     // color = vec4(pass_color.rgb, pass_color.a * alpha);
 }

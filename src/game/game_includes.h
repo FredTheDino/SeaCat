@@ -31,6 +31,8 @@ namespace Input {
         UP,
         DOWN,
 
+        TEST,
+
         /* ---------------- And above this line ---------------- */
 
         // Defaults

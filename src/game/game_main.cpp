@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "text_zoom.cpp"
+
 namespace Game {
 
 void entity_registration() {}
@@ -18,10 +20,16 @@ GameState game_state = GameState::GAME;
 
 void setup() {
     Renderer::turn_on_camera(0);
+
+    Input::add(K(SPACE), Input::Name::TEST);
 }
 
 // Main logic
 void update(f32 delta) {
+
+    if (Input::pressed(Input::Name::TEST)) {
+        pick_up_compliment("Soot!", V2(0, 0));
+    }
 
     // Determine which part of the game we are in.
     switch (game_state) {
@@ -47,6 +55,8 @@ void update(f32 delta) {
 // Main draw
 void draw() {
     const char *some_string = "SeaCow";
+
+    Renderer::push_rectangle(0, V2(0, 0), V2(5, 5), V4(0.2, 0.2, 0.2, 1.0));
 
     // Determine which part of the game we are in.
     switch (game_state) {

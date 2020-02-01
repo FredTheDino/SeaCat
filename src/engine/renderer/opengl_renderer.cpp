@@ -358,6 +358,7 @@ bool init(const char *title, int width, int height) {
     SDL::window_callback = resize_window;
     SDL_GL_SetSwapInterval(1);
     glEnable(GL_DEBUG_OUTPUT);
+
 #if FOG_VERBOSE
     glDebugMessageCallback(gl_debug_message, 0);
 #endif
@@ -366,7 +367,7 @@ bool init(const char *title, int width, int height) {
         sprite_render_queues[i].create(512);
     }
     font_render_queue.create(256);
-    
+
     // Initalize texture indicies
     for (u32 i = 0; i < OPENGL_NUM_CAMERAS; i++)
         _fog_texture_indicies[i] = i;
@@ -380,7 +381,7 @@ bool init(const char *title, int width, int height) {
     create_frame_buffers(width, height);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glGenTextures(1, &sprite_texture_array);
     glBindTexture(GL_TEXTURE_2D_ARRAY, sprite_texture_array);
