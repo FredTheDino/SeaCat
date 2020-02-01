@@ -7,6 +7,7 @@
 
 Spawner enemy_spawner;
 Spawner cog_spawner;
+#include "text_zoom.cpp"
 
 Logic::LogicID update_id;
 Logic::LogicID draw_id;
@@ -18,7 +19,6 @@ void (*current_exit)();
 
 namespace Game {
 
-const u32 CRITICAL_CONFIDENCE = 3;
 u32 confidence = 0;
 u32 intro = 0;
 u32 phase = 0;
@@ -28,7 +28,6 @@ void entity_registration() {
 }
 
 void empty_func() {}
-
 
 void setup() {
     Phase1::setup();
@@ -61,7 +60,6 @@ void setup() {
         Phase1::enter();
     }
 }
-
 
 // Extra logic
 void update(f32 delta) {

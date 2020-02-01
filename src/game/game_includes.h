@@ -92,6 +92,8 @@ namespace Logic {
         GLOOP_ENEMY,
         GLOOP_BULLET,
 
+        TEXT_COMPLIMENT,
+
         NUM_ENTITY_TYPES, // Don't write anything after this.
     };
 }
