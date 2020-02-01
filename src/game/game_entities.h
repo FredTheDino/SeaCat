@@ -220,9 +220,9 @@ struct Spawner {
 
         switch (phase) {
             case 1:
-                if (time - last_spawn[EntityType::FLOOF] > 8) {
+                if (time - last_spawn[EntityType::FLOOF] > 4) {
                     last_spawn[EntityType::FLOOF] = time;
-                    spawn_floof();
+                    spawn_floof_phase1();
                 }
                 break;
             case 2:
@@ -257,7 +257,7 @@ struct Spawner {
         time = 0;
         this->phase = phase;
         if (phase == 1) {
-            last_spawn[EntityType::FLOOF] = 4;
+            last_spawn[EntityType::FLOOF] = 0;
         }
         if (phase == 2) {
             last_spawn[EntityType::AGGRO] = -14;
@@ -274,6 +274,18 @@ struct Spawner {
         AggroEnemy aggro_enemy;
         aggro_enemy_init(aggro_enemy, V2(2*random_real() - 1, 2));
         entities.push_back(Logic::add_entity(aggro_enemy));
+    }
+
+    void spawn_floof_phase1() {
+        FloofEnemy floof_enemy;
+
+        Vec2 camera_pos = Renderer::get_camera()->position;
+        float camera_zoom = Renderer::get_camera()->zoom;
+        float camera_ratio = Renderer::get_window_aspect_ratio();
+
+        floof_enemy_init(floof_enemy, camera_pos + V2(1, 1 / camera_ratio)/camera_zoom);
+        floof_enemy.speed = 0;
+        entities.push_back(Logic::add_entity(floof_enemy));
     }
 
     void spawn_floof() {
