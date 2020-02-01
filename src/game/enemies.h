@@ -3,9 +3,11 @@ Physics::ShapeID enemy_shape;
 
 Vec2 target = V2(0, 0);
 
-enum class EnemyType {
-    AGGRO,
-    BOSS
+enum EnemyType {
+    AGGRO = 0,
+    FLOOF = 1,
+    GLOOP = 2,
+    BOSS = 3
 };
 
 struct Enemy : public Logic::Entity {
@@ -46,7 +48,7 @@ struct AggroEnemy : public Enemy {
     }
 
     void draw () {
-        Renderer::push_rectangle(1, body.position, body.scale, V4(0.7, 0, 0, 1));
+        draw_sprite(1, body.position, 0.5, 0, Sprites::SPIKE);
     }
 
     bool charging = false;
@@ -78,7 +80,7 @@ struct FloofEnemy : public Enemy {
     }
 
     void draw () {
-        Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0.7, 1));
+        draw_sprite(1, body.position, 0.5, 0, Sprites::FLOOF);
     }
 
     float speed = 0.2;
@@ -89,7 +91,7 @@ void floof_enemy_init(FloofEnemy& floof_enemy, Vec2 position=V2(0, 0)) {
 
     floof_enemy.position = position;
     floof_enemy.hp = 10;
-    floof_enemy.time = 0;
+    floof_enemy.time = 2*PI*random_real();
     floof_enemy.body = Physics::create_body(enemy_shape);
     floof_enemy.body.scale = V2(0.25, 0.25);
     floof_enemy.body.position = position;
@@ -116,11 +118,12 @@ struct GloopBullet : public Enemy {
     }
 
     void draw () {
-        Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0, 1));
+        draw_sprite(1, body.position, 1, 0, sprite);
     }
 
     float speed = 0.5;
     float rotation = 0;
+    Sprites sprite = (random_bit() ? Sprites::GLOOP_PEW_1 : Sprites::GLOOP_PEW_2);
     REGISTER_FIELDS(GLOOP_BULLET, GloopBullet, speed);
 };
 
@@ -151,7 +154,7 @@ void GloopEnemy::update(float delta) {
 }
 
 void GloopEnemy::draw () {
-    Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0, 1));
+    draw_sprite(1, body.position, 0.5, 0, Sprites::GLOOP);
 }
 
 void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position=V2(0, 0)) {
@@ -163,3 +166,80 @@ void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position=V2(0, 0)) {
     gloop_enemy.body.scale = V2(0.25, 0.25);
     gloop_enemy.body.position = position;
 }
+
+struct Spawner {
+
+    void update(float delta) {
+
+        if (paused) return;
+
+        time += delta;
+
+        switch (phase) {
+            case 1:
+                if (time - last_spawn[EnemyType::FLOOF] > 8) {
+                    last_spawn[EnemyType::FLOOF] = time;
+                    spawn_floof();
+                }
+                break;
+            case 2:
+                if (time - last_spawn[EnemyType::AGGRO] > 20) {
+                    last_spawn[EnemyType::AGGRO] = time;
+                    spawn_aggro();
+                }
+                if (time - last_spawn[EnemyType::FLOOF] > 8) {
+                    last_spawn[EnemyType::FLOOF] = time;
+                    spawn_floof();
+                }
+                if (time - last_spawn[EnemyType::GLOOP] > 20) {
+                    last_spawn[EnemyType::GLOOP] = time;
+                    spawn_gloop();
+                }
+                break;
+            default:
+                LOG("Invalid spawner phase!!\n");
+                break;
+        }
+    }
+
+    void set_phase(int phase) {
+        time = 0;
+        this->phase = phase;
+        if (phase == 1) {
+            last_spawn[EnemyType::FLOOF] = 4;
+        }
+        if (phase == 2) {
+            last_spawn[EnemyType::AGGRO] = -14;
+            last_spawn[EnemyType::FLOOF] = 24;
+            last_spawn[EnemyType::GLOOP] = -4;
+        }
+    }
+
+    void set_paused(bool paused) {
+        this->paused = paused;
+    }
+
+    void spawn_aggro() {
+        AggroEnemy aggro_enemy;
+        aggro_enemy_init(aggro_enemy, V2(2*random_real() - 1, 2));
+        Logic::add_entity(aggro_enemy);
+    }
+
+    void spawn_floof() {
+        FloofEnemy floof_enemy;
+        floof_enemy_init(floof_enemy, V2(2*random_real() - 1, 2));
+        Logic::add_entity(floof_enemy);
+    }
+
+    void spawn_gloop() {
+        GloopEnemy gloop_enemy;
+        gloop_enemy_init(gloop_enemy, V2(2*random_real() - 1, 2));
+        Logic::add_entity(gloop_enemy);
+    }
+
+private:
+    int phase = 0;
+    bool paused = false;
+    float time = 0;
+    float last_spawn[EnemyType::BOSS];
+};
