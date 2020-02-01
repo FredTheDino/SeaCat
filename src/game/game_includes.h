@@ -85,6 +85,7 @@ namespace Logic {
         AGGRO_ENEMY,
         FLOOF_ENEMY,
         GLOOP_ENEMY,
+        GLOOP_BULLET,
 
         NUM_ENTITY_TYPES, // Don't write anything after this.
     };
