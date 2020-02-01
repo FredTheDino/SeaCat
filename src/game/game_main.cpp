@@ -6,7 +6,9 @@
 
 namespace Game {
 
-void entity_registration() {}
+void entity_registration() {
+    REGISTER_ENTITY(AggroEnemy);
+}
 
 enum class GameState {
     INTRO,
@@ -17,18 +19,26 @@ enum class GameState {
 
 GameState game_state = GameState::GAME;
 
-std::vector<Enemy*> enemies;
 
 void setup() {
     enemy_shape = Physics::add_shape(LEN(enemy_shape_points), enemy_shape_points);
-    enemies.push_back(new SmallEnemy(V2(0, 0)));
+    AggroEnemy aggro_enemy;
+    aggro_enemy_init(aggro_enemy);
+    FloofEnemy floof_enemy;
+    floof_enemy_init(floof_enemy, V2(0, 1));
+    Logic::add_entity(aggro_enemy);
+    Logic::add_entity(floof_enemy);
 
     Renderer::turn_on_camera(0);
 }
 
 // Main logic
 void update(f32 delta) {
-
+    static bool show_control_contols = true;
+    if (Util::begin_tweak_section("target", &show_control_contols)) {
+        Util::tweak("center", &target);
+    }
+    Util::end_tweak_section(&show_control_contols);
     // Determine which part of the game we are in.
     switch (game_state) {
 
@@ -38,9 +48,6 @@ void update(f32 delta) {
 
         // Update game.
         case GameState::GAME:
-            for (Enemy* enemy : enemies) {
-                enemy->update(delta);
-            }
             break;
 
         // Update transition.
@@ -65,9 +72,6 @@ void draw() {
 
         // Draw game.
         case GameState::GAME:
-            for (Enemy* enemy : enemies) {
-                Renderer::push_rectangle(1, enemy->body.position, enemy->body.scale);
-            }
             break;
 
         // Draw transition.

@@ -1,56 +1,90 @@
 Vec2 enemy_shape_points[] = { V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1) };
 Physics::ShapeID enemy_shape;
 
+Vec2 target = V2(0, 0);
+
 enum class EnemyType {
-    SMALL,
+    AGGRO,
     BOSS
 };
 
-struct Enemy {
-    Enemy(Vec2 position, int hp) :
-        position(position),
-        hp(hp),
-        time(0),
-        body(Physics::create_body(enemy_shape)) {}
-
-    virtual void update(float delta) = 0;
-
+struct Enemy : public Logic::Entity {
     Vec2 position;
     int hp;
     float time;
     Physics::Body body;
 };
 
-struct SmallEnemy : Enemy {
-    SmallEnemy(Vec2 position) : Enemy(position, 10) {
-        body.scale = V2(0.25f, 0.25f);
-    }
+struct AggroEnemy : public Enemy {
 
     void update(float delta) {
         time += delta;
 
-        Vec2 dir;
-
         if (time < 10) {
             Vec2 goal = circling_center + V2(cos(time), sin(time)) * circling_radius;
-            body.acceleration = normalize(goal - body.position) * acceleration;
-        } else if (time >= 10 && charge_dir == V2(0, 0)) {
-            charge_dir = normalize(circling_center - body.position) * charge_speed;
-            body.acceleration = V2(0, 0);
-            body.velocity = dir;
-        } else if (time < 11) {
+            body.velocity = goal - body.position;
+            if (length(body.velocity) > 1)
+                body.velocity = normalize(body.velocity);
+            body.velocity *= speed;
+        } else if (time >= 10 && !charging) {
+            charging = true;
+            body.velocity = normalize(circling_center - body.position) * charge_speed;
+        } else if (time < 10.9) {
             // Charge
         } else {
             time = 0;
+            charging = false;
         }
 
-        body.velocity += body.acceleration * delta;
         body.position += body.velocity * delta;
     }
 
+    void draw () {
+        Renderer::push_rectangle(1, body.position, body.scale, V4(1, 0, 0, 1));
+    }
+
     float circling_radius = 1;
-    float acceleration = 1;
+    float speed = 2;
     float charge_speed = 2;
-    Vec2 circling_center = V2(0, 0);
-    Vec2 charge_dir = V2(0, 0);
+    Vec2& circling_center = target;
+    bool charging = false;
+    REGISTER_FIELDS(AGGRO_ENEMY, AggroEnemy, circling_radius, speed, charge_speed);
 };
+
+void aggro_enemy_init(AggroEnemy& aggro_enemy, Vec2 position=V2(0, 0)) {
+
+    aggro_enemy.position = position;
+    aggro_enemy.hp = 10;
+    aggro_enemy.time = 0;
+    aggro_enemy.body = Physics::create_body(enemy_shape);
+    aggro_enemy.body.scale = V2(0.25, 0.25);
+    aggro_enemy.body.position = position;
+}
+
+struct FloofEnemy : public Enemy {
+    void update(float delta) {
+        time += delta;
+
+        body.velocity = V2(cos(time) * speed, -speed);
+        body.position += body.velocity * delta;
+    }
+
+    void draw () {
+        Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0.7, 1));
+    }
+
+    float speed = 0.2;
+    Vec2& circling_center = target;
+    bool charging = false;
+    REGISTER_FIELDS(FLOOF_ENEMY, FloofEnemy, speed);
+};
+
+void floof_enemy_init(FloofEnemy& floof_enemy, Vec2 position=V2(0, 0)) {
+
+    floof_enemy.position = position;
+    floof_enemy.hp = 10;
+    floof_enemy.time = 0;
+    floof_enemy.body = Physics::create_body(enemy_shape);
+    floof_enemy.body.scale = V2(0.25, 0.25);
+    floof_enemy.body.position = position;
+}
