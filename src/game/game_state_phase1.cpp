@@ -35,21 +35,24 @@ namespace Phase1 {
         current_exit = exit;
 
         Renderer::set_window_size(960, 720);
-	Renderer::get_camera()->zoom = 0.1;
+        Renderer::get_camera()->zoom = 0.1;
 	
-        spawner.set_phase(1);
-        spawner.set_paused(false);
+        enemy_spawner.set_phase(1);
+        enemy_spawner.set_paused(false);
+
+        cog_spawner.set_phase(11);
+        cog_spawner.set_paused(false);
     }
 
     void update(f32 delta, f32 now) {
         player1.update(delta);
-        spawner.update(delta);
+        enemy_spawner.update(delta);
+        cog_spawner.update(delta);
 
         Renderer::get_camera()->position = -player1.player_body.position;
     }
 
     void draw() {
-        LOG("DRAWING\n");
 	player1.draw();
 
 	// Physics::Overlap curr_overlap = Physics::check_overlap(&player1.player_body, &temp_rect);

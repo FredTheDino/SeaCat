@@ -3,9 +3,10 @@
 
 #include <vector>
 #include "assets.cpp"
-#include "enemies.h"
+#include "game_entities.h"
 
-Spawner spawner;
+Spawner enemy_spawner;
+Spawner cog_spawner;
 
 Logic::LogicID update_id;
 Logic::LogicID draw_id;

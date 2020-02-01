@@ -11,7 +11,7 @@ enum EntityType {
     BOSS = 4
 };
 
-struct Enemy : public Logic::Entity {
+struct GameEntity : public Logic::Entity {
     Vec2 position;
     float hp;
     float time;
@@ -22,7 +22,7 @@ struct Enemy : public Logic::Entity {
     };
 };
 
-struct AggroEnemy : public Enemy {
+struct AggroEnemy : public GameEntity {
 
     void update(float delta) override {
         time += delta;
@@ -76,7 +76,7 @@ void aggro_enemy_init(AggroEnemy& aggro_enemy, Vec2 position=V2(0, 0)) {
     aggro_enemy.body.position = position;
 }
 
-struct FloofEnemy : public Enemy {
+struct FloofEnemy : public GameEntity {
     void update(float delta) override {
         time += delta;
 
@@ -102,7 +102,7 @@ void floof_enemy_init(FloofEnemy& floof_enemy, Vec2 position=V2(0, 0)) {
     floof_enemy.body.position = position;
 }
 
-struct GloopEnemy : public Enemy {
+struct GloopEnemy : public GameEntity {
 
     void update(float delta) override;
     void draw () override;
@@ -112,7 +112,7 @@ struct GloopEnemy : public Enemy {
     REGISTER_FIELDS(GLOOP_ENEMY, GloopEnemy, speed);
 };
 
-struct GloopBullet : public Enemy {
+struct GloopBullet : public GameEntity {
     void update(float delta) override {
         time += delta;
         body.position += body.velocity * delta;
@@ -172,13 +172,10 @@ void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position=V2(0, 0)) {
     gloop_enemy.body.position = position;
 }
 
-struct Cog : public Logic::Entity {
+struct Cog : public GameEntity {
     Vec2 center_position;
-    Vec2 real_position;
     Vec2 velocity = V2(0.15, 0);
     f32 size = 0.15;
-    Physics::Body body;
-    f32 time;
     f32 rot_speed = 0.2;
     f32 rot_amp = 0.5;
 
@@ -186,8 +183,8 @@ struct Cog : public Logic::Entity {
         time += delta;
         //center_position += velocity * delta;
 
-        real_position = center_position + V2(cos(time * rot_speed), sin(time * rot_speed)) * rot_amp;
-        body.position = real_position;
+        position = center_position + V2(cos(time * rot_speed), sin(time * rot_speed)) * rot_amp;
+        body.position = position;
     }
 
     void draw() override {
@@ -198,6 +195,7 @@ struct Cog : public Logic::Entity {
 
 void cog_init(Cog &cog, Vec2 position=V2(0, 0)) {
     cog.center_position = position;
+    cog.hp = 1;
     cog.time = 0;
     cog.body = Physics::create_body(square_shape);
     cog.body.scale = V2(cog.size, cog.size);
@@ -211,24 +209,16 @@ struct Spawner {
         if (paused) return;
 
         for (int i = entities.size() - 1; i >= 0; i--) {
-            Enemy *enemy = Logic::fetch_entity<Enemy>(entities[i]);
-            if (enemy->is_dead()) {
+            GameEntity *entity = Logic::fetch_entity<GameEntity>(entities[i]);
+            if (entity->is_dead()) {
                 Logic::remove_entity(entities[i]);
                 entities.erase(entities.begin()+i);
             }
         }
 
-        
-
         time += delta;
 
         switch (phase) {
-            case 0:
-                if (time - last_spawn[EntityType::COG] > 2) {
-                    last_spawn[EntityType::COG] = time;
-                    spawn_cog();
-                }
-                break;
             case 1:
                 if (time - last_spawn[EntityType::FLOOF] > 8) {
                     last_spawn[EntityType::FLOOF] = time;
@@ -247,6 +237,14 @@ struct Spawner {
                 if (time - last_spawn[EntityType::GLOOP] > 20) {
                     last_spawn[EntityType::GLOOP] = time;
                     spawn_gloop();
+                }
+                break;
+            // cogs
+            case 11:
+            case 12:
+                if (time - last_spawn[EntityType::COG] > 2) {
+                    last_spawn[EntityType::COG] = time;
+                    spawn_cog();
                 }
                 break;
             default:
@@ -293,11 +291,10 @@ struct Spawner {
     void spawn_cog() {
         Cog cog;
         cog_init(cog, V2(0, 0));
-        cogs.push_back(Logic::add_entity(cog));
+        entities.push_back(Logic::add_entity(cog));
     }
 
     std::vector<Logic::EntityID> entities;
-    std::vector<Logic::EntityID> cogs;
 private:
     int phase = 0;
     bool paused = false;
