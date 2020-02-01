@@ -128,23 +128,39 @@ void enter() {
     player_init(player);
     player_id = Logic::add_entity(player);
 
-    spawner.set_phase(2);
-    spawner.set_paused(false);
+    Renderer::get_camera()->zoom = 0.3;
+
+    enemy_spawner.set_phase(2);
+    enemy_spawner.set_paused(false);
+
+    cog_spawner.set_phase(12);
+    cog_spawner.set_paused(false);
 }
 
 void update(f32 delta, f32 now) {
-    spawner.update(delta);
+    enemy_spawner.update(delta);
+    cog_spawner.update(delta);
 
     Player *player = Logic::fetch_entity<Player>(player_id);
-    for (int i = spawner.enemies.size() - 1; i >= 0; i--) {
-        Enemy *enemy = Logic::fetch_entity<Enemy>(spawner.enemies[i]);
+    for (int i = enemy_spawner.entities.size() - 1; i >= 0; i--) {
+        GameEntity *enemy = Logic::fetch_entity<GameEntity>(enemy_spawner.entities[i]);
         if (Physics::check_overlap(&enemy->body, &player->shot_body)) {
             enemy->hp -= delta * 15;
+        }
+    }
+
+    for (s32 i = cog_spawner.entities.size() - 1; i >= 0; i--) {
+        GameEntity *cog = Logic::fetch_entity<GameEntity>(cog_spawner.entities[i]);
+        if (Physics::check_overlap(&cog->body, &player->ship_body)) {
+            cog->hp = 0;
         }
     }
 }
 
 void draw() {
+    // Draw background
+    draw_sprite(0, V2(0, 0), 2 / Renderer::get_camera()->zoom, 0,
+            Sprites::BACKGROUND);
 }
 
 void exit() {}

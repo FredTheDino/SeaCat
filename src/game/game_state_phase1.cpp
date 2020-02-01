@@ -36,14 +36,24 @@ namespace Phase1 {
 
         Renderer::get_camera()->zoom = 0.3;
 
-        spawner.set_phase(1);
-        spawner.set_paused(false);
+        enemy_spawner.set_phase(1);
+        enemy_spawner.set_paused(false);
+
+        cog_spawner.set_phase(11);
+        cog_spawner.set_paused(false);
     }
 
     void update(f32 delta, f32 now) {
         player1.update(delta);
-        spawner.update(delta);
+        enemy_spawner.update(delta);
+        cog_spawner.update(delta);
 
+        for (s32 i = cog_spawner.entities.size() - 1; i >= 0; i--) {
+            GameEntity *cog = Logic::fetch_entity<GameEntity>(cog_spawner.entities[i]);
+            if (Physics::check_overlap(&cog->body, &player1.player_body)) {
+                cog->hp = 0;
+            }
+        }
         //Renderer::get_camera()->position = -player1.player_body.position;
     }
 
@@ -51,7 +61,8 @@ namespace Phase1 {
         player1.draw();
 
         // Draw background
-        draw_sprite(0, V2(0, 0), 10, 0, Sprites::BACKGROUND);
+        draw_sprite(0, V2(0, 0), 2 / Renderer::get_camera()->zoom, 0,
+                Sprites::BACKGROUND);
 
     // Physics::Overlap curr_overlap = Physics::check_overlap(&player1.player_body, &temp_rect);
     // Physics::solve(curr_overlap);
