@@ -11,7 +11,7 @@ namespace Phase1 {
     void exit();
 
     void setup(){
-	player1.init_PhaseOnePlayer();
+        player1.init_PhaseOnePlayer();
     }
     
     void enter() {
@@ -33,7 +33,7 @@ namespace Phase1 {
 
     void draw() {
         LOG("DRAWING\n");
-	player1.draw();
+        player1.draw();
     }
 
     void exit() {
