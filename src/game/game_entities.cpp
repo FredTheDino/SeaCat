@@ -197,8 +197,9 @@ void Spawner::set_phase(int phase) {
 
 void Spawner::set_paused(bool paused) { this->paused = paused; }
 
-void clear() {
+void Spawner::clear() {
     entities.clear();
+    Logic::clear_entitysystem();
 }
 
 void Spawner::spawn_aggro() {

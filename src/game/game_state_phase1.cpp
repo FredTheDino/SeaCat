@@ -32,6 +32,8 @@ void setup() {
     // temp_rect.position = V2(0, 3);
 }
 
+Logic::LogicID leave_id;
+
 void enter() {
     current_exit();
     Logic::update_callback(update_id, update, 0.0, Logic::FOREVER);
@@ -44,14 +46,11 @@ void enter() {
     cog_spawner.set_phase(11);
     cog_spawner.set_paused(false);
 
-    auto leave = []() -> bool {
-        if (progess >= 1.0) {
+    auto leave = [&leave_id]() {
+        if (progess >= 1.0)
             Cutscene::enter(1);
-            return true;
-        }
-        return false;
     };
-    Logic::add_callback(Logic::POST_DRAW, leave, 0.0, Logic::FOREVER);
+    leave_id = Logic::add_callback(Logic::POST_DRAW, leave, 0.0, Logic::FOREVER);
 }
 
 void update(f32 delta, f32 now) {
@@ -88,6 +87,8 @@ void draw() {
 }
 
 void exit() {
-    // TODO(ed): Clear entities
+    Logic::remove_callback(leave_id);
+    enemy_spawner.clear();
+    cog_spawner.clear();
 }
 };  // namespace Phase1

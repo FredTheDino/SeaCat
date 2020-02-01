@@ -166,7 +166,7 @@ namespace Logic {
     void clear_entitysystem() {
         _fog_es.memory->clear();
         _fog_es.next_free = 0;
-        _fog_es.entity.clear();
+        _fog_es.entities.clear();
         _fog_es.max_entity = 0;
         _fog_es.num_entities = 0;
         _fog_es.num_removed = 0;
