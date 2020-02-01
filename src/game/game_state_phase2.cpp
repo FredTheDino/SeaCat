@@ -12,12 +12,12 @@ struct Player : public Logic::Entity {
 
     Vec2 position;
     Vec2 velocity = V2(0, 0);
-    f32 max_velocity = 0.12;
-    f32 control = 4;  // higher => better control
-    const Vec2 DIMENSIONS = V2(0.1, 0.1);
+    f32 max_velocity = 0.02;
+    f32 control = 3;  // higher => better control
+    const Vec2 DIMENSIONS = V2(1, 1) * 0.1;
 
-    u32 wobble_speed = 10;
-    f32 wobble_amp = 0.015;
+    u32 wobble_speed = 2;
+    f32 wobble_amp = 0.0007;
 
     f32 shot_width = 0.05;
     f32 shot_held_for = 0;
@@ -80,9 +80,9 @@ struct Player : public Logic::Entity {
     }
 
     void draw() override {
-        Renderer::push_rectangle(0, position, DIMENSIONS);
-        Physics::debug_draw_body(&ship_body);
-        Physics::debug_draw_body(&shot_body);
+        draw_sprite(2, ship_body.position, 0.22, 0, Sprites::SHIP);
+        //Physics::debug_draw_body(&ship_body);
+        //Physics::debug_draw_body(&shot_body);
 
         if (shot_held_for >= shot_held_target) {
             // TODO(gu) particles

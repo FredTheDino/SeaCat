@@ -33,6 +33,7 @@ void PhaseOnePlayer::init_PhaseOnePlayer() {
     Vec2 points[] = {V2(0, 0), V2(0, 0.5), V2(0.5, 0.5), V2(0.5, 0)};
     Physics::ShapeID my_shape = Physics::add_shape(LEN(points), points);
     player_body = Physics::create_body(my_shape, 0b110);
+    player_body.scale = V2(1, 1) * 0.20;
 }
 
 // Update
@@ -69,7 +70,8 @@ void PhaseOnePlayer::jerk(Vec2 *new_acc) {
 
 // Draw the Hero
 void PhaseOnePlayer::draw() {
-    draw_sprite(2, player_body.position, 1, 0, Sprites::CAT);
+    Physics::debug_draw_body(&player_body);
+    draw_sprite(2, player_body.position, 0.3, 0, Sprites::CAT);
 }
 
 // Calc and Change the current speed by the acc and cos(max_speed - curr_speed)

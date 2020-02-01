@@ -20,11 +20,11 @@ struct AggroEnemy : public GameEntity {
     void draw() override;
 
     bool charging = false;
-    float charge_time = 1.0;
+    float charge_time = 1.5;
     float idle_time = 16;
     float time_offset = 2 * PI * random_real();
-    float circling_radius = 1;
-    float speed = 2;
+    float circling_radius = 0.75;
+    float speed = 0.4;
     Vec2& circling_center = target;
     REGISTER_FIELDS(AGGRO_ENEMY, AggroEnemy, circling_radius, speed, speed);
 };
@@ -36,7 +36,7 @@ struct FloofEnemy : public GameEntity {
 
     void draw() override;
 
-    float speed = 0.2;
+    float speed = 0.1;
     REGISTER_FIELDS(FLOOF_ENEMY, FloofEnemy, speed);
 };
 
@@ -46,7 +46,7 @@ struct GloopEnemy : public GameEntity {
     void update(float delta) override;
     void draw() override;
 
-    float speed = 0.2;
+    float speed = 0.05;
     Vec2& player_pos = target;
     REGISTER_FIELDS(GLOOP_ENEMY, GloopEnemy, speed);
 };
@@ -60,7 +60,7 @@ struct GloopBullet : public GameEntity {
 
     bool is_dead() override;
 
-    float speed = 0.5;
+    float speed = 0.25;
     float rotation = 0;
     Sprites sprite =
         (random_bit() ? Sprites::GLOOP_PEW_1 : Sprites::GLOOP_PEW_2);
@@ -74,7 +74,7 @@ struct Cog : public GameEntity {
     Vec2 velocity = V2(0.15, 0);
     f32 size = 0.15;
     f32 rot_speed = 0.2;
-    f32 rot_amp = 0.5;
+    f32 rot_amp = 0.2;
 
     void update(f32 delta) override;
 

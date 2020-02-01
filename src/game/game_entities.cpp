@@ -1,3 +1,5 @@
+#define ENTITY_DEBUG 0
+
 void AggroEnemy::update(float delta) {
     time += delta;
 
@@ -28,7 +30,10 @@ void AggroEnemy::update(float delta) {
 }
 
 void AggroEnemy::draw() {
-    draw_sprite(1, body.position, 0.5, 0, Sprites::SPIKE);
+#if ENTITY_DEBUG
+    Physics::debug_draw_body(&body);
+#endif
+    draw_sprite(1, body.position, 0.25, 0, Sprites::SPIKE);
 }
 
 void aggro_enemy_init(AggroEnemy& aggro_enemy, Vec2 position = V2(0, 0)) {
@@ -36,7 +41,7 @@ void aggro_enemy_init(AggroEnemy& aggro_enemy, Vec2 position = V2(0, 0)) {
     aggro_enemy.hp = 10;
     aggro_enemy.time = 0;
     aggro_enemy.body = Physics::create_body(square_shape);
-    aggro_enemy.body.scale = V2(0.25, 0.25);
+    aggro_enemy.body.scale = V2(1, 1) * 0.06;
     aggro_enemy.body.position = position;
 }
 
@@ -48,7 +53,10 @@ void FloofEnemy::update(float delta) {
 }
 
 void FloofEnemy::draw() {
-    draw_sprite(1, body.position, 0.5, 0, Sprites::FLOOF);
+#if ENTITY_DEBUG
+    Physics::debug_draw_body(&body);
+#endif
+    draw_sprite(1, body.position, 0.25, 0, Sprites::FLOOF);
 }
 
 void floof_enemy_init(FloofEnemy& floof_enemy, Vec2 position = V2(0, 0)) {
@@ -56,7 +64,7 @@ void floof_enemy_init(FloofEnemy& floof_enemy, Vec2 position = V2(0, 0)) {
     floof_enemy.hp = 10;
     floof_enemy.time = 2 * PI * random_real();
     floof_enemy.body = Physics::create_body(square_shape);
-    floof_enemy.body.scale = V2(0.25, 0.25);
+    floof_enemy.body.scale = V2(1, 1) * 0.08;
     floof_enemy.body.position = position;
 }
 
@@ -76,7 +84,10 @@ void GloopEnemy::update(float delta) {
 }
 
 void GloopEnemy::draw() {
-    draw_sprite(1, body.position, 0.5, 0, Sprites::GLOOP);
+#if ENTITY_DEBUG
+    Physics::debug_draw_body(&body);
+#endif
+    draw_sprite(1, body.position, 0.25, 0, Sprites::GLOOP);
 }
 
 void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position = V2(0, 0)) {
@@ -84,7 +95,7 @@ void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position = V2(0, 0)) {
     gloop_enemy.hp = 10;
     gloop_enemy.time = 0;
     gloop_enemy.body = Physics::create_body(square_shape);
-    gloop_enemy.body.scale = V2(0.25, 0.25);
+    gloop_enemy.body.scale = V2(1, 1) * 0.08;
     gloop_enemy.body.position = position;
 }
 
@@ -93,7 +104,12 @@ void GloopBullet::update(float delta) {
     body.position += body.velocity * delta;
 }
 
-void GloopBullet::draw() { draw_sprite(1, body.position, 1, 0, sprite); }
+void GloopBullet::draw() {
+#if ENTITY_DEBUG
+    Physics::debug_draw_body(&body);
+#endif
+    draw_sprite(1, body.position, 0.50, 0, sprite);
+}
 
 bool GloopBullet::is_dead() { return hp <= 0 || time > 10; }
 
@@ -101,7 +117,7 @@ void gloop_bullet_init(GloopBullet& gloop_bullet, GloopEnemy& shooter) {
     gloop_bullet.hp = 10;
     gloop_bullet.time = 0;
     gloop_bullet.body = Physics::create_body(square_shape);
-    gloop_bullet.body.scale = V2(0.10, 0.10);
+    gloop_bullet.body.scale = V2(1, 1) * 0.03;
     gloop_bullet.body.position = shooter.body.position;
     gloop_bullet.body.velocity =
         normalize(shooter.player_pos - shooter.body.position) *
@@ -120,9 +136,10 @@ void Cog::update(f32 delta) {
 }
 
 void Cog::draw() {
-    // Renderer::push_point(0, position, V4(1, 1, 1, 0.66), size);
-    // Physics::debug_draw_body(&body);
-    draw_sprite(2, position, size * 3.5, 0.0, Sprites::COG);
+#if ENTITY_DEBUG
+    Physics::debug_draw_body(&body);
+#endif
+    draw_sprite(2, position, size * 1.5, 0.0, Sprites::COG);
 }
 
 void cog_init(Cog& cog, Vec2 position = V2(0, 0)) {
@@ -130,7 +147,7 @@ void cog_init(Cog& cog, Vec2 position = V2(0, 0)) {
     cog.hp = 1;
     cog.time = 0;
     cog.body = Physics::create_body(square_shape);
-    cog.body.scale = V2(cog.size, cog.size);
+    cog.body.scale = V2(cog.size, cog.size) * 0.3;
     cog.body.position = position;
 }
 
