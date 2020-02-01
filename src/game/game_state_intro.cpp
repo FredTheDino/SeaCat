@@ -74,7 +74,6 @@ namespace Intro {
     }
 
     void draw() {
-        Renderer::push_rectangle(5, V2(0, 0), V2(100, 100), V4(0, 0, 0, 1));
         Renderer::draw_text(phrase1, -0.9, 0.6, 1.0, ASSET_MONACO_FONT, 0, V4(0.41, 0.63, 1, 1));
         f32 textOffset = Renderer::messure_text(therPhrase, 1.0, ASSET_MONACO_FONT).x;
         Renderer::draw_text(phrase2, 0.9 - textOffset, -0.6, 1.0, ASSET_MONACO_FONT, 0);
