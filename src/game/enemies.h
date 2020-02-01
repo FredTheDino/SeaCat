@@ -1,9 +1,9 @@
-Vec2 enemy_shape_points[] = { V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1) };
-Physics::ShapeID enemy_shape;
+Vec2 square_shape_points[] = { V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1) };
+Physics::ShapeID square_shape;
 
 Vec2 target = V2(0, 0);
 
-enum EnemyType {
+enum EntityType {
     AGGRO = 0,
     FLOOF = 1,
     GLOOP = 2,
@@ -13,9 +13,13 @@ enum EnemyType {
 
 struct Enemy : public Logic::Entity {
     Vec2 position;
-    int hp;
+    float hp;
     float time;
     Physics::Body body;
+
+    virtual bool is_dead() {
+        return hp <= 0;
+    };
 };
 
 struct AggroEnemy : public Enemy {
@@ -49,7 +53,7 @@ struct AggroEnemy : public Enemy {
     }
 
     void draw () override {
-        Renderer::push_rectangle(1, body.position, body.scale, V4(0.7, 0, 0, 1));
+        draw_sprite(1, body.position, 0.5, 0, Sprites::SPIKE);
     }
 
     bool charging = false;
@@ -67,7 +71,7 @@ void aggro_enemy_init(AggroEnemy& aggro_enemy, Vec2 position=V2(0, 0)) {
     aggro_enemy.position = position;
     aggro_enemy.hp = 10;
     aggro_enemy.time = 0;
-    aggro_enemy.body = Physics::create_body(enemy_shape);
+    aggro_enemy.body = Physics::create_body(square_shape);
     aggro_enemy.body.scale = V2(0.25, 0.25);
     aggro_enemy.body.position = position;
 }
@@ -81,7 +85,7 @@ struct FloofEnemy : public Enemy {
     }
 
     void draw () override {
-        Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0.7, 1));
+        draw_sprite(1, body.position, 0.5, 0, Sprites::FLOOF);
     }
 
     float speed = 0.2;
@@ -93,7 +97,7 @@ void floof_enemy_init(FloofEnemy& floof_enemy, Vec2 position=V2(0, 0)) {
     floof_enemy.position = position;
     floof_enemy.hp = 10;
     floof_enemy.time = 2*PI*random_real();
-    floof_enemy.body = Physics::create_body(enemy_shape);
+    floof_enemy.body = Physics::create_body(square_shape);
     floof_enemy.body.scale = V2(0.25, 0.25);
     floof_enemy.body.position = position;
 }
@@ -112,18 +116,19 @@ struct GloopBullet : public Enemy {
     void update(float delta) override {
         time += delta;
         body.position += body.velocity * delta;
-
-        if (time > 10) {
-            Logic::remove_entity(id);
-        }
     }
 
     void draw () override {
-        Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0, 1));
+        draw_sprite(1, body.position, 1, 0, sprite);
+    }
+
+    bool is_dead() override {
+        return hp <= 0 || time > 10;
     }
 
     float speed = 0.5;
     float rotation = 0;
+    Sprites sprite = (random_bit() ? Sprites::GLOOP_PEW_1 : Sprites::GLOOP_PEW_2);
     REGISTER_FIELDS(GLOOP_BULLET, GloopBullet, speed);
 };
 
@@ -131,7 +136,7 @@ void gloop_bullet_init(GloopBullet& gloop_bullet, GloopEnemy& shooter) {
 
     gloop_bullet.hp = 10;
     gloop_bullet.time = 0;
-    gloop_bullet.body = Physics::create_body(enemy_shape);
+    gloop_bullet.body = Physics::create_body(square_shape);
     gloop_bullet.body.scale = V2(0.10, 0.10);
     gloop_bullet.body.position = shooter.body.position;
     gloop_bullet.body.velocity = normalize(shooter.player_pos - shooter.body.position) * gloop_bullet.speed;
@@ -154,7 +159,7 @@ void GloopEnemy::update(float delta) {
 }
 
 void GloopEnemy::draw () {
-    Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0, 1));
+    draw_sprite(1, body.position, 0.5, 0, Sprites::GLOOP);
 }
 
 void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position=V2(0, 0)) {
@@ -162,7 +167,7 @@ void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position=V2(0, 0)) {
     gloop_enemy.position = position;
     gloop_enemy.hp = 10;
     gloop_enemy.time = 0;
-    gloop_enemy.body = Physics::create_body(enemy_shape);
+    gloop_enemy.body = Physics::create_body(square_shape);
     gloop_enemy.body.scale = V2(0.25, 0.25);
     gloop_enemy.body.position = position;
 }
@@ -194,7 +199,7 @@ struct Cog : public Logic::Entity {
 void cog_init(Cog &cog, Vec2 position=V2(0, 0)) {
     cog.center_position = position;
     cog.time = 0;
-    cog.body = Physics::create_body(enemy_shape);
+    cog.body = Physics::create_body(square_shape);
     cog.body.scale = V2(cog.size, cog.size);
     cog.body.position = position;
 }
@@ -205,32 +210,42 @@ struct Spawner {
 
         if (paused) return;
 
+        for (int i = entities.size() - 1; i >= 0; i--) {
+            Enemy *enemy = Logic::fetch_entity<Enemy>(entities[i]);
+            if (enemy->is_dead()) {
+                Logic::remove_entity(entities[i]);
+                entities.erase(entities.begin()+i);
+            }
+        }
+
+        
+
         time += delta;
 
         switch (phase) {
             case 0:
-                if (time - last_spawn[EnemyType::COG] > 2) {
-                    last_spawn[EnemyType::COG] = time;
+                if (time - last_spawn[EntityType::COG] > 2) {
+                    last_spawn[EntityType::COG] = time;
                     spawn_cog();
                 }
                 break;
             case 1:
-                if (time - last_spawn[EnemyType::FLOOF] > 8) {
-                    last_spawn[EnemyType::FLOOF] = time;
+                if (time - last_spawn[EntityType::FLOOF] > 8) {
+                    last_spawn[EntityType::FLOOF] = time;
                     spawn_floof();
                 }
                 break;
             case 2:
-                if (time - last_spawn[EnemyType::AGGRO] > 20) {
-                    last_spawn[EnemyType::AGGRO] = time;
+                if (time - last_spawn[EntityType::AGGRO] > 20) {
+                    last_spawn[EntityType::AGGRO] = time;
                     spawn_aggro();
                 }
-                if (time - last_spawn[EnemyType::FLOOF] > 8) {
-                    last_spawn[EnemyType::FLOOF] = time;
+                if (time - last_spawn[EntityType::FLOOF] > 8) {
+                    last_spawn[EntityType::FLOOF] = time;
                     spawn_floof();
                 }
-                if (time - last_spawn[EnemyType::GLOOP] > 20) {
-                    last_spawn[EnemyType::GLOOP] = time;
+                if (time - last_spawn[EntityType::GLOOP] > 20) {
+                    last_spawn[EntityType::GLOOP] = time;
                     spawn_gloop();
                 }
                 break;
@@ -244,12 +259,12 @@ struct Spawner {
         time = 0;
         this->phase = phase;
         if (phase == 1) {
-            last_spawn[EnemyType::FLOOF] = 4;
+            last_spawn[EntityType::FLOOF] = 4;
         }
         if (phase == 2) {
-            last_spawn[EnemyType::AGGRO] = -14;
-            last_spawn[EnemyType::FLOOF] = 24;
-            last_spawn[EnemyType::GLOOP] = -4;
+            last_spawn[EntityType::AGGRO] = -14;
+            last_spawn[EntityType::FLOOF] = 24;
+            last_spawn[EntityType::GLOOP] = -4;
         }
     }
 
@@ -260,30 +275,32 @@ struct Spawner {
     void spawn_aggro() {
         AggroEnemy aggro_enemy;
         aggro_enemy_init(aggro_enemy, V2(2*random_real() - 1, 2));
-        Logic::add_entity(aggro_enemy);
+        entities.push_back(Logic::add_entity(aggro_enemy));
     }
 
     void spawn_floof() {
         FloofEnemy floof_enemy;
         floof_enemy_init(floof_enemy, V2(2*random_real() - 1, 2));
-        Logic::add_entity(floof_enemy);
+        entities.push_back(Logic::add_entity(floof_enemy));
     }
 
     void spawn_gloop() {
         GloopEnemy gloop_enemy;
         gloop_enemy_init(gloop_enemy, V2(2*random_real() - 1, 2));
-        Logic::add_entity(gloop_enemy);
+        entities.push_back(Logic::add_entity(gloop_enemy));
     }
 
     void spawn_cog() {
         Cog cog;
         cog_init(cog, V2(0, 0));
-        Logic::add_entity(cog);
+        cogs.push_back(Logic::add_entity(cog));
     }
 
+    std::vector<Logic::EntityID> entities;
+    std::vector<Logic::EntityID> cogs;
 private:
     int phase = 0;
     bool paused = false;
     float time = 0;
-    float last_spawn[EnemyType::BOSS];
+    float last_spawn[EntityType::BOSS];
 };

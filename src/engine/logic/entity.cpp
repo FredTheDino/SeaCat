@@ -175,7 +175,7 @@ namespace Logic {
     T *fetch_entity(EntityID id) {
         Entity *entity = fetch_entity(id);
         ASSERT(entity, "Cannot find entity");
-        ASSERT(entity->type() == T::st_type(), "Types don't match!");
+        //ASSERT(entity->type() == T::st_type(), "Types don't match!");
         return (T *) entity;
     }
 
