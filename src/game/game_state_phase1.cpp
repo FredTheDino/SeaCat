@@ -14,8 +14,6 @@ namespace Phase1 {
     void setup(){
 	
 	player1.init_PhaseOnePlayer();
-	Renderer::set_window_size(960, 720);
-	Renderer::get_camera()->zoom = 0.1;
  	// for (int num_rec_i = 0; num_rec_i < len(temp_rect);num_rec_i){
 	//     if (num_rec_i%2 = 0){
 	// 	Vec2 points[] = { V2(0, 0), V2(0, 1), V2(5, 1), V2(5, 0) };
@@ -36,6 +34,9 @@ namespace Phase1 {
         Logic::update_callback(draw_id, draw, 0.0, Logic::FOREVER);
         current_exit = exit;
 
+        Renderer::set_window_size(960, 720);
+	Renderer::get_camera()->zoom = 0.1;
+	
         spawner.set_phase(1);
         spawner.set_paused(false);
     }
@@ -45,6 +46,7 @@ namespace Phase1 {
 
 	player1.update(delta);
 	Renderer::get_camera()->position = -player1.player_body.position;
+	spawner.update(delta);
     }
 
     void draw() {
@@ -54,7 +56,6 @@ namespace Phase1 {
 	// Physics::Overlap curr_overlap = Physics::check_overlap(&player1.player_body, &temp_rect);
 	// Physics::solve(curr_overlap);
 	// Physics::debug_draw_body(&temp_rect);
-        spawner.update(delta);
     }
 
     void exit() {

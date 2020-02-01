@@ -24,10 +24,8 @@ void empty_func() {}
 
 
 void setup() {
-
     Phase1::setup();
     Phase2::setup();
-
 
     enemy_shape = Physics::add_shape(LEN(enemy_shape_points), enemy_shape_points);
 
