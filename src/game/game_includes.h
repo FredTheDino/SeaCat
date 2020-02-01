@@ -32,6 +32,8 @@ namespace Input {
         UP,
         DOWN,
 
+        SHOOT,
+
         /* ---------------- And above this line ---------------- */
 
         // Defaults
