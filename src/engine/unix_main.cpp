@@ -164,7 +164,7 @@ int main(int argc, char **argv) {
     u32 win_width = 500;
     u32 win_height = 500;
     u32 index = 1;
-    while (index < argc) {
+    while (index < (u32)argc) {
         switch (parse_str_argument(argv[index])) {
         case resolution:
             win_width = (u32) atoi(argv[index + 1]);
