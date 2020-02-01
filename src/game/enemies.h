@@ -7,7 +7,8 @@ enum EnemyType {
     AGGRO = 0,
     FLOOF = 1,
     GLOOP = 2,
-    BOSS = 3
+    COG = 3,
+    BOSS = 4
 };
 
 struct Enemy : public Logic::Entity {
@@ -19,7 +20,7 @@ struct Enemy : public Logic::Entity {
 
 struct AggroEnemy : public Enemy {
 
-    void update(float delta) {
+    void update(float delta) override {
         time += delta;
 
         if (time < idle_time + time_offset) {
@@ -47,7 +48,7 @@ struct AggroEnemy : public Enemy {
         body.position += body.velocity * delta;
     }
 
-    void draw () {
+    void draw () override {
         Renderer::push_rectangle(1, body.position, body.scale, V4(0.7, 0, 0, 1));
     }
 
@@ -72,14 +73,14 @@ void aggro_enemy_init(AggroEnemy& aggro_enemy, Vec2 position=V2(0, 0)) {
 }
 
 struct FloofEnemy : public Enemy {
-    void update(float delta) {
+    void update(float delta) override {
         time += delta;
 
         body.velocity = V2(cos(time) * speed, -speed);
         body.position += body.velocity * delta;
     }
 
-    void draw () {
+    void draw () override {
         Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0.7, 1));
     }
 
@@ -99,8 +100,8 @@ void floof_enemy_init(FloofEnemy& floof_enemy, Vec2 position=V2(0, 0)) {
 
 struct GloopEnemy : public Enemy {
 
-    void update(float delta);
-    void draw ();
+    void update(float delta) override;
+    void draw () override;
 
     float speed = 0.2;
     Vec2& player_pos = target;
@@ -108,7 +109,7 @@ struct GloopEnemy : public Enemy {
 };
 
 struct GloopBullet : public Enemy {
-    void update(float delta) {
+    void update(float delta) override {
         time += delta;
         body.position += body.velocity * delta;
 
@@ -117,7 +118,7 @@ struct GloopBullet : public Enemy {
         }
     }
 
-    void draw () {
+    void draw () override {
         Renderer::push_rectangle(1, body.position, body.scale, V4(0, 0.7, 0, 1));
     }
 
@@ -166,6 +167,38 @@ void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position=V2(0, 0)) {
     gloop_enemy.body.position = position;
 }
 
+struct Cog : public Logic::Entity {
+    Vec2 center_position;
+    Vec2 real_position;
+    Vec2 velocity = V2(0.15, 0);
+    f32 size = 0.15;
+    Physics::Body body;
+    f32 time;
+    f32 rot_speed = 0.2;
+    f32 rot_amp = 0.5;
+
+    void update(f32 delta) override {
+        time += delta;
+        //center_position += velocity * delta;
+
+        real_position = center_position + V2(cos(time * rot_speed), sin(time * rot_speed)) * rot_amp;
+        body.position = real_position;
+    }
+
+    void draw() override {
+        //Renderer::push_point(0, position, V4(1, 1, 1, 0.66), size);
+        Physics::debug_draw_body(&body);
+    }
+};
+
+void cog_init(Cog &cog, Vec2 position=V2(0, 0)) {
+    cog.center_position = position;
+    cog.time = 0;
+    cog.body = Physics::create_body(enemy_shape);
+    cog.body.scale = V2(cog.size, cog.size);
+    cog.body.position = position;
+}
+
 struct Spawner {
 
     void update(float delta) {
@@ -175,6 +208,12 @@ struct Spawner {
         time += delta;
 
         switch (phase) {
+            case 0:
+                if (time - last_spawn[EnemyType::COG] > 2) {
+                    last_spawn[EnemyType::COG] = time;
+                    spawn_cog();
+                }
+                break;
             case 1:
                 if (time - last_spawn[EnemyType::FLOOF] > 8) {
                     last_spawn[EnemyType::FLOOF] = time;
@@ -234,6 +273,12 @@ struct Spawner {
         GloopEnemy gloop_enemy;
         gloop_enemy_init(gloop_enemy, V2(2*random_real() - 1, 2));
         Logic::add_entity(gloop_enemy);
+    }
+
+    void spawn_cog() {
+        Cog cog;
+        cog_init(cog, V2(0, 0));
+        Logic::add_entity(cog);
     }
 
 private:

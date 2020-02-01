@@ -127,11 +127,13 @@ void enter() {
     Player player;
     player_init(player);
     player_id = Logic::add_entity(player);
+
+    spawner.set_phase(0);
+    spawner.set_paused(false);
 }
 
 void update(f32 delta, f32 now) {
-    spawner.set_phase(2);
-    spawner.set_paused(false);
+    spawner.update(delta);
 }
 
 void draw() {

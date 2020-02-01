@@ -84,6 +84,7 @@ namespace Perf {
 namespace Logic {
     enum class EntityType {
         BASE,
+        PLAYER_PHASE2,
         AGGRO_ENEMY,
         FLOOF_ENEMY,
         GLOOP_ENEMY,
