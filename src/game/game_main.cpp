@@ -3,9 +3,10 @@
 
 #include <vector>
 #include "assets.cpp"
-#include "enemies.h"
+#include "game_entities.h"
 
-Spawner spawner;
+Spawner enemy_spawner;
+Spawner cog_spawner;
 
 Logic::LogicID update_id;
 Logic::LogicID draw_id;
@@ -35,11 +36,13 @@ void setup() {
     Phase1::setup();
     Phase2::setup();
 
-    enemy_shape = Physics::add_shape(LEN(enemy_shape_points), enemy_shape_points);
+    square_shape = Physics::add_shape(LEN(square_shape_points), square_shape_points);
 
     Renderer::turn_on_camera(0);
-	
+
     using namespace Input;
+    add(K(f), Name::FULLSCREEN);
+
     add(K(a), Name::LEFT);
     add(K(d), Name::RIGHT);
     add(K(w), Name::UP);
@@ -57,7 +60,6 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
                 0.0, Logic::FOREVER);
         current_exit = empty_func;
-        Phase2::enter();
         Intro::enter(intro);
         enteredCS = Logic::now();
     }
@@ -89,13 +91,17 @@ void update(f32 delta) {
         Intro::enter(intro);
         enteredCS = Logic::now();
     }
-    
+
     else if (Logic::now() - enteredCS >= INTRO_TIME && phase < 3) {
         phase = 3;
         Intro::exit();
         //Boss::enter();
     }
-    
+
+    using namespace Input;
+    if (pressed(Name::FULLSCREEN)) {
+        Renderer::toggle_fullscreen();
+    }
 }
 
 
