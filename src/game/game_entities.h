@@ -204,9 +204,27 @@ void cog_init(Cog &cog, Vec2 position=V2(0, 0)) {
 }
 
 struct Boss : public GameEntity {
+    Vec2 velocity = V2(0, 0);
+    f32 size = 5;
+
+	// TODO: Cycles for shooting
+    void update(f32 delta) override {
+        time += delta;
+    }
+
+    void draw() override {
+        Physics::debug_draw_body(&body);
+    	draw_sprite(1, body.position, size, 0, Sprites::BOSS);
+    }
 };
 
-// TODO: Boss init fn
+void boss_init(Boss &boss) {
+    boss.hp = 5;
+	// TODO: Complicated body - several shapes
+    boss.body = Physics::create_body(square_shape);
+    boss.body.scale = V2(boss.size, boss.size);
+    boss.body.position = V2(0, 0);
+}
 
 struct Spawner {
 
@@ -245,14 +263,13 @@ struct Spawner {
                     spawn_gloop();
                 }
                 break;
-            // cogs
             case 3:
-				// TODO: Only spawn one
                 if (!last_spawn[EntityType::BOSS]) {
                     last_spawn[EntityType::BOSS] = 1;
 					spawn_boss();
 				}
 				break;
+            // cogs
             case 11:
             case 12:
                 if (time - last_spawn[EntityType::COG] > 2) {
@@ -311,8 +328,9 @@ struct Spawner {
     }
 
     void spawn_boss() {
-		// TODO: spawn boss
-		spawn_aggro();
+        Boss boss;
+        boss_init(boss);
+		Logic::add_entity(boss);
     }
 
     std::vector<Logic::EntityID> entities;
