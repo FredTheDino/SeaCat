@@ -12,9 +12,13 @@ enum EnemyType {
 
 struct Enemy : public Logic::Entity {
     Vec2 position;
-    int hp;
+    float hp;
     float time;
     Physics::Body body;
+
+    virtual bool is_dead() {
+        return hp <= 0;
+    };
 };
 
 struct AggroEnemy : public Enemy {
@@ -111,14 +115,14 @@ struct GloopBullet : public Enemy {
     void update(float delta) {
         time += delta;
         body.position += body.velocity * delta;
-
-        if (time > 10) {
-            Logic::remove_entity(id);
-        }
     }
 
     void draw () {
         draw_sprite(1, body.position, 1, 0, sprite);
+    }
+
+    bool is_dead() override {
+        return hp <= 0 || time > 10;
     }
 
     float speed = 0.5;
@@ -173,6 +177,14 @@ struct Spawner {
 
         if (paused) return;
 
+        for (int i = enemies.size() - 1; i >= 0; i--) {
+            Enemy *enemy = Logic::fetch_entity<Enemy>(enemies[i]);
+            if (enemy->is_dead()) {
+                Logic::remove_entity(enemies[i]);
+                enemies.erase(enemies.begin()+i);
+            }
+        }
+
         time += delta;
 
         switch (phase) {
@@ -222,21 +234,22 @@ struct Spawner {
     void spawn_aggro() {
         AggroEnemy aggro_enemy;
         aggro_enemy_init(aggro_enemy, V2(2*random_real() - 1, 2));
-        Logic::add_entity(aggro_enemy);
+        enemies.push_back(Logic::add_entity(aggro_enemy));
     }
 
     void spawn_floof() {
         FloofEnemy floof_enemy;
         floof_enemy_init(floof_enemy, V2(2*random_real() - 1, 2));
-        Logic::add_entity(floof_enemy);
+        enemies.push_back(Logic::add_entity(floof_enemy));
     }
 
     void spawn_gloop() {
         GloopEnemy gloop_enemy;
         gloop_enemy_init(gloop_enemy, V2(2*random_real() - 1, 2));
-        Logic::add_entity(gloop_enemy);
+        enemies.push_back(Logic::add_entity(gloop_enemy));
     }
 
+    std::vector<Logic::EntityID> enemies;
 private:
     int phase = 0;
     bool paused = false;

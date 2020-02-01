@@ -127,11 +127,21 @@ void enter() {
     Player player;
     player_init(player);
     player_id = Logic::add_entity(player);
+
+    spawner.set_phase(2);
+    spawner.set_paused(false);
 }
 
 void update(f32 delta, f32 now) {
-    spawner.set_phase(2);
-    spawner.set_paused(false);
+    spawner.update(delta);
+
+    Player *player = Logic::fetch_entity<Player>(player_id);
+    for (int i = spawner.enemies.size() - 1; i >= 0; i--) {
+        Enemy *enemy = Logic::fetch_entity<Enemy>(spawner.enemies[i]);
+        if (Physics::check_overlap(&enemy->body, &player->shot_body)) {
+            enemy->hp -= delta * 15;
+        }
+    }
 }
 
 void draw() {

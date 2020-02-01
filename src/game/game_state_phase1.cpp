@@ -41,12 +41,11 @@ namespace Phase1 {
         spawner.set_paused(false);
     }
 
-    void update(f32 now, f32 delta) {
-        LOG("Updating!\n");
+    void update(f32 delta, f32 now) {
+        player1.update(delta);
+        spawner.update(delta);
 
-	player1.update(delta);
-	Renderer::get_camera()->position = -player1.player_body.position;
-	spawner.update(delta);
+        Renderer::get_camera()->position = -player1.player_body.position;
     }
 
     void draw() {
