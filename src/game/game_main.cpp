@@ -83,18 +83,18 @@ void update(f32 delta) {
     f32 starspawn = random_real();
     if (starspawn >= 0.5) stars.spawn();
     stars.update(delta);
-    Renderer::debug_camera(0);
+    //Renderer::debug_camera(0);
     using namespace Input;
     if (pressed(Name::FULLSCREEN)) {
         Renderer::toggle_fullscreen();
     }
 
-    static bool camera_vignette = true;
-    if (Util::begin_tweak_section("CAMERA VIGNETTE", &camera_vignette)) {
-        Util::tweak("vin-radius", &Renderer::vignette_radius);
-        Util::tweak("vin-strengt", &Renderer::vignette_strength);
-    }
-    Util::end_tweak_section(&camera_vignette);
+    //static bool camera_vignette = true;
+    //if (Util::begin_tweak_section("CAMERA VIGNETTE", &camera_vignette)) {
+    //    Util::tweak("vin-radius", &Renderer::vignette_radius);
+    //    Util::tweak("vin-strengt", &Renderer::vignette_strength);
+    //}
+    //Util::end_tweak_section(&camera_vignette);
 }
 
 // Extra draw
