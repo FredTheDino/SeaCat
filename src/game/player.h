@@ -4,7 +4,7 @@ struct PlayerPhase1 : public Logic::Entity {
     Physics::Body body;
 
     Vec2 position;
-    f32 max_velocity = 1.0;
+    f32 max_velocity = 0.3;
     f32 min_acceleration = 0.01;
     f32 max_acceleration = 0.01;
     f32 acceleration_steps = 0.4;
