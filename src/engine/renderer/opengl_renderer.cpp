@@ -326,6 +326,8 @@ void render_post_processing() {
 
         glUniform1iv(screen_texture_location, OPENGL_NUM_CAMERAS, &_fog_texture_indicies[0]);
         glUniform1i(num_screen_textures_location, _fog_num_active_cameras);
+        glUniform1f(radius_location, vignette_radius);
+        glUniform1f(strength_location, vignette_strength);
     }
 
     glBindVertexArray(screen_quad_vao);
@@ -358,6 +360,7 @@ bool init(const char *title, int width, int height) {
     SDL::window_callback = resize_window;
     SDL_GL_SetSwapInterval(1);
     glEnable(GL_DEBUG_OUTPUT);
+
 #if FOG_VERBOSE
     glDebugMessageCallback(gl_debug_message, 0);
 #endif
@@ -538,6 +541,8 @@ void upload_shader(AssetID asset, const char *source) {
                     "const int num_screens = " STR(OPENGL_NUM_CAMERAS) ";\n"
                     "uniform int num_active_samplers;\n"
                     "uniform sampler2D screen_samplers[num_screens];\n"
+                    "uniform float strength;\n"
+                    "uniform float radius;\n"
                     "%s", source);
             post_process_shader_program = compile_shader_program_from_source(source);
             ASSERT(post_process_shader_program, "Failed to compile shader");
@@ -545,6 +550,10 @@ void upload_shader(AssetID asset, const char *source) {
                 post_process_shader_program.id, "screen_samplers");
             num_screen_textures_location = glGetUniformLocation(
                 post_process_shader_program.id, "num_active_samplers");
+            strength_location = glGetUniformLocation(
+                post_process_shader_program.id, "strength");
+            radius_location = glGetUniformLocation(
+                post_process_shader_program.id, "radius");
             break;
         default:
             ERR("Invalid asset passed as shader (%d)", asset);

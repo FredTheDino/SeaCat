@@ -2,16 +2,25 @@
 #define FOG_GAME
 
 #include <vector>
-#include "assets.cpp"
-#include "game_entities.h"
 
-Spawner enemy_spawner;
-Spawner cog_spawner;
+Vec2 square_shape_points[] = {V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1)};
+Physics::ShapeID square_shape;
+Vec2 triangle_shape_points[] = { V2(0, 0), V2(1, 0), V2(0, -1) };
+Physics::ShapeID triangle_shape;
+
+#include "assets.cpp"
+#include "particles.h"
+#include "player.h"
+#include "player.cpp"
+#include "game_entities.h"
+#include "game_entities.cpp"
+#include "text_zoom.cpp"
 
 Logic::LogicID update_id;
 Logic::LogicID draw_id;
 void (*current_exit)();
 
+#include "game_state_cutscenes.h"
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
 #include "game_state_phase3.cpp"
@@ -19,25 +28,23 @@ void (*current_exit)();
 
 namespace Game {
 
-const u32 CRITICAL_CONFIDENCE = 3;
 u32 confidence = 0;
 u32 intro = 0;
 u32 phase = 0;
 
-void entity_registration() {
-    REGISTER_ENTITY(AggroEnemy);
-}
+void entity_registration() { REGISTER_ENTITY(AggroEnemy); }
 
 void empty_func() {}
-
 
 void setup() {
     Phase1::setup();
     Phase2::setup();
     Phase3::setup();
 
-    square_shape = Physics::add_shape(LEN(square_shape_points), square_shape_points);
-    triangle_shape = Physics::add_shape(LEN(triangle_shape_points), triangle_shape_points);
+    square_shape = 
+		Physics::add_shape(LEN(square_shape_points), square_shape_points);
+    triangle_shape = 
+		Physics::add_shape(LEN(triangle_shape_points), triangle_shape_points);
 
     Renderer::turn_on_camera(0);
 
@@ -54,17 +61,24 @@ void setup() {
     add(A(LEFTY, Player::P1), Name::UP_DOWN);
     add(A(LEFTX, Player::P2), Name::LEFT_RIGHT);
     add(A(LEFTY, Player::P2), Name::UP_DOWN);
-    {
-        update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func,
-                0.0, Logic::FOREVER);
 
-        draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func,
-                0.0, Logic::FOREVER);
+    add(B(B, Player::P1), Name::SHOOT);
+    add(B(B, Player::P2), Name::SHOOT);
+
+    init_laser_particles();
+
+    {
+        update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func, 0.0,
+                                        Logic::FOREVER);
+
+        draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func, 0.0,
+                                      Logic::FOREVER);
         current_exit = empty_func;
+
+        // Cutscene::enter(0);
         Phase3::enter();
     }
 }
-
 
 // Extra logic
 void update(f32 delta) {
@@ -73,14 +87,16 @@ void update(f32 delta) {
     if (pressed(Name::FULLSCREEN)) {
         Renderer::toggle_fullscreen();
     }
-}
 
+    static bool camera_vignette = true;
+    if (Util::begin_tweak_section("CAMERA VIGNETTE", &camera_vignette)) {
+        Util::tweak("vin-radius", &Renderer::vignette_radius);
+        Util::tweak("vin-strengt", &Renderer::vignette_strength);
+    }
+    Util::end_tweak_section(&camera_vignette);
+}
 
 // Extra draw
-void draw() {
-    //for (u32 i = 0; i < (u32) Sprites::NUM_SPRITES; i++) {
-    //    draw_sprite(0, V2(0, i), 0.5, 0.0, (Sprites) i);
-    //}
-}
+void draw() {}
 
 }  // namespace Game

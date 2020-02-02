@@ -4,6 +4,9 @@ namespace Renderer {
 // The camera is very useful when you want to decide what the
 // player looks at. I promise.
 
+f32 vignette_radius = 1.0;
+f32 vignette_strength = 1.0;
+
 ///* Camera struct
 // The camera struct is how a camera is controlled. This struct can
 // give you fine grain camera control.
