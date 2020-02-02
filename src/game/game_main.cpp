@@ -18,6 +18,10 @@ Logic::LogicID update_id;
 Logic::LogicID draw_id;
 void (*current_exit)();
 
+bool transitioning = false;
+
+void empty_func() {}
+
 #include "game_state_cutscenes.h"
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
@@ -30,8 +34,6 @@ u32 intro = 0;
 u32 phase = 0;
 
 void entity_registration() { REGISTER_ENTITY(AggroEnemy); }
-
-void empty_func() {}
 
 void setup() {
     Phase1::setup();
@@ -69,8 +71,8 @@ void setup() {
                                       Logic::FOREVER);
         current_exit = empty_func;
 
-        // Cutscene::enter(0);
-        Phase2::enter();
+        Cutscene::enter(0);
+        // Phase2::enter();
     }
 }
 

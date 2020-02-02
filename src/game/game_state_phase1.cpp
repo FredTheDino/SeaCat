@@ -36,8 +36,11 @@ void enter() {
     saddness_target = 1.0;
     saddness = saddness_target;
     auto leave = []() {
-        if (progess >= 0.5) {
+        if (progess >= 1.0) {
             LOG("cut");
+            Logic::update_callback(update_id, empty_func, 0.0, Logic::FOREVER);
+            Logic::update_callback(draw_id, empty_func, 0.0, Logic::FOREVER);
+            transitioning = true;
             Cutscene::enter(1);
         }
     };
@@ -47,9 +50,14 @@ void enter() {
     player.init();
     player_id = Logic::add_entity(player);
     init_hit_particles();
+
+    transitioning = false;
 }
 
 void update(f32 delta, f32 now) {
+
+    if (transitioning) return;
+
     hitEnemy.update(delta);
     enemy_spawner.update(delta);
     cog_spawner.update(delta);
@@ -62,8 +70,8 @@ void update(f32 delta, f32 now) {
             cog->hp = 0;
             pick_up_compliment();
             // TODO: Fix this later
-            progess = CLAMP(0, 1.0, progess + 0.1);
-            saddness_target -= 0.1;
+            progess = CLAMP(0, 1.0, progess + 0.2);
+            saddness_target -= 0.2;
         }
     }
 
@@ -86,16 +94,19 @@ void update(f32 delta, f32 now) {
             };
             Mixer::play_sound(6, alts[random_int() % LEN(alts)]);
             saddness_target += 0.2;
-            progess = CLAMP(0, 1.0, progess - 0.1);
+            progess = CLAMP(0, 1.0, progess - 0.2);
         }
     }
     saddness_target = CLAMP(0, 1.0, saddness_target);
     Vec2 target = -player->body.position;
     Vec2 curr = Renderer::get_camera()->position;
-    Renderer::get_camera()->position = LERP(curr, length(target - curr) * delta, target);
+    Renderer::get_camera()->position = LERP(curr, 2 * length(target - curr) * delta, target);
 }
 
 void draw() {
+
+    if (transitioning) return;
+
     // Draw background
     Vec4 tint = LERP(START_COLOR, progess, END_COLOR);
     draw_sprite(0, -Renderer::get_camera(0)->position, 2, 0, Sprites::BACKGROUND, tint);
@@ -113,6 +124,7 @@ void draw() {
 
 void exit() {
     Logic::remove_callback(leave_id);
+    Logic::remove_entity(player_id);
     enemy_spawner.clear();
     cog_spawner.clear();
 }

@@ -1,13 +1,13 @@
-f32 cos_acc_mod(Vec2 cur_velocity, f32 max_velocity, f32 min_acceleration) {
-    Vec2 velocity_percentage = cur_velocity / max_velocity;
-    if ((velocity_percentage.x + velocity_percentage.y) <= min_acceleration) {
-        return min_acceleration;
-    } else {
-        return ((sin(velocity_percentage.x * (PI / 2)) +
-                 sin(velocity_percentage.y * (PI / 2))) /
-                2);
-    }
-}
+//f32 cos_acc_mod(Vec2 cur_velocity, f32 max_velocity, f32 min_acceleration) {
+//    Vec2 velocity_percentage = cur_velocity / max_velocity;
+//    if ((velocity_percentage.x + velocity_percentage.y) <= min_acceleration) {
+//        return min_acceleration;
+//    } else {
+//        return ((sin(velocity_percentage.x * (PI / 2)) +
+//                 sin(velocity_percentage.y * (PI / 2))) /
+//                2);
+//    }
+//}
 
 void PlayerPhase1::update(f32 delta) {
     if (DEBUG) {
@@ -16,26 +16,26 @@ void PlayerPhase1::update(f32 delta) {
         if (begin_tweak_section("player phase 1", &show_control_controls)) {
             tweak("max velocity", &max_velocity);
             tweak("max acceleration", &max_acceleration);
-            tweak("acceleration steps", &acceleration_steps);
         }
         end_tweak_section(&show_control_controls);
     }
 
     using namespace Input;
     Vec2 acc = V2(0, 0);
-    if (down(Name::UP)) acc.y += acceleration_steps;
-    if (down(Name::DOWN)) acc.y -= acceleration_steps;
-    if (down(Name::LEFT)) acc.x -= acceleration_steps;
-    if (down(Name::RIGHT)) acc.x += acceleration_steps;
-    acc.x = CLAMP(-max_acceleration, max_acceleration, acc.x);
-    acc.y = CLAMP(-max_acceleration, max_acceleration, acc.y);
+    if (down(Name::UP)) acc.y += max_acceleration;
+    if (down(Name::DOWN)) acc.y -= max_acceleration;
+    if (down(Name::LEFT)) acc.x -= max_acceleration;
+    if (down(Name::RIGHT)) acc.x += max_acceleration;
+
     body.acceleration = acc;
 
-    body.velocity += body.acceleration * cos_acc_mod(body.velocity, max_velocity, min_acceleration);
+    body.velocity += body.acceleration * delta;
+    //cos_acc_mod(body.velocity, max_velocity, min_acceleration);
+
     body.velocity.x = CLAMP(-max_velocity, max_velocity, body.velocity.x);
     body.velocity.y = CLAMP(-max_velocity, max_velocity, body.velocity.y);
 
-    body.position += body.velocity;
+    body.position += body.velocity * delta;
 }
 
 void PlayerPhase1::draw() {

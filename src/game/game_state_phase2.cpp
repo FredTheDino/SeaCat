@@ -38,14 +38,22 @@ void enter() {
     progress = 0;
     auto leave = []() {
         if (progress >= progress_cap) {
+            Logic::update_callback(update_id, empty_func, 0.0, Logic::FOREVER);
+            Logic::update_callback(draw_id, empty_func, 0.0, Logic::FOREVER);
+            transitioning = true;
             Cutscene::enter(2);
         }
     };
     leave_id = Logic::add_callback(Logic::POST_DRAW, leave, 0.0, Logic::FOREVER);
     init_hit_particles();
+
+    transitioning = false;
 }
 
 void update(f32 delta, f32 now) {
+
+    if (transitioning) return;
+
     hitEnemy.update(delta);
     enemy_spawner.update(delta);
     cog_spawner.update(delta);
@@ -94,12 +102,16 @@ void update(f32 delta, f32 now) {
 }
 
 void draw() {
+
+    if (transitioning) return;
+
     // Draw background
     draw_sprite(0, V2(0, 0), 2, 0, Sprites::BACKGROUND);
     hitEnemy.draw();
 }
 
 void exit() {
+    Logic::remove_entity(player_id);
     enemy_spawner.clear();
     cog_spawner.clear();
 }
