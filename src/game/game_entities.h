@@ -102,6 +102,8 @@ struct Spawner {
 
     void spawn_gloop();
 
+    void spawn_gloop_bullet(GloopEnemy&);
+
     void spawn_cog();
 
     void spawn_cog(Vec2 pos);

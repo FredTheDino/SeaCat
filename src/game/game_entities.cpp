@@ -91,9 +91,7 @@ void GloopEnemy::update(float delta) {
     if (time > 8) {
         time = 0;
 
-        GloopBullet bullet;
-        gloop_bullet_init(bullet, *this);
-        Logic::add_entity(bullet);
+        enemy_spawner.spawn_gloop_bullet(*this);
     }
 }
 
@@ -125,10 +123,10 @@ void GloopBullet::draw() {
     draw_sprite(1, body.position, 0.50, 0, sprite);
 }
 
-bool GloopBullet::is_dead() { return hp <= 0 || time > 10; }
+bool GloopBullet::is_dead() { return hp <= 0 || time > 100; }
 
 void gloop_bullet_init(GloopBullet& gloop_bullet, GloopEnemy& shooter) {
-    gloop_bullet.hp = 10;
+    gloop_bullet.hp = 1000;
     gloop_bullet.time = 0;
     gloop_bullet.body = Physics::create_body(square_shape);
     gloop_bullet.body.scale = V2(1, 1) * 0.03;
@@ -267,6 +265,12 @@ void Spawner::spawn_gloop() {
     GloopEnemy gloop_enemy;
     gloop_enemy_init(gloop_enemy, V2(2 * random_real() - 1, 2));
     entities.push_back(Logic::add_entity(gloop_enemy));
+}
+
+void Spawner::spawn_gloop_bullet(GloopEnemy& shooter) {
+    GloopBullet bullet;
+    gloop_bullet_init(bullet, shooter);
+    entities.push_back(Logic::add_entity(bullet));
 }
 
 void Spawner::spawn_cog() {

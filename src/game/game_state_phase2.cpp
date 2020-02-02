@@ -37,13 +37,17 @@ void update(f32 delta, f32 now) {
     cog_spawner.update(delta);
 
     PlayerPhase2 *player = Logic::fetch_entity<PlayerPhase2>(player_id);
-    if (player->shooting) {
-        for (s32 i = enemy_spawner.entities.size() - 1; i >= 0; i--) {
-            GameEntity *enemy =
-                Logic::fetch_entity<GameEntity>(enemy_spawner.entities[i]);
-            if (Physics::check_overlap(&enemy->body, &player->shot_body)) {
-                enemy->hp -= delta * 15;
-            }
+    for (s32 i = enemy_spawner.entities.size() - 1; i >= 0; i--) {
+        GameEntity *enemy =
+            Logic::fetch_entity<GameEntity>(enemy_spawner.entities[i]);
+        if (player->shooting && Physics::check_overlap(&enemy->body,
+                    &player->shot_body)) {
+            enemy->hp -= delta * 15;
+        }
+
+        Physics::Overlap overlap = Physics::check_overlap(&enemy->body, &player->ship_body); 
+        if (overlap) {
+            player->velocity = overlap.normal * 0.02;
         }
     }
 
