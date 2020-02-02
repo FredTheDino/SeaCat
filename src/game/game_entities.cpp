@@ -174,7 +174,7 @@ void Spawner::update(float delta) {
             Logic::remove_entity(entities[i]);
             entities.erase(entities.begin() + i);
 
-            if (phase == 1 || phase == 2) {
+            if (phase == 2) {
                 cog_spawner.spawn_cog(entity->body.position - V2(Cog().rot_amp, 0));
             }
         }
