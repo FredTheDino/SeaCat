@@ -68,6 +68,7 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func, 0.0,
                                       Logic::FOREVER);
         current_exit = empty_func;
+
         // Cutscene::enter(0);
         Phase2::enter();
     }

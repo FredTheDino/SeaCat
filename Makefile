@@ -61,7 +61,7 @@ clean:
 #	cd $(BIN_DIR); ./$(EDITOR_PROGRAM_NAME)
 
 run: $(ENGINE_PROGRAM_PATH) 
-	cd $(BIN_DIR); ./$(ENGINE_PROGRAM_NAME)
+	cd $(BIN_DIR); ./$(ENGINE_PROGRAM_NAME) -r 1600 900
 
 debug: $(ENGINE_PROGRAM_PATH)
 	cd $(BIN_DIR); gdb -ex "b _fog_assert_failed()" -ex "b _fog_illegal_allocation()" ./$(ENGINE_PROGRAM_NAME)

@@ -208,7 +208,7 @@ void Spawner::update(float delta) {
         // cogs
         case 11:
         case 12:
-            if (time - last_spawn[EntityType::COG] > 4) {
+            if (time - last_spawn[EntityType::COG] > 3) {
                 last_spawn[EntityType::COG] = time;
                 spawn_cog();
             }

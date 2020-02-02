@@ -49,7 +49,7 @@ Particle ParticleSystem::generate() {
     }
     return {
         0,
-            (alive_time.min != 0 && alive_time.max != 0 ? 1.0f / alive_time.random() : 0),
+            1.0f / alive_time.random(),
 
             rotation.random(),
             angular_velocity.random(),
