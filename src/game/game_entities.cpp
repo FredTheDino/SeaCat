@@ -199,16 +199,16 @@ void boss_init(Boss& boss) {
 	boss.y = 0.6;
 	
     boss.body_left = Physics::create_body(triangle_shape);
-    boss.body_left.scale = V2(boss.size, boss.size);
-    boss.body_left.position = V2(boss.x - 1, boss.y);
+    boss.body_left.scale = V2(boss.size, boss.size * 0.5);
+    boss.body_left.position = V2(boss.x - 0.8, boss.y + 0.2);
 
     boss.body  = Physics::create_body(square_shape);
-    boss.body.scale = V2(boss.size * 0.2, boss.size * 0.8);
-    boss.body.position = V2(boss.x - boss.size * 0.1,  boss.y + boss.size * 0.1);
+    boss.body.scale = V2(boss.size * 0.2, boss.size * 0.9);
+    boss.body.position = V2(boss.x - boss.size * 0.05,  boss.y + boss.size * 0.13);
 
     boss.body_right = Physics::create_body(triangle_shape);
-    boss.body_right.scale = V2(-boss.size, boss.size);
-    boss.body_right.position = V2(boss.x + 1, boss.y);
+    boss.body_right.scale = V2(-boss.size, boss.size * 0.8);
+    boss.body_right.position = V2(boss.x + 0.7, boss.y + 0.2);
 }
 
 void Spawner::update(float delta) {

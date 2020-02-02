@@ -5,7 +5,7 @@
 
 Vec2 square_shape_points[] = {V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1)};
 Physics::ShapeID square_shape;
-Vec2 triangle_shape_points[] = { V2(0, 0), V2(1, 0), V2(0, -1) };
+Vec2 triangle_shape_points[] = { V2(0, 0), V2(0.5, 0), V2(0, -1) };
 Physics::ShapeID triangle_shape;
 
 #include "assets.cpp"
