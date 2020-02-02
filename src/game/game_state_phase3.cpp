@@ -59,9 +59,9 @@ void update(f32 delta, f32 now) {
     }
 
     float player_constrain_acceleration = 0.2;
-    if (player->position.x > 0.9) {
+    if (player->position.x > 0.3) {
         player->velocity -= V2(delta * player_constrain_acceleration, 0);
-    } else if (player->position.x < -0.9) {
+    } else if (player->position.x < -0.3) {
         player->velocity += V2(delta * player_constrain_acceleration, 0);
     }
     if (player->position.y > Renderer::get_window_aspect_ratio()) {
@@ -75,6 +75,8 @@ void draw() {
     // Draw background
     draw_sprite(0, V2(0, 0), 2 / Renderer::get_camera()->zoom, 0,
             Sprites::BACKGROUND);
+    Renderer::push_rectangle(1, V2(1, 0), V2(0.5, 2), V4(0, 0, 0, 1));
+    Renderer::push_rectangle(1, V2(-1, 0), V2(0.5, 2), V4(0, 0, 0, 1));
 }
 
 void exit() {
