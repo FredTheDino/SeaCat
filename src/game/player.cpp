@@ -1,24 +1,16 @@
-//f32 cos_acc_mod(Vec2 cur_velocity, f32 max_velocity, f32 min_acceleration) {
-//    Vec2 velocity_percentage = cur_velocity / max_velocity;
-//    if ((velocity_percentage.x + velocity_percentage.y) <= min_acceleration) {
-//        return min_acceleration;
-//    } else {
-//        return ((sin(velocity_percentage.x * (PI / 2)) +
-//                 sin(velocity_percentage.y * (PI / 2))) /
-//                2);
-//    }
-//}
+#define SHIP_DEBUG 0
+#define SHIP_TWEAK 0
 
 void PlayerPhase1::update(f32 delta) {
-    if (DEBUG) {
-        using namespace Util;
-        static bool show_control_controls = true;
-        if (begin_tweak_section("player phase 1", &show_control_controls)) {
-            tweak("max velocity", &max_velocity);
-            tweak("max acceleration", &max_acceleration);
-        }
-        end_tweak_section(&show_control_controls);
+#if SHIP_TWEAK
+    using namespace Util;
+    static bool show_control_controls = true;
+    if (begin_tweak_section("player phase 1", &show_control_controls)) {
+        tweak("max velocity", &max_velocity);
+        tweak("max acceleration", &max_acceleration);
     }
+    end_tweak_section(&show_control_controls);
+#endif
 
     using namespace Input;
     Vec2 acc = V2(0, 0);
@@ -51,7 +43,7 @@ void PlayerPhase1::init() {
 }
 
 void PlayerPhase2::update(f32 delta) {
-#ifdef DEBUG
+#if SHIP_TWEAK
         using namespace Util;
         static bool show_ship_controls = true;
         if (begin_tweak_section("ship controls", &show_ship_controls)) {
@@ -129,21 +121,40 @@ void PlayerPhase2::update(f32 delta) {
 }
 
 void PlayerPhase2::draw() {
-    const f32 MAX_ROT = PI/16;
-    draw_sprite(2, ship_body.position, 0.22, CLAMP(-MAX_ROT, MAX_ROT, (velocity + wobble_velocity).x * 100), Sprites::SHIP);
+    const f32 MAX_ROT = PI/32;
+    f32 rot = CLAMP(-MAX_ROT, MAX_ROT, (velocity * 10 + wobble_velocity * 80).x);
+    if (has_LAZOR) {
+        if (shooting) {
+            rot = 0;
+            draw_sprite(3, ship_body.position + lazor_ship_offset + lazor_offset,
+                    lazor_ship_scale * lazor_scale, rot, Sprites::LAZER_BASE);
+            draw_sprite(3, ship_body.position + lazor_ship_offset + lazor_offset + lazor_beam_offset,
+                    lazor_ship_scale * lazor_scale * lazor_beam_scale, 0, Sprites::LAZER_BEAM);
+            Vec2 next_beam_pos = ship_body.position + lazor_ship_offset + lazor_offset + lazor_beam_offset;
+            for (u32 i = 0; i < 15; i++) {
+                draw_sprite(3, ship_body.position + lazor_ship_offset + lazor_offset + lazor_beam_offset + lazor_beam_next_offset * i,
+                        lazor_ship_scale * lazor_scale * lazor_beam_scale * lazor_beam_next_scale, 0, Sprites::LAZER_BEAM);
+            }
+        }
+        draw_sprite(2, ship_body.position + lazor_ship_offset, lazor_ship_scale, rot, Sprites::SHIP_LAZER);
+    } else {
+        draw_sprite(2, ship_body.position, 0.22, rot, Sprites::SHIP);
+    }
 
     rightLaser.draw();
     leftLaser.draw();
     middleLaser.draw();
 
+#if SHIP_DEBUG
     Renderer::push_rectangle(0, position, DIMENSIONS);
     Physics::debug_draw_body(&ship_body);
     Physics::debug_draw_body(&shot_body);
 
     if (shooting) {
         Renderer::push_rectangle(1, shot_body.position, shot_body.scale,
-                                 V4(0, 0.2, 1, 1));
+                                 V4(0, 0.2, 1, 0.33));
     }
+#endif
 }
 
 void PlayerPhase2::init(Vec2 pos) {
