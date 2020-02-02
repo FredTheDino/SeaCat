@@ -94,7 +94,10 @@ void PlayerPhase2::update(f32 delta) {
         }
 
         if (released(Input::Name::SHOOT)) {
-            if (shot_held_for >= shot_held_target) shooting = true;
+            if (shot_held_for >= shot_held_target) {
+                shooting = true;
+                Mixer::play_sound(4, ASSET_LAZER_CHARGE);
+            }
             shot_held_for = 0;
         }
 
