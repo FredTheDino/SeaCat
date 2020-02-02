@@ -181,12 +181,13 @@ void Spawner::update(float delta) {
     for (int i = entities.size() - 1; i >= 0; i--) {
         GameEntity* entity = Logic::fetch_entity<GameEntity>(entities[i]);
         if (entity->is_dead()) {
-            Logic::remove_entity(entities[i]);
-            entities.erase(entities.begin() + i);
-
             if (phase == 2) {
+                hitEnemy.position = entity->body.position;
+                for (u32 i = 0; i < 300; i++) hitEnemy.spawn();
                 cog_spawner.spawn_cog(entity->body.position - V2(Cog().rot_amp, 0));
             }
+            Logic::remove_entity(entities[i]);
+            entities.erase(entities.begin() + i);
         }
     }
 

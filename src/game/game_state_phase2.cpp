@@ -42,9 +42,11 @@ void enter() {
         }
     };
     leave_id = Logic::add_callback(Logic::POST_DRAW, leave, 0.0, Logic::FOREVER);
+    init_hit_particles();
 }
 
 void update(f32 delta, f32 now) {
+    hitEnemy.update(delta);
     enemy_spawner.update(delta);
     cog_spawner.update(delta);
 
@@ -59,6 +61,10 @@ void update(f32 delta, f32 now) {
 
         Physics::Overlap overlap = Physics::check_overlap(&enemy->body, &player->ship_body);
         if (overlap) {
+            hitEnemy.position = (player->ship_body.position + enemy->body.position)/2;
+            for (int i = 0; i < 300; i++) {
+                hitEnemy.spawn();
+            }
             player->velocity = overlap.normal * 0.02;
         }
     }
@@ -78,6 +84,7 @@ void update(f32 delta, f32 now) {
 void draw() {
     // Draw background
     draw_sprite(0, V2(0, 0), 2, 0, Sprites::BACKGROUND);
+    hitEnemy.draw();
 }
 
 void exit() {
