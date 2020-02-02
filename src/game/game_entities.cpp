@@ -199,7 +199,7 @@ void Boss::draw() {
 }
 
 void boss_init(Boss& boss) {
-    boss.hp = 5;
+    boss.hp = 10;
 	boss.size = 2*0.3;
 	boss.x = 0;
 	boss.y = 0.3;
