@@ -2,7 +2,7 @@ namespace Phase2 {
 
 Logic::EntityID player_id;
 
-const s32 progress_cap = 15;
+const s32 progress_cap = 10;
 s32 progress;
 
 void setup();
