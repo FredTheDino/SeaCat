@@ -17,11 +17,11 @@ struct AggroEnemy : public GameEntity {
     void draw() override;
 
     bool charging = false;
-    float charge_time = 1.5;
+    float charge_time = 1;
     float idle_time = 16;
     float time_offset = 2 * PI * random_real();
-    float circling_radius = 0.75;
-    float speed = 0.4;
+    float circling_radius = 0.5;
+    float speed = 1;
     Vec2& circling_center = target;
     REGISTER_FIELDS(AGGRO_ENEMY, AggroEnemy, circling_radius, speed, speed);
 };
@@ -102,12 +102,19 @@ struct Spawner {
 
     void spawn_gloop();
 
+    void spawn_gloop_bullet(GloopEnemy&);
+
     void spawn_cog();
 
+    void spawn_cog(Vec2 pos);
+
     std::vector<Logic::EntityID> entities;
-   private:
+private:
     int phase = 0;
     bool paused = false;
     float time = 0;
     float last_spawn[EntityType::BOSS];
 };
+
+Spawner enemy_spawner;
+Spawner cog_spawner;

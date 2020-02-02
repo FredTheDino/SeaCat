@@ -14,9 +14,6 @@ Physics::ShapeID square_shape;
 #include "game_entities.cpp"
 #include "text_zoom.cpp"
 
-Spawner enemy_spawner;
-Spawner cog_spawner;
-
 Logic::LogicID update_id;
 Logic::LogicID draw_id;
 void (*current_exit)();
@@ -71,8 +68,9 @@ void setup() {
         draw_id = Logic::add_callback(Logic::PRE_DRAW, empty_func, 0.0,
                                       Logic::FOREVER);
         current_exit = empty_func;
-        Cutscene::enter(0);
-        //Phase1::enter();
+
+        // Cutscene::enter(0);
+        Phase1::enter();
     }
 }
 

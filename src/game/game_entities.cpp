@@ -57,6 +57,11 @@ void target_strat(FloofEnemy *self, f32 delta) {
 void FloofEnemy::update(float delta) {
     time += delta;
     strategy(this, delta);
+    position = body.position;
+
+    if (length(position - target) > 2/Renderer::get_camera(0)->aspect_ratio) {
+        hp = 0;
+    }
 }
 
 void FloofEnemy::draw() {
@@ -91,9 +96,7 @@ void GloopEnemy::update(float delta) {
     if (time > 8) {
         time = 0;
 
-        GloopBullet bullet;
-        gloop_bullet_init(bullet, *this);
-        Logic::add_entity(bullet);
+        enemy_spawner.spawn_gloop_bullet(*this);
     }
 }
 
@@ -116,6 +119,11 @@ void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position = V2(0, 0)) {
 void GloopBullet::update(float delta) {
     time += delta;
     body.position += body.velocity * delta;
+    position = body.position;
+
+    if (length(position - target) > 2/Renderer::get_camera(0)->aspect_ratio) {
+        hp = 0;
+    }
 }
 
 void GloopBullet::draw() {
@@ -125,10 +133,10 @@ void GloopBullet::draw() {
     draw_sprite(1, body.position, 0.50, 0, sprite);
 }
 
-bool GloopBullet::is_dead() { return hp <= 0 || time > 10; }
+bool GloopBullet::is_dead() { return hp <= 0 || time > 100; }
 
 void gloop_bullet_init(GloopBullet& gloop_bullet, GloopEnemy& shooter) {
-    gloop_bullet.hp = 10;
+    gloop_bullet.hp = 1000;
     gloop_bullet.time = 0;
     gloop_bullet.body = Physics::create_body(square_shape);
     gloop_bullet.body.scale = V2(1, 1) * 0.03;
@@ -175,6 +183,10 @@ void Spawner::update(float delta) {
         if (entity->is_dead()) {
             Logic::remove_entity(entities[i]);
             entities.erase(entities.begin() + i);
+
+            if (phase == 2) {
+                cog_spawner.spawn_cog(entity->body.position - V2(Cog().rot_amp, 0));
+            }
         }
     }
 
@@ -265,13 +277,21 @@ void Spawner::spawn_gloop() {
     entities.push_back(Logic::add_entity(gloop_enemy));
 }
 
-void Spawner::spawn_cog() {
-    Cog cog;
+void Spawner::spawn_gloop_bullet(GloopEnemy& shooter) {
+    GloopBullet bullet;
+    gloop_bullet_init(bullet, shooter);
+    entities.push_back(Logic::add_entity(bullet));
+}
 
+void Spawner::spawn_cog() {
     Vec2 camera_pos = Renderer::get_camera()->position;
     float radius = length(V2(1, (1.0 / Renderer::get_window_aspect_ratio())));
     Vec2 spawn_pos = random_unit_vec2() * radius - camera_pos;
+    spawn_cog(spawn_pos);
+}
 
+void Spawner::spawn_cog(Vec2 spawn_pos) {
+    Cog cog;
     cog_init(cog, spawn_pos);
     entities.push_back(Logic::add_entity(cog));
 }
