@@ -106,7 +106,8 @@ void draw() {
     if (transitioning) return;
 
     // Draw background
-    draw_sprite(0, V2(0, 0), 2, 0, Sprites::BACKGROUND);
+    Vec4 tint = V4(0.5, 0.5, 0.5, 1.0);
+    draw_sprite(0, V2(0, 0), 2, 0, Sprites::BACKGROUND, tint);
     hitEnemy.draw();
     stars.draw();
 }
