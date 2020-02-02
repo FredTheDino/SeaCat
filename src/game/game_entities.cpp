@@ -156,7 +156,9 @@ void Cog::update(f32 delta) {
                V2(cos(time * rot_speed), sin(time * rot_speed)) * rot_amp;
     body.position = position;
 
-    rotation = 0.35 * ((u32)(((Logic::now())/0.5f) - init_rotations));
+    f32 bpm = 60.0f/100;
+
+    rotation = 0.35 * ((u32)(((Logic::now())/bpm) - init_rotations));
 }
 
 void Cog::draw() {
