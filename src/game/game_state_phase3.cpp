@@ -3,6 +3,8 @@ namespace Phase3 {
 Logic::EntityID player_id;
 Logic::EntityID boss_id;
 
+Mixer::AudioID music_id;
+
 void setup();
 void enter();
 void update(f32 now, f32 delta);
@@ -27,6 +29,8 @@ void enter() {
     enemy_spawner.set_phase(3);
     enemy_spawner.set_paused(false);
     boss_id = enemy_spawner.spawn_boss();
+
+    music_id = Mixer::play_sound(3, ASSET_BOSS_SONG, 1.0, Mixer::AUDIO_DEFAULT_GAIN, 0, 0, true);
 }
 
 void update(f32 delta, f32 now) {
@@ -84,5 +88,6 @@ void exit() {
     enemy_spawner.clear();
     Logic::update_callback(update_id, empty_func, 0.0, Logic::FOREVER);
     Logic::update_callback(draw_id, empty_func, 0.0, Logic::FOREVER);
+    Mixer::stop_sound(music_id);
 }
 }
