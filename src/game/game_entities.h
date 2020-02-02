@@ -91,8 +91,7 @@ struct Cog : public GameEntity {
 };
 
 struct Boss : public GameEntity {
-    f32 size = 5;
-    Vec2 position = V2(0, 0);
+    f32 size, x, y;
 	Physics::Body body_left;
 	Physics::Body body_right;
 

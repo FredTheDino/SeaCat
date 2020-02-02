@@ -86,8 +86,10 @@ struct Player : public Logic::Entity {
 
     void draw() override {
         Renderer::push_rectangle(0, position, DIMENSIONS);
+#if ENTITY_DEBUG
         Physics::debug_draw_body(&ship_body);
         Physics::debug_draw_body(&shot_body);
+#endif
 
         if (shot_held_for >= shot_held_target) {
             //TODO(gu) particles

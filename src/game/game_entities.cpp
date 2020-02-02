@@ -186,7 +186,7 @@ void Boss::draw() {
 	Physics::debug_draw_body(&body);
 	Physics::debug_draw_body(&body_right);
 #endif
-	draw_sprite(1, position, size, 0, Sprites::BOSS);
+	draw_sprite(1, V2(x, y), size, 0, Sprites::BOSS);
 }
 
 // TEST
@@ -194,18 +194,21 @@ Logic::EntityID bossID;
 
 void boss_init(Boss& boss) {
     boss.hp = 5;
+	boss.size = 2;
+	boss.x = 0;
+	boss.y = 0.6;
 	
     boss.body_left = Physics::create_body(triangle_shape);
     boss.body_left.scale = V2(boss.size, boss.size);
-    boss.body_left.position = V2(-1, 0);
+    boss.body_left.position = V2(boss.x - 1, boss.y);
 
     boss.body  = Physics::create_body(square_shape);
     boss.body.scale = V2(boss.size * 0.2, boss.size * 0.8);
-    boss.body.position = V2(-boss.size * 0.1, boss.size * 0.1);
+    boss.body.position = V2(boss.x - boss.size * 0.1,  boss.y + boss.size * 0.1);
 
     boss.body_right = Physics::create_body(triangle_shape);
     boss.body_right.scale = V2(-boss.size, boss.size);
-    boss.body_right.position = V2(1, 0);
+    boss.body_right.position = V2(boss.x + 1, boss.y);
 }
 
 void Spawner::update(float delta) {
