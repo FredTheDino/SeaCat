@@ -1,4 +1,4 @@
-#define ENTITY_DEBUG 1
+#define ENTITY_DEBUG 0
 
 void AggroEnemy::update(float delta) {
     time += delta;
