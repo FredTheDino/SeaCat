@@ -81,8 +81,8 @@ void update(f32 delta, f32 now) {
         GameEntity *enemy = Logic::fetch_entity<GameEntity>(enemy_spawner.entities[i]);
         Physics::Overlap overlap = Physics::check_overlap(&enemy->body, &player->body);
         if (overlap) {
-            player->body.velocity = overlap.normal * 0.01;
-            enemy->body.velocity += overlap.normal * 0.01;
+            player->body.velocity += overlap.normal * 0.1;
+            enemy->body.velocity -= overlap.normal * 0.1;
             hitEnemy.position = (player->body.position + enemy->body.position)/2;
             for (int i = 0; i < 300; i++) {
                 hitEnemy.spawn();

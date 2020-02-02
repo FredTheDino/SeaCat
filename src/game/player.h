@@ -4,7 +4,7 @@ struct PlayerPhase1 : public Logic::Entity {
     Physics::Body body;
 
     Vec2 position;
-    f32 max_velocity = 0.15;
+    f32 max_velocity = 0.20;
     f32 max_acceleration = 0.2;
 
     void update(f32 delta) override;

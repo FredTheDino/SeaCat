@@ -175,6 +175,96 @@ void cog_init(Cog& cog, Vec2 position = V2(0, 0)) {
     cog.body.position = position + V2(cog.rot_amp, 0);
 }
 
+// TODO: Cycles for shooting
+void Boss::update(f32 delta) {
+	time += delta;
+
+    if (time > next_bullet) { // TODO: Randomize
+        time = 0;
+		next_bullet = random_real(0, 3);
+
+        enemy_spawner.spawn_boss_bullet();
+    }
+}
+
+void Boss::draw() {
+#if ENTITY_DEBUG
+	Physics::debug_draw_body(&body_left);
+	Physics::debug_draw_body(&body);
+	Physics::debug_draw_body(&body_right);
+#endif
+	draw_sprite(2, V2(x, y), size, 0, Sprites::BOSS);
+}
+
+// TEST
+Logic::EntityID bossID;
+
+void boss_init(Boss& boss) {
+    boss.hp = 5;
+	boss.size = 2;
+	boss.x = 0;
+	boss.y = 0.6;
+	
+    boss.body_left = Physics::create_body(triangle_shape);
+    boss.body_left.scale = V2(boss.size, boss.size * 0.5);
+    boss.body_left.position = V2(boss.x - 0.8, boss.y + 0.2);
+
+    boss.body  = Physics::create_body(square_shape);
+    boss.body.scale = V2(boss.size * 0.2, boss.size * 0.9);
+    boss.body.position = V2(boss.x - boss.size * 0.05,  boss.y + boss.size * 0.13);
+
+    boss.body_right = Physics::create_body(triangle_shape);
+    boss.body_right.scale = V2(-boss.size, boss.size * 0.8);
+    boss.body_right.position = V2(boss.x + 0.7, boss.y + 0.2);
+}
+
+void BossBullet::update(float delta) {
+    time += delta;
+    body.position += body.velocity * delta;
+    position = body.position;
+
+    if (length(position - target) > 2/Renderer::get_camera(0)->aspect_ratio) {
+        hp = 0;
+    }
+}
+
+void BossBullet::draw() {
+#if ENTITY_DEBUG
+    Physics::debug_draw_body(&body);
+#endif
+    draw_sprite(1, body.position, size, rotation, sprite);
+}
+
+bool BossBullet::is_dead() { return hp <= 0 || time > 100; }
+
+void boss_bullet_init(BossBullet& bullet) {
+    bullet.hp = 1000;
+    bullet.time = 0;
+	bullet.size = random_real(0.7, 1.5);
+    bullet.body = Physics::create_body(square_shape);
+    bullet.body.position = V2(random_real(-1, 1), 2);
+    bullet.body.velocity = bullet.velocity; // Randomize?
+    bullet.body.rotation = random_real(0, PI);
+}
+
+void Wall::update(f32 delta) {
+}
+
+void Wall::draw() {
+#if ENTITY_DEBUG
+	Physics::debug_draw_body(&body);
+#endif
+	Renderer::push_rectangle(3, position, size, V4(0, 0, 0, 1));
+}
+
+void wall_init(Wall& wall, Vec2 pos) { 
+    wall.body  = Physics::create_body(square_shape);
+	wall.position = pos;
+	wall.size = V2(2, 4);
+	wall.body.position = pos;
+	wall.body.scale = wall.size;
+}
+
 void Spawner::update(float delta) {
     if (paused) return;
 
@@ -214,6 +304,12 @@ void Spawner::update(float delta) {
                 spawn_gloop();
             }
             break;
+		case 3:
+			if (!last_spawn[EntityType::BOSS]) {
+				last_spawn[EntityType::BOSS] = 1;
+				spawn_boss();
+			}
+			break;
         // cogs
         case 11:
         case 12:
@@ -239,6 +335,9 @@ void Spawner::set_phase(int phase) {
         last_spawn[EntityType::FLOOF] = 24;
         last_spawn[EntityType::GLOOP] = -4;
     }
+	if (phase == 3) {
+		last_spawn[EntityType::BOSS] = 0;
+	}
 }
 
 void Spawner::set_paused(bool paused) { this->paused = paused; }
@@ -295,4 +394,21 @@ void Spawner::spawn_cog(Vec2 spawn_pos) {
     Cog cog;
     cog_init(cog, spawn_pos);
     entities.push_back(Logic::add_entity(cog));
+}
+
+void Spawner::spawn_boss() {
+    Boss boss;
+    boss_init(boss);
+	bossID = Logic::add_entity(boss);
+	Wall left, right;
+	wall_init(left, V2(-2, 0));
+	wall_init(right, V2(1.95, 0));
+	Logic::add_entity(left);
+	Logic::add_entity(right);
+}
+
+void Spawner::spawn_boss_bullet() {
+    BossBullet bullet;
+    boss_bullet_init(bullet);
+    entities.push_back(Logic::add_entity(bullet));
 }
