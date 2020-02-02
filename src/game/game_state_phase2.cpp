@@ -120,6 +120,7 @@ void draw() {
 }
 
 void exit() {
+    Logic::remove_callback(leave_id);
     Logic::remove_entity(player_id);
     enemy_spawner.clear();
     cog_spawner.clear();
