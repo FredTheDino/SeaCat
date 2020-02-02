@@ -16,6 +16,8 @@ void update(f32 now, f32 delta);
 void draw();
 void exit();
 
+Mixer::AudioID tickID;
+    
 void setup() {}
 
 Logic::LogicID leave_id;
@@ -46,6 +48,7 @@ void enter() {
     player.init();
     player_id = Logic::add_entity(player);
     init_hit_particles();
+    tickID = Mixer::play_sound(2, ASSET_METRONOME_2, 1.0, Mixer::AUDIO_DEFAULT_GAIN, Mixer::AUDIO_DEFAULT_VARIANCE, Mixer::AUDIO_DEFAULT_VARIANCE, true);
 }
 
 void update(f32 delta, f32 now) {
@@ -115,5 +118,6 @@ void exit() {
     Logic::remove_callback(leave_id);
     enemy_spawner.clear();
     cog_spawner.clear();
+    Mixer::stop_sound(tickID);
 }
 };  // namespace Phase1

@@ -11,6 +11,8 @@ void update(f32 now, f32 delta);
 void draw();
 void exit();
 
+Mixer::AudioID 
+
 void setup() {
     square_shape = Physics::add_shape(LEN(square_shape_points), square_shape_points);
 }
@@ -43,6 +45,7 @@ void enter() {
     };
     leave_id = Logic::add_callback(Logic::POST_DRAW, leave, 0.0, Logic::FOREVER);
     init_hit_particles();
+    tickID = Mixer::play_sound(2, ASSET_METRONOME_2, 1.0, Mixer::AUDIO_DEFAULT_GAIN, Mixer::AUDIO_DEFAULT_VARIANCE, Mixer::AUDIO_DEFAULT_VARIANCE, true);
 }
 
 void update(f32 delta, f32 now) {
@@ -103,5 +106,6 @@ void draw() {
 void exit() {
     enemy_spawner.clear();
     cog_spawner.clear();
+    Mixer::stop_sound(tickID);
 }
 }  // namespace Phase2
