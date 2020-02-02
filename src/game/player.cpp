@@ -1,4 +1,4 @@
-#define SHIP_DEBUG 0
+#define SHIP_DEBUG 1
 #define SHIP_TWEAK 0
 
 void PlayerPhase1::update(f32 delta) {

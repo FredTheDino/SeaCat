@@ -1,4 +1,4 @@
-#define ENTITY_DEBUG 0
+#define ENTITY_DEBUG 1
 
 void AggroEnemy::update(float delta) {
     time += delta;
@@ -198,18 +198,15 @@ void Boss::draw() {
 	draw_sprite(2, V2(x, y), size, 0, Sprites::BOSS);
 }
 
-// TEST
-Logic::EntityID bossID;
-
 void boss_init(Boss& boss) {
     boss.hp = 5;
-	boss.size = 2;
+	boss.size = 2*0.3;
 	boss.x = 0;
-	boss.y = 0.6;
+	boss.y = 0.3;
 	
     boss.body_left = Physics::create_body(triangle_shape);
     boss.body_left.scale = V2(boss.size, boss.size * 0.5);
-    boss.body_left.position = V2(boss.x - 0.8, boss.y + 0.2);
+    boss.body_left.position = V2(boss.x - 0.8*0.3, boss.y + 0.2*0.3);
 
     boss.body  = Physics::create_body(square_shape);
     boss.body.scale = V2(boss.size * 0.2, boss.size * 0.9);
@@ -217,7 +214,7 @@ void boss_init(Boss& boss) {
 
     boss.body_right = Physics::create_body(triangle_shape);
     boss.body_right.scale = V2(-boss.size, boss.size * 0.8);
-    boss.body_right.position = V2(boss.x + 0.7, boss.y + 0.2);
+    boss.body_right.position = V2(boss.x + 0.7*0.3, boss.y + 0.2*0.3);
 }
 
 void BossBullet::update(float delta) {
@@ -242,10 +239,11 @@ bool BossBullet::is_dead() { return hp <= 0 || time > 100; }
 void boss_bullet_init(BossBullet& bullet) {
     bullet.hp = 1000;
     bullet.time = 0;
-	bullet.size = random_real(0.7, 1.5);
+	bullet.size = random_real(0.7, 1.5)*0.3;
     bullet.body = Physics::create_body(square_shape);
-    bullet.body.position = V2(random_real(-1, 1), 2);
-    bullet.body.velocity = bullet.velocity; // Randomize?
+    bullet.body.scale = V2(bullet.size, bullet.size)*0.3*0.3;
+    bullet.body.position = V2(random_real(-1, 1), 2)*0.3;
+    bullet.body.velocity = bullet.velocity*0.3; // Randomize?
     bullet.body.rotation = random_real(0, PI);
 }
 
@@ -262,7 +260,7 @@ void Wall::draw() {
 void wall_init(Wall& wall, Vec2 pos) { 
     wall.body  = Physics::create_body(square_shape);
 	wall.position = pos;
-	wall.size = V2(2, 4);
+	wall.size = V2(2, 4)*0.3;
 	wall.body.position = pos;
 	wall.body.scale = wall.size;
 }
@@ -307,10 +305,12 @@ void Spawner::update(float delta) {
             }
             break;
 		case 3:
+            /*
 			if (!last_spawn[EntityType::BOSS]) {
 				last_spawn[EntityType::BOSS] = 1;
 				spawn_boss();
 			}
+            */
 			break;
         // cogs
         case 11:
@@ -398,15 +398,15 @@ void Spawner::spawn_cog(Vec2 spawn_pos) {
     entities.push_back(Logic::add_entity(cog));
 }
 
-void Spawner::spawn_boss() {
+Logic::EntityID Spawner::spawn_boss() {
     Boss boss;
     boss_init(boss);
-	bossID = Logic::add_entity(boss);
 	Wall left, right;
-	wall_init(left, V2(-2, 0));
-	wall_init(right, V2(1.95, 0));
+	wall_init(left, V2(-2, 0)*0.3);
+	wall_init(right, V2(1.95, 0)*0.3);
 	Logic::add_entity(left);
 	Logic::add_entity(right);
+	return Logic::add_entity(boss);
 }
 
 void Spawner::spawn_boss_bullet() {
