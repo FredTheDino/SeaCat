@@ -182,7 +182,7 @@ void Spawner::update(float delta) {
 
     switch (phase) {
         case 1:
-            if (time - last_spawn[EntityType::FLOOF] > 4) {
+            if (time - last_spawn[EntityType::FLOOF] > 3) {
                 last_spawn[EntityType::FLOOF] = time;
                 spawn_floof_phase1();
             }
@@ -204,7 +204,7 @@ void Spawner::update(float delta) {
         // cogs
         case 11:
         case 12:
-            if (time - last_spawn[EntityType::COG] > 2) {
+            if (time - last_spawn[EntityType::COG] > 4) {
                 last_spawn[EntityType::COG] = time;
                 spawn_cog();
             }
@@ -245,11 +245,9 @@ void Spawner::spawn_floof_phase1() {
     FloofEnemy floof_enemy;
 
     Vec2 camera_pos = Renderer::get_camera()->position;
-    float camera_zoom = Renderer::get_camera()->zoom;
-    float camera_ratio = Renderer::get_window_aspect_ratio();
-
-    floof_enemy_init_linear(floof_enemy,
-                            camera_pos + V2(1, 1 / camera_ratio) / camera_zoom,
+    float radius = length(V2(1, (1.0 / Renderer::get_window_aspect_ratio())));
+    Vec2 spawn_pos = random_unit_vec2() * radius - camera_pos;
+    floof_enemy_init_linear(floof_enemy, spawn_pos,
                             Renderer::get_camera(0)->position);
     floof_enemy.speed = 2;
     entities.push_back(Logic::add_entity(floof_enemy));
@@ -269,6 +267,11 @@ void Spawner::spawn_gloop() {
 
 void Spawner::spawn_cog() {
     Cog cog;
-    cog_init(cog, V2(0, 0));
+
+    Vec2 camera_pos = Renderer::get_camera()->position;
+    float radius = length(V2(1, (1.0 / Renderer::get_window_aspect_ratio())));
+    Vec2 spawn_pos = random_unit_vec2() * radius - camera_pos;
+
+    cog_init(cog, spawn_pos);
     entities.push_back(Logic::add_entity(cog));
 }

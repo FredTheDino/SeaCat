@@ -1,8 +1,8 @@
 
 struct TextCompliment : public Logic::Entity {
     // Max lifetime in seconds
-    const f32 MAX_LIFE = 1.0f;
-    const f32 ZOOM_SCALE = 10.0f;
+    const f32 MAX_LIFE = 1.5f;
+    const f32 ZOOM_SCALE = 3.0f;
 
     const char *text;
     f32 life;
@@ -13,7 +13,7 @@ struct TextCompliment : public Logic::Entity {
     void draw() {
         // TODO(ed): What color here?
         f32 alpha = CLAMP(0, 1.0, (MAX_LIFE - life) / MAX_LIFE);
-        f32 scale = life * life * ZOOM_SCALE;
+        f32 scale = life * ZOOM_SCALE;
         Renderer::draw_text(text, position.x, position.y + 0.5 * life * life,
                             scale, ASSET_MONACO_FONT, -0.5,
                             V4(0.7, 0.7, 0.7, alpha));
@@ -27,7 +27,7 @@ void remove_text() {
     };
 }
 
-void pick_up_compliment(Vec2 position) {
+void pick_up_compliment() {
     const char *compliments[] = {
         "You look nice!", "WELL DONE!",   "Keep fighting!", "Perfect!",
         "Keep it up!",    "So proud!",    "Love it.",       "Great idea",
@@ -37,8 +37,7 @@ void pick_up_compliment(Vec2 position) {
     };
     TextCompliment compliment = {};
     compliment.text = compliments[random_int() % LEN(compliments)];
-    compliment.position = (position - Renderer::get_camera(0)->position) *
-                          Renderer::get_camera(0)->zoom;
+    compliment.position = random_unit_vec2() * 0.4;
     Logic::add_entity(compliment);
 }
 

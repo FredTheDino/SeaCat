@@ -56,7 +56,7 @@ void update(f32 delta, f32 now) {
             Logic::fetch_entity<GameEntity>(cog_spawner.entities[i]);
         if (Physics::check_overlap(&cog->body, &player->body)) {
             cog->hp = 0;
-            pick_up_compliment(cog->position);
+            pick_up_compliment();
             // TODO: Fix this later
             progess = CLAMP(0, 1.0, progess + 0.1);
             saddness_target -= 0.1;
@@ -93,8 +93,8 @@ void draw() {
     draw_sprite(0, -Renderer::get_camera(0)->position, 2, 0, Sprites::BACKGROUND, tint);
 
     saddness = LERP(saddness, Logic::delta() * 2, saddness_target);
-    Renderer::vignette_strength = (saddness * saddness) * 2.5;
-    Renderer::vignette_radius = (saddness * saddness) * 3;
+    Renderer::vignette_strength = (saddness * saddness) * 4.5;
+    Renderer::vignette_radius = (saddness * saddness) * 0.5;
     // Physics::Overlap curr_overlap =
     // Physics::check_overlap(&player1.player_body, &temp_rect);
     // Physics::solve(curr_overlap);
