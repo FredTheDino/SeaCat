@@ -3,7 +3,6 @@ Renderer::ParticleSystem leftLaser;
 Renderer::ParticleSystem middleLaser;
 
 Renderer::ParticleSystem hitEnemy;
-Renderer::ParticleSystem hitCog;
 
 void init_laser_particles() {
     rightLaser = Renderer::create_particle_system(5, 1000, V2(0, 0));
