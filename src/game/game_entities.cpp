@@ -57,6 +57,11 @@ void target_strat(FloofEnemy *self, f32 delta) {
 void FloofEnemy::update(float delta) {
     time += delta;
     strategy(this, delta);
+    position = body.position;
+
+    if (length(position - target) > 2/Renderer::get_camera(0)->aspect_ratio) {
+        hp = 0;
+    }
 }
 
 void FloofEnemy::draw() {
@@ -114,6 +119,11 @@ void gloop_enemy_init(GloopEnemy& gloop_enemy, Vec2 position = V2(0, 0)) {
 void GloopBullet::update(float delta) {
     time += delta;
     body.position += body.velocity * delta;
+    position = body.position;
+
+    if (length(position - target) > 2/Renderer::get_camera(0)->aspect_ratio) {
+        hp = 0;
+    }
 }
 
 void GloopBullet::draw() {
