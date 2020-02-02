@@ -97,7 +97,6 @@ struct Boss : public GameEntity {
 	f32 next_bullet = 2;
 	Physics::Body body_left;
 	Physics::Body body_right;
-    hp = 10;
 
     void update(f32 delta) override;
 
