@@ -82,36 +82,38 @@ void PlayerPhase2::update(f32 delta) {
     leftLaser.update(delta);
     middleLaser.update(delta);
 
-    if (down(Input::Name::SHOOT)) {
-        shot_held_for += delta;
-        rightLaser.spawn();
-        rightLaser.spawn();
-        rightLaser.spawn();
-        leftLaser.spawn();
-        leftLaser.spawn();
-        leftLaser.spawn();
-    }
-
-    if (released(Input::Name::SHOOT)) {
-        if (shot_held_for >= shot_held_target) shooting = true;
-        shot_held_for = 0;
-    }
-
-    if (shooting) {
-        if (shot_current_shot_length > shot_length) {
-            shooting = false;
-            shot_current_shot_length = 0;
+    if (has_LAZOR) {
+        if (down(Input::Name::SHOOT)) {
+            shot_held_for += delta;
+            rightLaser.spawn();
+            rightLaser.spawn();
+            rightLaser.spawn();
+            leftLaser.spawn();
+            leftLaser.spawn();
+            leftLaser.spawn();
         }
-        shot_current_shot_length += delta;
-        rightLaser.spawn();
-        leftLaser.spawn();
-        middleLaser.spawn();
-        rightLaser.spawn();
-        leftLaser.spawn();
-        middleLaser.spawn();
-        rightLaser.spawn();
-        leftLaser.spawn();
-        middleLaser.spawn();
+
+        if (released(Input::Name::SHOOT)) {
+            if (shot_held_for >= shot_held_target) shooting = true;
+            shot_held_for = 0;
+        }
+
+        if (shooting) {
+            if (shot_current_shot_length > shot_length) {
+                shooting = false;
+                shot_current_shot_length = 0;
+            }
+            shot_current_shot_length += delta;
+            rightLaser.spawn();
+            leftLaser.spawn();
+            middleLaser.spawn();
+            rightLaser.spawn();
+            leftLaser.spawn();
+            middleLaser.spawn();
+            rightLaser.spawn();
+            leftLaser.spawn();
+            middleLaser.spawn();
+        }
     }
 
     f32 max_height = Renderer::get_camera()->zoom / Renderer::get_camera()->aspect_ratio;

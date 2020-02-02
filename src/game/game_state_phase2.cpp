@@ -29,6 +29,7 @@ void enter() {
 
     PlayerPhase2 player;
     player.init();
+    player.has_LAZOR = false;
     player_id = Logic::add_entity(player);
 
     enemy_spawner.set_phase(2);
@@ -36,6 +37,9 @@ void enter() {
 
     cog_spawner.set_phase(12);
     cog_spawner.set_paused(false);
+
+    // Spawn first cog
+    cog_spawner.spawn_cog(V2(1, Renderer::get_window_aspect_ratio()));
 
     progress = 0;
     auto leave = []() {
@@ -96,6 +100,7 @@ void update(f32 delta, f32 now) {
             Logic::fetch_entity<GameEntity>(cog_spawner.entities[i]);
         if (Physics::check_overlap(&cog->body, &player->ship_body)) {
             cog->hp = 0;
+            player->has_LAZOR = true;
             progress++;
         }
     }
