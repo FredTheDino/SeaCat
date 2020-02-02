@@ -5,6 +5,8 @@
 
 Vec2 square_shape_points[] = {V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1)};
 Physics::ShapeID square_shape;
+Vec2 triangle_shape_points[] = { V2(0, 0), V2(0.5, 0), V2(0, -1) };
+Physics::ShapeID triangle_shape;
 
 #include "assets.cpp"
 #include "particles.h"
@@ -25,6 +27,7 @@ void empty_func() {}
 #include "game_state_cutscenes.h"
 #include "game_state_phase1.cpp"
 #include "game_state_phase2.cpp"
+#include "game_state_phase3.cpp"
 #include "game_state_cutscenes.cpp"
 
 namespace Game {
@@ -38,9 +41,12 @@ void entity_registration() { REGISTER_ENTITY(AggroEnemy); }
 void setup() {
     Phase1::setup();
     Phase2::setup();
+    Phase3::setup();
 
-    square_shape =
-        Physics::add_shape(LEN(square_shape_points), square_shape_points);
+    square_shape = 
+		Physics::add_shape(LEN(square_shape_points), square_shape_points);
+    triangle_shape = 
+		Physics::add_shape(LEN(triangle_shape_points), triangle_shape_points);
 
     Renderer::turn_on_camera(0);
 

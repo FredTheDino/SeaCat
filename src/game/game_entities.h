@@ -1,6 +1,13 @@
 Vec2 target = V2(0, 0);
 
-enum EntityType { AGGRO = 0, FLOOF = 1, GLOOP = 2, COG = 3, BOSS = 4 };
+enum EntityType {
+    AGGRO = 0,
+    FLOOF = 1,
+    GLOOP = 2,
+    COG = 3,
+    BOSS = 4,
+	NR_OF_ENTITIES = 5
+};
 
 struct GameEntity : public Logic::Entity {
     Vec2 position;
@@ -85,6 +92,46 @@ struct Cog : public GameEntity {
 
 void cog_init(Cog& cog, Vec2 position);
 
+struct Boss : public GameEntity {
+    f32 size, x, y;
+	f32 next_bullet = 2;
+	Physics::Body body_left;
+	Physics::Body body_right;
+
+    void update(f32 delta) override;
+
+    void draw() override;
+};
+
+void boss_init(Boss& boss);
+
+struct BossBullet : public GameEntity {
+    void update(float delta) override;
+
+    void draw() override;
+
+    bool is_dead() override;
+
+    Vec2 velocity = V2(0, -2);
+    float rotation = 0;
+    float size = 0;
+    Sprites sprite = 
+        (random_bit() ? Sprites::GLOOP_PEW_1 : Sprites::GLOOP_PEW_2);
+    REGISTER_FIELDS(GLOOP_BULLET, GloopBullet, speed);
+};
+
+void gloop_bullet_init(GloopBullet& gloop_bullet, GloopEnemy& shooter);
+
+struct Wall: public GameEntity {
+	Vec2 position, size;
+
+    void update(f32 delta) override;
+
+    void draw() override;
+};
+
+void wall_init(Wall& wall, Vec2 pos);
+
 struct Spawner {
     void update(float delta);
 
@@ -108,12 +155,16 @@ struct Spawner {
 
     void spawn_cog(Vec2 pos);
 
+    void spawn_boss();
+
+    void spawn_boss_bullet();
+
     std::vector<Logic::EntityID> entities;
 private:
+    float last_spawn[EntityType::NR_OF_ENTITIES];
     int phase = 0;
     bool paused = false;
     float time = 0;
-    float last_spawn[EntityType::BOSS];
 };
 
 Spawner enemy_spawner;
