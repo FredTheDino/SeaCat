@@ -97,6 +97,7 @@ struct Boss : public GameEntity {
 	f32 next_bullet = 2;
 	Physics::Body body_left;
 	Physics::Body body_right;
+    hp = 10;
 
     void update(f32 delta) override;
 
@@ -112,7 +113,7 @@ struct BossBullet : public GameEntity {
 
     bool is_dead() override;
 
-    Vec2 velocity = V2(0, -2);
+    Vec2 velocity = V2(0, -2)*0.3;
     float rotation = 0;
     float size = 0;
     Sprites sprite = 
@@ -120,7 +121,7 @@ struct BossBullet : public GameEntity {
     REGISTER_FIELDS(GLOOP_BULLET, GloopBullet, speed);
 };
 
-void gloop_bullet_init(GloopBullet& gloop_bullet, GloopEnemy& shooter);
+void boss_bullet_init(BossBullet& bullet);
 
 struct Wall: public GameEntity {
 	Vec2 position, size;
@@ -155,7 +156,7 @@ struct Spawner {
 
     void spawn_cog(Vec2 pos);
 
-    void spawn_boss();
+    Logic::EntityID spawn_boss();
 
     void spawn_boss_bullet();
 

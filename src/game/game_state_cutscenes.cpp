@@ -67,7 +67,7 @@ void enter(u32 state) {
                 Phase2::enter();
                 break;
             case 2:
-                // Boss::enter();
+                Phase3::enter();
                 break;
             default:
                 UNREACHABLE;
