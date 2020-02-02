@@ -8,7 +8,7 @@ f32 saddness;
 f32 saddness_target;
 
 Vec4 START_COLOR = V4(0.1, 0.05, 0.05, 1.0);
-Vec4 END_COLOR = V4(0.3, 0.3, 0.3, 1.0);
+Vec4 END_COLOR = V4(0.4, 0.4, 0.4, 1.0);
 
 void setup();
 void enter();
@@ -44,6 +44,10 @@ void enter() {
     PlayerPhase1 player;
     player.init();
     player_id = Logic::add_entity(player);
+
+    for (u32 i = 0; i < 50; i++) {
+        star_system.spawn();
+    }
 }
 
 void update(f32 delta, f32 now) {
@@ -88,6 +92,8 @@ void update(f32 delta, f32 now) {
 }
 
 void draw() {
+    star_system.draw();
+
     // Draw background
     Vec4 tint = LERP(START_COLOR, progess, END_COLOR);
     draw_sprite(0, -Renderer::get_camera(0)->position, 2, 0, Sprites::BACKGROUND, tint);

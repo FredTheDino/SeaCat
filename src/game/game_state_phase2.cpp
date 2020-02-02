@@ -1,5 +1,7 @@
 namespace Phase2 {
 
+Vec4 BACKGROUND_TINT = V4(0.4, 0.4, 0.4, 1.0);
+
 Logic::EntityID player_id;
 
 void setup();
@@ -56,7 +58,7 @@ void update(f32 delta, f32 now) {
 
 void draw() {
     // Draw background
-    draw_sprite(0, V2(0, 0), 2, 0, Sprites::BACKGROUND);
+    draw_sprite(0, V2(0, 0), 2, 0, Sprites::BACKGROUND, BACKGROUND_TINT);
 }
 
 //TODO(gu) drop entities from entity system

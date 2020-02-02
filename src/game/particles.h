@@ -1,3 +1,5 @@
+Renderer::ParticleSystem star_system;
+
 Renderer::ParticleSystem rightLaser;
 Renderer::ParticleSystem leftLaser;
 Renderer::ParticleSystem middleLaser;
@@ -29,4 +31,15 @@ void init_laser_particles() {
     middleLaser.velocity_dir = {0, 2*PI};
     middleLaser.spawn_size = {0.02, 0.03};
     middleLaser.velocity = {0.5, 1};
+}
+
+void init_star_system() {
+    star_system = Renderer::create_particle_system(5, 1000, V2(0, 0));
+    star_system.one_size = true;
+    star_system.alive_time = {1, 1};
+    star_system.position_x = {-0.1, 0.1};
+    star_system.position_y = {-0.1, 0.1};
+    star_system.velocity = {0, 0};
+    star_system.acceleration = {0, 0};
+    star_system.spawn_size = {0.02, 0.03};
 }

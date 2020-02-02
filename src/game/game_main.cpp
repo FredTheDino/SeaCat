@@ -63,6 +63,7 @@ void setup() {
     add(B(B, Player::P2), Name::SHOOT);
 
     init_laser_particles();
+    init_star_system();
 
     {
         update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func, 0.0,
@@ -72,6 +73,7 @@ void setup() {
                                       Logic::FOREVER);
         current_exit = empty_func;
         // Cutscene::enter(0);
+        //Cutscene::enter(0);
         Phase1::enter();
     }
 }
