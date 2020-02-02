@@ -36,17 +36,21 @@ void enter() {
     saddness_target = 1.0;
     saddness = saddness_target;
     auto leave = []() {
-        if (progess >= 1.0)
+        if (progess >= 0.5) {
+            LOG("cut");
             Cutscene::enter(1);
+        }
     };
     leave_id = Logic::add_callback(Logic::POST_DRAW, leave, 0.0, Logic::FOREVER);
 
     PlayerPhase1 player;
     player.init();
     player_id = Logic::add_entity(player);
+    init_hit_particles();
 }
 
 void update(f32 delta, f32 now) {
+    hitEnemy.update(delta);
     enemy_spawner.update(delta);
     cog_spawner.update(delta);
 
@@ -69,6 +73,10 @@ void update(f32 delta, f32 now) {
         if (overlap) {
             player->body.velocity = overlap.normal * 0.01;
             enemy->body.velocity += overlap.normal * 0.01;
+            hitEnemy.position = (player->body.position + enemy->body.position)/2;
+            for (int i = 0; i < 300; i++) {
+                hitEnemy.spawn();
+            }
             // TODO(ed): Which channel
             AssetID alts[] = {
                 ASSET_SPACESUIT_HIT_1,
@@ -95,6 +103,8 @@ void draw() {
     saddness = LERP(saddness, Logic::delta() * 2, saddness_target);
     Renderer::vignette_strength = (saddness * saddness) * 4.5;
     Renderer::vignette_radius = (saddness * saddness) * 0.5;
+
+    hitEnemy.draw();
     // Physics::Overlap curr_overlap =
     // Physics::check_overlap(&player1.player_body, &temp_rect);
     // Physics::solve(curr_overlap);
