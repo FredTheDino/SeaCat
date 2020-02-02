@@ -116,6 +116,7 @@ void draw() {
     Renderer::vignette_radius = (saddness * saddness) * 0.5;
 
     hitEnemy.draw();
+    stars.draw();
     // Physics::Overlap curr_overlap =
     // Physics::check_overlap(&player1.player_body, &temp_rect);
     // Physics::solve(curr_overlap);

@@ -4,6 +4,8 @@ Renderer::ParticleSystem middleLaser;
 
 Renderer::ParticleSystem hitEnemy;
 
+Renderer::ParticleSystem stars;
+
 void init_laser_particles() {
     rightLaser = Renderer::create_particle_system(5, 1000, V2(0, 0));
     rightLaser.one_size = true;
@@ -42,4 +44,15 @@ void init_hit_particles() {
     hitEnemy.die_green = {0.894, 0.894};
     hitEnemy.die_blue = {0.529, 0.529};
     hitEnemy.velocity = {0.1, 1};
+}
+
+void init_stars() {
+    stars = Renderer::create_particle_system(1, 2000, V2(0, 0));
+    stars.alive_time = {6, 15};
+    stars.position_x = {-2, 2};
+    stars.position_y = {-1, 1};
+    stars.velocity = {0, 0};
+    stars.spawn_size = {0, 0};
+    stars.die_size = {0.01, 0.02};
+    stars.relative = true;
 }
