@@ -90,6 +90,8 @@ struct Cog : public GameEntity {
     void draw() override;
 };
 
+void cog_init(Cog& cog, Vec2 position);
+
 struct Boss : public GameEntity {
     f32 size, x, y;
 	Physics::Body body_left;
@@ -100,7 +102,17 @@ struct Boss : public GameEntity {
     void draw() override;
 };
 
-void cog_init(Cog& cog, Vec2 position);
+void boss_init(Boss& boss);
+
+struct Wall: public GameEntity {
+	Vec2 position, size;
+
+    void update(f32 delta) override;
+
+    void draw() override;
+};
+
+void wall_init(Wall& wall, Vec2 pos);
 
 struct Spawner {
     void update(float delta);

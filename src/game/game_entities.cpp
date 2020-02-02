@@ -211,6 +211,24 @@ void boss_init(Boss& boss) {
     boss.body_right.position = V2(boss.x + 0.7, boss.y + 0.2);
 }
 
+void Wall::update(f32 delta) {
+}
+
+void Wall::draw() {
+#if ENTITY_DEBUG
+	Physics::debug_draw_body(&body);
+#endif
+	Renderer::push_rectangle(1, position, size, V4(0, 0, 0, 1));
+}
+
+void wall_init(Wall& wall, Vec2 pos) { 
+    wall.body  = Physics::create_body(square_shape);
+	wall.position = pos;
+	wall.size = V2(2, 4);
+	wall.body.position = pos;
+	wall.body.scale = wall.size;
+}
+
 void Spawner::update(float delta) {
     if (paused) return;
 
@@ -345,4 +363,9 @@ void Spawner::spawn_boss() {
     Boss boss;
     boss_init(boss);
 	bossID = Logic::add_entity(boss);
+	Wall left, right;
+	wall_init(left, V2(-2, 0));
+	wall_init(right, V2(1.95, 0));
+	Logic::add_entity(left);
+	Logic::add_entity(right);
 }
