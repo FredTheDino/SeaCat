@@ -94,6 +94,7 @@ void cog_init(Cog& cog, Vec2 position);
 
 struct Boss : public GameEntity {
     f32 size, x, y;
+	f32 next_bullet = 2;
 	Physics::Body body_left;
 	Physics::Body body_right;
 
@@ -103,6 +104,23 @@ struct Boss : public GameEntity {
 };
 
 void boss_init(Boss& boss);
+
+struct BossBullet : public GameEntity {
+    void update(float delta) override;
+
+    void draw() override;
+
+    bool is_dead() override;
+
+    Vec2 velocity = V2(0, -2);
+    float rotation = 0;
+    float size = 0;
+    Sprites sprite = 
+        (random_bit() ? Sprites::GLOOP_PEW_1 : Sprites::GLOOP_PEW_2);
+    REGISTER_FIELDS(GLOOP_BULLET, GloopBullet, speed);
+};
+
+void gloop_bullet_init(GloopBullet& gloop_bullet, GloopEnemy& shooter);
 
 struct Wall: public GameEntity {
 	Vec2 position, size;
@@ -138,6 +156,8 @@ struct Spawner {
     void spawn_cog(Vec2 pos);
 
     void spawn_boss();
+
+    void spawn_boss_bullet();
 
     std::vector<Logic::EntityID> entities;
 private:

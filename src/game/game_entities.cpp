@@ -1,4 +1,4 @@
-#define ENTITY_DEBUG 1
+#define ENTITY_DEBUG 0
 
 void AggroEnemy::update(float delta) {
     time += delta;
@@ -178,6 +178,13 @@ void cog_init(Cog& cog, Vec2 position = V2(0, 0)) {
 // TODO: Cycles for shooting
 void Boss::update(f32 delta) {
 	time += delta;
+
+    if (time > next_bullet) { // TODO: Randomize
+        time = 0;
+		next_bullet = random_real(0, 3);
+
+        enemy_spawner.spawn_boss_bullet();
+    }
 }
 
 void Boss::draw() {
@@ -186,7 +193,7 @@ void Boss::draw() {
 	Physics::debug_draw_body(&body);
 	Physics::debug_draw_body(&body_right);
 #endif
-	draw_sprite(1, V2(x, y), size, 0, Sprites::BOSS);
+	draw_sprite(2, V2(x, y), size, 0, Sprites::BOSS);
 }
 
 // TEST
@@ -211,6 +218,35 @@ void boss_init(Boss& boss) {
     boss.body_right.position = V2(boss.x + 0.7, boss.y + 0.2);
 }
 
+void BossBullet::update(float delta) {
+    time += delta;
+    body.position += body.velocity * delta;
+    position = body.position;
+
+    if (length(position - target) > 2/Renderer::get_camera(0)->aspect_ratio) {
+        hp = 0;
+    }
+}
+
+void BossBullet::draw() {
+#if ENTITY_DEBUG
+    Physics::debug_draw_body(&body);
+#endif
+    draw_sprite(1, body.position, size, rotation, sprite);
+}
+
+bool BossBullet::is_dead() { return hp <= 0 || time > 100; }
+
+void boss_bullet_init(BossBullet& bullet) {
+    bullet.hp = 1000;
+    bullet.time = 0;
+	bullet.size = random_real(0.7, 1.5);
+    bullet.body = Physics::create_body(square_shape);
+    bullet.body.position = V2(random_real(-1, 1), 2);
+    bullet.body.velocity = bullet.velocity; // Randomize?
+    bullet.body.rotation = random_real(0, PI);
+}
+
 void Wall::update(f32 delta) {
 }
 
@@ -218,7 +254,7 @@ void Wall::draw() {
 #if ENTITY_DEBUG
 	Physics::debug_draw_body(&body);
 #endif
-	Renderer::push_rectangle(1, position, size, V4(0, 0, 0, 1));
+	Renderer::push_rectangle(3, position, size, V4(0, 0, 0, 1));
 }
 
 void wall_init(Wall& wall, Vec2 pos) { 
@@ -368,4 +404,10 @@ void Spawner::spawn_boss() {
 	wall_init(right, V2(1.95, 0));
 	Logic::add_entity(left);
 	Logic::add_entity(right);
+}
+
+void Spawner::spawn_boss_bullet() {
+    BossBullet bullet;
+    boss_bullet_init(bullet);
+    entities.push_back(Logic::add_entity(bullet));
 }
