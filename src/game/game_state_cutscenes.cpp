@@ -10,6 +10,7 @@ char their_buffer[THEIR_BUFFER_LEN];
 f32 DELAY1 = 0.36;
 f32 DELAY2 = 0.27;
 f32 STARTED = 0;
+u32 localState = 0;
 
 Logic::LogicID id;
 
@@ -51,13 +52,13 @@ void update_their_phrase(f32 now, f32 started, const char *phrase) {
 const f32 CUTSCENE_DURATION = 10;
 
 void enter(u32 state) {
+    localState = state;
     current_exit();
     Logic::update_callback(update_id, update, 0.0, Logic::FOREVER);
     Logic::update_callback(draw_id, draw, 0.0, Logic::FOREVER);
     current_exit = leave;
 
     auto exit_func = [state]() {
-        LOG("I'm here");
         switch (state) {
             case 0:
                 Phase1::enter();
@@ -89,6 +90,22 @@ void update(f32 delta, f32 now) {
 }
 
 void draw() {
+    Vec4 tint;
+    switch(localState) {
+        case 0:
+            tint = V4(0.1, 0.05, 0.05, 1.0);
+            break;
+        case 1:
+            tint = V4(0.5, 0.5, 0.5, 1.0);
+            break;
+        case 2:
+            tint = V4(1, 1, 1, 1);
+            break;
+    }
+
+    draw_sprite(0, -Renderer::get_camera(0)->position, 2, 0, Sprites::BACKGROUND, tint);
+
+
     f32 aspect_ratio = Renderer::get_window_aspect_ratio();
     Renderer::draw_text(cat_buffer, -0.8, 0.8 * aspect_ratio, 1.0,
                         ASSET_MONACO_FONT, 0, V4(0.41, 0.63, 1, 1));
