@@ -78,7 +78,7 @@ void setup() {
                                       Logic::FOREVER);
         current_exit = empty_func;
 
-        Cutscene::enter(1);
+        Cutscene::enter(0);
         //Phase1::enter();
     }
 }
