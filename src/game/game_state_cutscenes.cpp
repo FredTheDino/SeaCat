@@ -48,7 +48,7 @@ void update_their_phrase(f32 now, f32 started, const char *phrase) {
     }
 }
 
-const f32 CUTSCENE_DURATION = 12;
+const f32 CUTSCENE_DURATION = 10;
 
 void enter(u32 state) {
     current_exit();
@@ -57,6 +57,7 @@ void enter(u32 state) {
     current_exit = leave;
 
     auto exit_func = [state]() {
+        LOG("I'm here");
         switch (state) {
             case 0:
                 Phase1::enter();
@@ -71,7 +72,7 @@ void enter(u32 state) {
                 UNREACHABLE;
         };
     };
-    id = Logic::add_callback(Logic::POST_DRAW, exit_func, CUTSCENE_DURATION);
+    id = Logic::add_callback(Logic::POST_DRAW, exit_func, Logic::now() + CUTSCENE_DURATION);
 
     STARTED = Logic::now();
     for (u32 i = 0; i < CAT_BUFFET_LEN; i++) cat_buffer[i] = 0;
