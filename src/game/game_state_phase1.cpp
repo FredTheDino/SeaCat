@@ -44,10 +44,6 @@ void enter() {
     PlayerPhase1 player;
     player.init();
     player_id = Logic::add_entity(player);
-
-    for (u32 i = 0; i < 50; i++) {
-        star_system.spawn();
-    }
 }
 
 void update(f32 delta, f32 now) {

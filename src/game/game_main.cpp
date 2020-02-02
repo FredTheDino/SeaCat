@@ -6,6 +6,8 @@
 Vec2 square_shape_points[] = {V2(0, 0), V2(1, 0), V2(1, 1), V2(0, 1)};
 Physics::ShapeID square_shape;
 
+bool stars_spawned = false;
+
 #include "assets.cpp"
 #include "particles.h"
 #include "player.h"
@@ -80,6 +82,15 @@ void setup() {
 
 // Extra logic
 void update(f32 delta) {
+    if (!stars_spawned) {
+        for (u32 i = 0; i < 50; i++) {
+            LOG("spawning %d", i);
+            star_system.spawn();
+        }
+        stars_spawned = true;
+    }
+    star_system.spawn();
+
     Renderer::debug_camera(0);
     using namespace Input;
     if (pressed(Name::FULLSCREEN)) {
