@@ -63,6 +63,18 @@ void update(f32 delta, f32 now) {
         }
     }
 
+    float player_constrain_acceleration = 0.2;
+    if (player->position.x > 1) {
+        player->velocity -= V2(delta * player_constrain_acceleration, 0);
+    } else if (player->position.x < -1) {
+        player->velocity += V2(delta * player_constrain_acceleration, 0);
+    }
+    if (player->position.y > Renderer::get_window_aspect_ratio()) {
+        player->velocity -= V2(0, delta * player_constrain_acceleration);
+    } else if (player->position.y < -Renderer::get_window_aspect_ratio()) {
+        player->velocity += V2(0, delta * player_constrain_acceleration);
+    }
+
     for (s32 i = cog_spawner.entities.size() - 1; i >= 0; i--) {
         GameEntity *cog =
             Logic::fetch_entity<GameEntity>(cog_spawner.entities[i]);
