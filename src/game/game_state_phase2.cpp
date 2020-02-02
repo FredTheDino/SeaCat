@@ -11,7 +11,7 @@ void update(f32 now, f32 delta);
 void draw();
 void exit();
 
-Mixer::AudioID 
+Mixer::AudioID tickID;
 
 void setup() {
     square_shape = Physics::add_shape(LEN(square_shape_points), square_shape_points);

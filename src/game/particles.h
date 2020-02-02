@@ -10,7 +10,7 @@ void init_laser_particles() {
     rightLaser = Renderer::create_particle_system(5, 1000, V2(0, 0));
     rightLaser.one_size = true;
     rightLaser.alive_time = {0.2, 0.5};
-    rightLaser.position_x = {0.2, 0.3};
+    rightLaser.position_x = {0.02, 0.03};
     rightLaser.position_y = {-0.15, -0.1};
     rightLaser.velocity_dir = {0, 2*PI};
     rightLaser.spawn_size = {0.01, 0.02};
