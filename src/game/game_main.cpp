@@ -60,6 +60,7 @@ void setup() {
     add(B(B, Player::P2), Name::SHOOT);
 
     init_laser_particles();
+    init_stars();
 
     {
         update_id = Logic::add_callback(Logic::PRE_UPDATE, empty_func, 0.0,
@@ -69,13 +70,17 @@ void setup() {
                                       Logic::FOREVER);
         current_exit = empty_func;
 
-        // Cutscene::enter(0);
-        Phase2::enter();
+        Cutscene::enter(0);
+        //Phase2::enter();
     }
 }
 
 // Extra logic
 void update(f32 delta) {
+    stars.position = - Renderer::get_camera()->position;
+    f32 starspawn = random_real();
+    if (starspawn >= 0.5) stars.spawn();
+    stars.update(delta);
     Renderer::debug_camera(0);
     using namespace Input;
     if (pressed(Name::FULLSCREEN)) {

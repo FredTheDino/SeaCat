@@ -97,6 +97,7 @@ void draw() {
     // Draw background
     draw_sprite(0, V2(0, 0), 2, 0, Sprites::BACKGROUND);
     hitEnemy.draw();
+    stars.draw();
 }
 
 void exit() {
