@@ -175,6 +175,10 @@ void Spawner::update(float delta) {
         if (entity->is_dead()) {
             Logic::remove_entity(entities[i]);
             entities.erase(entities.begin() + i);
+
+            if (phase == 1 || phase == 2) {
+                cog_spawner.spawn_cog(entity->body.position - V2(Cog().rot_amp, 0));
+            }
         }
     }
 
@@ -266,12 +270,14 @@ void Spawner::spawn_gloop() {
 }
 
 void Spawner::spawn_cog() {
-    Cog cog;
-
     Vec2 camera_pos = Renderer::get_camera()->position;
     float radius = length(V2(1, (1.0 / Renderer::get_window_aspect_ratio())));
     Vec2 spawn_pos = random_unit_vec2() * radius - camera_pos;
+    spawn_cog(spawn_pos);
+}
 
+void Spawner::spawn_cog(Vec2 spawn_pos) {
+    Cog cog;
     cog_init(cog, spawn_pos);
     entities.push_back(Logic::add_entity(cog));
 }

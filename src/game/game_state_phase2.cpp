@@ -19,6 +19,8 @@ void enter() {
     Logic::update_callback(draw_id, draw, 0.0, Logic::FOREVER);
     current_exit = exit;
 
+    Renderer::get_camera()->position = V2(0, 0);
+
     PlayerPhase2 player;
     player.init();
     player_id = Logic::add_entity(player);
@@ -52,6 +54,8 @@ void update(f32 delta, f32 now) {
             cog->hp = 0;
         }
     }
+
+    target = player->position;
 }
 
 void draw() {
