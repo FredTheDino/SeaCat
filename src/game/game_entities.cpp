@@ -291,7 +291,7 @@ void Spawner::update(float delta) {
             }
             break;
         case 2:
-            if (time - last_spawn[EntityType::AGGRO] > 20) {
+            if (time - last_spawn[EntityType::AGGRO] > 18) {
                 last_spawn[EntityType::AGGRO] = time;
                 spawn_aggro();
             }
@@ -299,7 +299,7 @@ void Spawner::update(float delta) {
                 last_spawn[EntityType::FLOOF] = time;
                 spawn_floof();
             }
-            if (time - last_spawn[EntityType::GLOOP] > 20) {
+            if (time - last_spawn[EntityType::GLOOP] > 18) {
                 last_spawn[EntityType::GLOOP] = time;
                 spawn_gloop();
             }

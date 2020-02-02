@@ -17,7 +17,7 @@ void draw();
 void exit();
 
 Mixer::AudioID tickID;
-    
+
 void setup() {}
 
 Logic::LogicID leave_id;
@@ -33,6 +33,8 @@ void enter() {
 
     cog_spawner.set_phase(11);
     cog_spawner.set_paused(false);
+
+    cog_spawner.spawn_cog(V2(0.6, 0));
 
     progess = 0;
     saddness_target = 1.0;
