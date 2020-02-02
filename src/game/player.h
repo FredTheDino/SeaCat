@@ -4,10 +4,8 @@ struct PlayerPhase1 : public Logic::Entity {
     Physics::Body body;
 
     Vec2 position;
-    f32 max_velocity = 0.3;
-    f32 min_acceleration = 0.01;
-    f32 max_acceleration = 0.01;
-    f32 acceleration_steps = 0.4;
+    f32 max_velocity = 0.15;
+    f32 max_acceleration = 0.2;
 
     void update(f32 delta) override;
     void draw() override;
@@ -28,6 +26,15 @@ struct PlayerPhase2 : public Logic::Entity {
     u32 wobble_speed = 2;
     f32 wobble_amp = 0.0007;
 
+    bool has_LAZOR = true;
+    const Vec2 lazor_ship_offset = V2(0, 0.009);
+    const f32 lazor_ship_scale = 0.4725;
+    const Vec2 lazor_offset = V2(0.0011, 0.0782);
+    const f32 lazor_scale = 1.0032;
+    const Vec2 lazor_beam_offset = V2(0.0039, 0.2004);
+    const f32 lazor_beam_scale = 1.0846;
+    const Vec2 lazor_beam_next_offset = V2(0.0018, 0.0943);
+    const f32 lazor_beam_next_scale = 1;
     f32 shot_width = 0.05;
     f32 shot_held_for = 0;
     f32 shot_held_target = 0.5;

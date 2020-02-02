@@ -271,12 +271,13 @@ void Spawner::update(float delta) {
     for (int i = entities.size() - 1; i >= 0; i--) {
         GameEntity* entity = Logic::fetch_entity<GameEntity>(entities[i]);
         if (entity->is_dead()) {
-            Logic::remove_entity(entities[i]);
-            entities.erase(entities.begin() + i);
-
             if (phase == 2) {
+                hitEnemy.position = entity->body.position;
+                for (u32 i = 0; i < 300; i++) hitEnemy.spawn();
                 cog_spawner.spawn_cog(entity->body.position - V2(Cog().rot_amp, 0));
             }
+            Logic::remove_entity(entities[i]);
+            entities.erase(entities.begin() + i);
         }
     }
 
@@ -348,7 +349,7 @@ void Spawner::clear() {
 
 void Spawner::spawn_aggro() {
     AggroEnemy aggro_enemy;
-    aggro_enemy_init(aggro_enemy, V2(2 * random_real() - 1, 2));
+    aggro_enemy_init(aggro_enemy, V2(random_real(-0.8, 0.8), 1));
     entities.push_back(Logic::add_entity(aggro_enemy));
 }
 
@@ -366,13 +367,13 @@ void Spawner::spawn_floof_phase1() {
 
 void Spawner::spawn_floof() {
     FloofEnemy floof_enemy;
-    floof_enemy_init(floof_enemy, V2(2 * random_real() - 1, 2));
+    floof_enemy_init(floof_enemy, V2(random_real(-0.8, 0.8), 1));
     entities.push_back(Logic::add_entity(floof_enemy));
 }
 
 void Spawner::spawn_gloop() {
     GloopEnemy gloop_enemy;
-    gloop_enemy_init(gloop_enemy, V2(2 * random_real() - 1, 2));
+    gloop_enemy_init(gloop_enemy, V2(random_real(-0.8, 0.8), 1));
     entities.push_back(Logic::add_entity(gloop_enemy));
 }
 
@@ -384,7 +385,7 @@ void Spawner::spawn_gloop_bullet(GloopEnemy& shooter) {
 
 void Spawner::spawn_cog() {
     Vec2 camera_pos = Renderer::get_camera()->position;
-    float radius = length(V2(1, (1.0 / Renderer::get_window_aspect_ratio())));
+    float radius = length(V2(1, 1.0 / Renderer::get_window_aspect_ratio()));
     Vec2 spawn_pos = random_unit_vec2() * radius - camera_pos;
     spawn_cog(spawn_pos);
 }
